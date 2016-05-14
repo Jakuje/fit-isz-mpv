@@ -7,4 +7,6 @@ Pouze textově zpracovaný obsah, bez obrázku a diagramů, které jsou součás
 
 		Progress: 0/63
 
+Zdroj otázek:
 
+ * http://www.fit.vutbr.cz/info/rd/rd23-160324.pdf
