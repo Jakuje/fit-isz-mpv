@@ -106,9 +106,71 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{TODO} \label{cha:1}
+\chapter{Metodika návrhu HW/SW codesign, platformy, programovatelné obvody.} \label{cha:1}
+\chapter{Výpočetní modely (StateCharts, Kahnova síť procesů, synchronní dataflow).} \label{cha:2}
+\chapter{Specifikace (chování, struktura), syntéza (alokace, přidělení, plánování) a integrace systémů (rozhraní, synchronizace, komunikace).} \label{cha:3}
+\chapter{Syntéza HW z vyšších programovacích jazyků (reprezentace, alokace, plánování, přiřazení) a jazyk Catapult C.} \label{cha:4}
+\chapter{Odhady (přesnost, věrnost, metriky, metody) a optimalizace vlastností systému (příkon, energie).} \label{cha:5}
+\chapter{Jazyk a sémantika predikátové logiky (termy, formule, realizace jazyka, pravdivost formulí).} \label{cha:6}
+\chapter{Formální systém predikátové logiky (axiomy a odvozovací pravidla, dokazatelnost, model a důsledek teorie, věty o úplnosti a kompaktnosti, prenexní tvar formulí).} \label{cha:7}
+\chapter{Algebraické struktury (grupy, okruhy, obory integrity a tělesa, svazy a Boolovy algebry, univerzální algebry).} \label{cha:8}
+\chapter{Základní algebraické metody (podalgebry, homomorfismy, přímé součiny, kongruence a faktorové algebry, normální podgrupy a ideály okruhů).} \label{cha:9}
+\chapter{Obory integrity a dělitelnost (okruhy polynomů, pravidla dělitelnosti, Gaussovy a Eukleidovy okruhy).} \label{cha:10}
+\chapter{Teorie polí (minimální pole, rozšíření pole, konečná pole a jejich konstrukce).} \label{cha:11}
+\chapter{Metrické prostory (příklady, konvergence posloupností, spojitá a izometrická zobrazení, úplnost, Banachova věta o pevném bodu).} \label{cha:12}
+\chapter{Normované a unitární prostory (základní vlastnosti a příklady, normované prostory konečné dimenze, uzavřené ortonormální systémy a Fourierovy řady).} \label{cha:13}
+\chapter{Obyčejné grafy (stupně uzlů, sledy, souvislost, izomorfismy, stromy, kostry, Kruskalův a Primův algoritmus pro hledání minimální kostry ohodnoceného grafu, eulerovské a hamiltonovské grafy, planarita a obarvitelnost).} \label{cha:14}
+\chapter{Orientované grafy (orientované sledy, souvislost a silná souvislost, turnaje, eulerovské a hamiltonovské grafy, Dijkstrův a Floyd-Warshallův algoritmus pro hledání cesty minimální délky).} \label{cha:15}
+\chapter{Klasifikace gramatik, formálních jazyků a automatů přijímajících jazyky.} \label{cha:16}
+\chapter{Vlastnosti formálních jazyků (typické vlastnosti a jejich rozhodnutelnost).} \label{cha:17}
+\chapter{Konečné automaty (jazyky přijímané jazyky KA, varianty KA, minimalizace KA).} \label{cha:18}
+\chapter{Regulární množiny, regulární výrazy a rovnice nad regulárními výrazy.} \label{cha:19}
+\chapter{Transformace a normální formy bezkontextových gramatik.} \label{cha:20}
+\chapter{Zásobníkové automaty (jazyky přijímané ZA, varianty ZA).} \label{cha:21}
+\chapter{Turingovy stroje (jazyky přijímané TS, varianty TS, lineárně omezené automaty, univerzální TS).} \label{cha:22}
+\chapter{Nerozhodnutelnost (problém zastavení TS, princip diagonalizace a redukce, Postův korespondenční problém).} \label{cha:23}
+\chapter{Parciální rekurzivní funkce.} \label{cha:24}
+\chapter{Časová a paměťová složitost (třídy složitosti, úplnost, SAT problém).} \label{cha:25}
+\chapter{Ukazatele a zákony paralelního zpracování. Funkce konst. účinnosti a škálovatelnost.} \label{cha:26}
+\chapter{Paralelizace programů: vzory programových a datových struktur, podpůrné struktury.} \label{cha:27}
+\chapter{Paralelní zpracování v OpenMP, SPMD, smyčky, sekce a tasky. Synchronizační prostředky.} \label{cha:28}
+\chapter{Architektury se sdílenou pamětí, UMA i NUMA, zajištění koherence pamětí cache.} \label{cha:29}
+\chapter{Architektury distribuovaných systémů se zasílání zpráv.} \label{cha:30}
+\chapter{Blokující a neblokující párové (point-to-point) komunikace v MPI.} \label{cha:31}
+\chapter{Kolektivní komunikace v MPI, paralelní vstup a výstup.} \label{cha:32}
+\chapter{Propojovací sítě: Topologie a směrovací algoritmu, přepínání a řízení toku.} \label{cha:33}
+\chapter{Klasifikace metod komprese dat (ztrátové, bezeztrátové, intuitivní, algoritmické, četnost výskytu, pravděpodobnost výskytu), princip kódování délek sledů, kódování „přesuň na začátek.‘‘} \label{cha:34}
+\chapter{Kódy s proměnnou délkou - princip, zdůvodnění, Huffmanovy kódy - různé typy, kanonický Huffmanův kód, adaptivní Huffmanův kód, aritmetický kód.} \label{cha:35}
+\chapter{Slovníkové metody (LZ77, LZ78, práce se slovníkem, pohyblivé okno, prodlužování položek).} \label{cha:36}
+\chapter{Informace a entropie, Shannova věta o kódování.} \label{cha:37}
+\chapter{Bezpečnostní kódy: lineární, Hammingovy, cyklické, konvoluční. Detekce a oprava chyb.} \label{cha:38}
+\chapter{Základní architektury přepínačů, algoritmy pro plánování, řešení blokování, vícestupňové přepínací sítě.} \label{cha:39}
+\chapter{Základní funkce směrovače, zpracování paketů ve směrovači, typy architektur.} \label{cha:40}
+\chapter{Sítě Peer-to-Peer (P2P), Milgramův problém malého světa, model sítě P2P, směrování v P2P sítích, strukturované a nestrukturované sítě.} \label{cha:41}
+\chapter{Základní principy softwarově definovaných sítí SDN, architektura, technologie OpenFlow.} \label{cha:42}
+\chapter{Formální metody v počítačových sítích.} \label{cha:43}
+\chapter{Konflikty a závislosti při řetězovém zpracování instrukcí a jejich HW/SW ošetření.} \label{cha:44}
+\chapter{Architektura superskalárních procesorů a algoritmy OOO zpracování instrukcí.} \label{cha:45}
+\chapter{Procesory VLIW a používané optimalizační techniky s HW podporou.} \label{cha:46}
+\chapter{Multivláknové procesory, hrubý, jemný a simultánní MT.} \label{cha:47}
+\chapter{Datový paralelismus SIMD a SIMT, HW implementace a SW podpora.} \label{cha:48}
+\chapter{Architektura grafických procesorů, odlišnosti od superskalárních procesorů.} \label{cha:49}
+\chapter{Programovací jazyk CUDA, model vláken a paměťový model.} \label{cha:50}
+\chapter{Základní rysy nízkopříkonových procesorů (požadavky, architektura, výkonnost).} \label{cha:51}
+\chapter{Jazyky pro popis obvodů (VHDL, syntetizovatelné konstrukce).} \label{cha:52}
+\chapter{Logická syntéza obvodů (návrh pro technologie FPGA a ASIC, fáze syntézy, optimalizace, mapování, techniky zřetězení a vyvážení).} \label{cha:53}
+\chapter{Moderní přístupy k syntéze číslicových obvodů (reprezentace obvodu pomocí AIG, techniky odstraňování funkční redundance v AIG, tradiční mapování AIG do LUT).} \label{cha:54}
+\chapter{Aplikace omezujících podmínek (časová a fyzická omezení).} \label{cha:55}
+\chapter{Verifikace číslicových obvodů (metodologie OVM).} \label{cha:56}
+\chapter{Technologie programovatelného hardware (architektura FPGA, struktura konfigurovatelných bloků a vestavěných bloků, propojovací sít, způsoby konfigurace, srovnání s technologií ASIC).} \label{cha:57}
+\chapter{Vestavěný počítačový systém (shody a odlišnosti s běžným univerzálním počítačovým systémem).} \label{cha:58}
+\chapter{Implementace funkcí vestavěného systému SW a HW prostředky (výhody a nevýhody - dopady SW a HW implementace konkrétní funkce na vlastnosti systému, příklad).} \label{cha:59}
+\chapter{Číslicové vstupy a výstupy vestavěných systémů (problémy a jejich řešení, přizpůsobení napěťových úrovní, snímání stavu mechanického kontaktu, ovládání zátěže, posílení výstupu, H-můstek).} \label{cha:60}
+\chapter{Architektura SW pro vestavěné systémy (hlavní smyčka, implementace stavového automatu, obsluha přerušení).} \label{cha:61}
+\chapter{Konstrukce adaptéru systémové sběrnice: návrh adresového dekodérů, obsluha čtecí a zápisové transakce.} \label{cha:62}
+\chapter{Architektura sběrnice PCI-Express a USB: typy transakcí, způsob komunikace a směrování transakcí, detekce chyb a způsob zotavení.} \label{cha:63}
 
-2. semestr, IPR, zdroje % XXX
+% 2. semestr, IPR, zdroje % XXX
 
 
 \end{document}
