@@ -4,6 +4,10 @@
 \usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{enumerate}
+
+\usepackage{amsthm}
+\newtheorem{mydef}{Definice}
 
 \usepackage{geometry}
 \usepackage{layout}
@@ -111,7 +115,187 @@
 \chapter{Specifikace (chování, struktura), syntéza (alokace, přidělení, plánování) a integrace systémů (rozhraní, synchronizace, komunikace).} \label{cha:3}
 \chapter{Syntéza HW z vyšších programovacích jazyků (reprezentace, alokace, plánování, přiřazení) a jazyk Catapult C.} \label{cha:4}
 \chapter{Odhady (přesnost, věrnost, metriky, metody) a optimalizace vlastností systému (příkon, energie).} \label{cha:5}
-\chapter{Jazyk a sémantika predikátové logiky (termy, formule, realizace jazyka, pravdivost formulí).} \label{cha:6}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Jazyk a sémantika predikátové logiky} \label{cha:6}
+
+1. semestr, MAT, \texttt{logikaaktual3.pdf}, 3., 4. kapitola
+
+(termy, formule, realizace jazyka, pravdivost formulí)
+
+\section{Úvod???}
+
+\begin{itemize}
+	\item \textbf{Proměnné}: Označení libovolného prvku z daného oboru $(x, y, z, \dots, x_1, x_2, \dots)$
+	\item \textbf{Konstanty}: Význačné objekty $(0, 1, \dots)$
+	\item \textbf{Funkční symboly}: Operace $(f, g, h, \dots, f_1, f_2, f_3)$
+	\item \textbf{Četnost funkčního symbolu}: počet argumentů dané operace
+	\item \textbf{Predikáty}: Vlastnosti a vztahy mezi objekty
+	\item \textbf{Predikátové symboly}: Vyjádření predikátů? $(p, q, r, \dots, p_1, p_2, \dots)$.
+	\item \textbf{Četnost predikátového symbolu}: počet argumentů predikátu
+	\item \textbf{Atomické formule}: Nejjednodušší tvrzení, složená z \emph{Proměnných}, \emph{konstant}, \emph{funkčních symbolů}, \emph{predikátových symbolů}.
+	\item Složitější formule: Atomické formule + logické spojky + kvantifikace proměnných ($\forall, \exists$)
+	\item \textbf{Abeceda predikátové logiky 1. řádu} výše uvedené symboly s logickými spojkami a pomocnými symboly (závorky, čárka).
+\end{itemize}
+
+Predikátová logika 1. řádu
+
+Matematické teorie pracují s celými soubory objektů (čísla, body v prostoru, prvky algebraických struktur).
+Pro označení lib. prvků z daného oboru používáme \emph{proměnné} $(x, y, z, \dots, x_1, x_2, \dots$
+
+Mezi prvky z daného oboru mohou být některé význačné objekty (0, neutrální prvek grupy, \dots), pro než užíváme zvláštní symboly -- \emph{konstanty} (např. 0, 1, \dots).
+
+S objekty daného oboru lze provádět různé operace (sčítání a násobení čísel, násobení v grupách, \dots).
+K označení operace užíváme \emph{funkční symboly} $(f, g, h, \dots, f_1, f_2, f_3)$.
+Ke každému funkčnímu symbolu je přiřazeno přirozené číslo, které vyjadřuje jeho \emph{četnost}, tj. počet argumentů dané operace.
+Je-li četnost symbolu rovna $n$, říkáme, že symbol je $n$-ární.
+Je přirozené chápat konstanty jako nulární funkční symboly.
+
+Matematika zkoumá vlastnosti objektů a vztahy mezi objekty.
+Vlastnosti  a vztahy mezi objekty daného oboru, tzv. \emph{predikáty} (\uv{být záporným číslem} (vlastnost), \uv{být menší než}, \uv{být prvkem} (vztahy)) vyjadřujeme pomocí \emph{predikátových symbolů} $(p, q, r, \dots, p_1, p_2, \dots)$.
+Predikát znamená vztah mezi užitým počtem objektů.
+Tím je každému predikátovému symbolu přiřazeno přirozené číslo, jeho četnost udávající počet jeho argumentů.
+Je-li četnost rovna $n$, říkáme, že symbol je \emph{n-ární}.
+V mnoha případech používáme zvláštní označení = pro binární predikátový symbol označující rovnost, tj.totožnost objektů z daného oboru.
+
+Z proměnných, konstant, funkčních symbolů a predikátových symbolů sestavujeme jistým způsobem nejjednodušší tvrzení, vyjádřená tzv. \emph{atomickými formulemi}.
+Z nich vytváříme složitější formule pomocí \emph{logických spojek} (stejných jako ve výrokové logice) a pomocí \emph{kvantifikace proměnných}.\\
+\emph{Univerzální (obecný) kvantifikátor} $\forall$ vyjadřuje platnost pro všechny objekty z daného oboru.\\
+\emph{Existenční kvantifikátor} $\exists$ vyjadřuje existenci požadovaného objektu v daném oboru.
+
+Uvedené symboly spolu s logickými spojkami a \emph{pomocnými symboly} (závorka, čárka) tvoří abecedu jazyka \emph{predikátové logiky 1. řádu}.
+Proměnné jazyka prvního řádu jsou obecná jména pro objekty daného oboru, tj. pro individua (např. čísla).
+Jazyk neobsahuje proměnné pro množiny individuí (např. množiny čísel, relací, \dots), vyšších řádů, které dovolují kvantifikovat např. množiny, relace.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Jazyk predikátové logiky}
+
+Logické symboly:
+\begin{itemize}
+	\item proměnné: $x, y, z, \dots, x_1, x_2, \dots$
+	\item logické spojky: $ \lnot, \land, \lor, \to, \leftrightarrow$
+	\item kvantifikátory: $\exists, \forall$
+	\item závorky, čárka: $(,)$
+	\item predikátový symbol rovnosti $=$
+\end{itemize}
+
+Speciální symboly:
+\begin{itemize}
+	\item funkční symboly $f, g, h, \dots, f_1, f_2, f_3$, nezáporné celé číslo -- četnost
+	\item predikátové symboly $p, q, r, \dots, p_1, p_2, \dots$, kladné celé číslo -- jeho četnost.
+\end{itemize}
+
+Obsahuje-li jazyk symbol $=$ pro rovnost, mluvíme o \emph{jazyku s rovností}.
+Specifiku jazyka určují jeho funkční a predikátové symboly (určující oblast kterou jazyk popisuje)
+
+\subsection{Termy}
+\begin{enumerate}[(i)]
+	\item Každá proměnná je term
+	\item Je-li $f$ funkční symbol s četností $n$ a jsou-li $t_1, \dots, t_n$ termy, pak také $f(t_1, \dots, t_n)$ je term
+	\item Každý term vznikne konečným počtem užití (i), (ii)
+\end{enumerate}
+(ze (ii) plyne, že každá konstanta je term)
+
+\subsection{Atomické formule}
+Je-li $p$ predikátový symbol s četností $n$ a jsou-li $t_1, \dots t_n$ termy, pak $p(t_1, \dots, t_n)$ je \emph{atomická formule}.
+
+Speciální, máme-li jazyk s rovností a jsou-li $t_1, t_2$ termy, pak $(t_1 = t_2)$ je atomická formule.
+Píšeme $(t_1 = t_2)$ místo $=(t_1, t_2)$. Podobný zápis používáme i pro jiné binární predikátové operátory, např. místo $< (t_1, t_2)$ píšeme $(t_1 < t_2)$.
+
+\subsection{Formule}
+\begin{enumerate}[(i)]
+	\item Každá atomická formule je formule
+	\item Jsou-li $\varphi, \psi$ formule, pak také $(\lnot \varphi), (\varphi \land \psi), (\varphi \lor \psi), (\varphi \to \psi), (\varphi \leftrightarrow \psi)$ jsou formule.
+	\item Je-li $x$ proměnná a $\varphi$ formule, pak také $(\forall x \varphi)$, $(\exists x \varphi)$ jsou formule.
+	\item Každá formule vznikne konečným počtem užití (i), (ii), (iii)
+\end{enumerate}
+
+Poznamenejme, že píšeme $x \not= y$ místo $\lnot (x, y)$ a také, pokud to nemůže narušit srozumitelnost, vynecháváme některé dvojice závorek.
+
+Při tvorbě formule $\varphi$ podle předchozí definice vytváříme určitou posloupnost formulí, která začíná atomickými formulemi a končí formulí $\varphi$ a každá formule v této posloupnosti vzniká z některých předcházejících pomocí logických spojek a kvantifikátorů. Každá z těchto formulí se nazývá podformule $\varphi$.
+
+Každá formule je konečnou posloupností symbolů. Každý symbol, zejména každá proměnná, se může ve formuli vyskytovat na jednom nebo více místech.
+Řekněme, že daný \emph{výskyt} proměnné $x$ ve formuli $\varphi$ je \emph{vázaný}, nenachází-li se v nějaké podformuli tvaru $\forall x \psi$ nebo $\exists x \psi$. V tomto případě se proměnná $x$ vyskytuje v kvantifikátoru samém nebo ve formuli $\psi$ (podformule $\psi$ se nazývá \emph{obor kvantifikátoru} $\forall x$ nebo $\exists x$.
+V opačném případě (výskyt není vázaný) řekneme, že daný výskyt proměnné $x$ ve formuli $\phi$ je \emph{volný}.
+Proměnná $x$ se nazývá \emph{volnou (vázanou) proměnnou} ve formuli $\phi$, existuje-li její volný (vázáný) výskyt v této formuli.
+Proměnná tedy může být ve formuli volná i vázaná. Formule neobsahující žádnou volnou proměnnou se nazývá \emph{uzavřená formule} nebo též \emph{výrok}.
+Naopak, formule neobsahující žádnou vázanou proměnnou se nazývá \emph{otevřenou formulí}. Uzavření a otevřené formule nazýváme \emph{formulemi s čistými proměnnými}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sémantika predikátové logiky}
+
+Chceme dát interpretaci symbolům jazyka predikátové logiky 1. řádu.
+Nejprve vymezíme obor, který budeme určovat možné hodnoty proměnných, bude to určitý soubor $M$ uvažovaných objektů.
+Funkčním symbolům budou odpovídat operace na $M$ příslušných četností.
+Predikátovým symbolům budou odpovídat vztahy mezi objekty z $M$, které lze popsat jako relace na $M$ příslušných četností. Máme-li jazyk s rovností, interpretujeme symbol $=$ jako rovnost objektů z $M$.
+
+\begin{mydef}
+Nechť $L$ je jazyk 1. řádu. \emph{Realizací jazyka} $L$ rozumíme algebraickou strukturu $\mathcal{M}$, která se skládá z
+\begin{enumerate}[(i)]
+	\item neprázdné množiny $M$, kterou nazveme \emph{unverzum}
+	\item pro každý funkční symbol $f$ četností $n$ je dáno zobrazení $f_\mathcal{M} : M^n \to M$
+	\item pro každý predikátový symbol $p$ četnosti $n$, kromě rovnosti, je dána relace $p_\mathcal{M} \subset M^n$
+\end{enumerate}
+\end{mydef}
+
+Poznamenejme, že pro nulární funkční symbol, tj. pro konstantu, je $M^0 = \{0\}$ a příslušné zobrazení $M^0 \to M$ lze chápat jako vyznačení určitého prvku z $M$ odpovídajícího daného konstantě.
+
+Chceme-li zkoumat pravdivost formulí jazyka $L$ v nějaké jeho realizaci $\mathcal{M}$ musíme volným proměnným přiřadit hodnoty, jimiž budou nějaké prvky množiny $M$.
+
+\begin{mydef}
+Libovolné zobrazení $e$ množiny všech proměnných do univerza $M$ dané realizace $\mathcal{M}$ jazyka $L$ budeme nazývat \emph{ohodnocení proměnných}.
+
+Je-li $x$ proměnná a $e$ ohodnocení proměnných a $m \in M$, potom ohodnocení proměnných, které proměnné $x$ přiřazuje prvek $m$ a pro všechny ostatní proměnné splývá s ohodnocením $e$, budeme značit $e(x/m)$.
+\end{mydef}
+
+\begin{mydef}
+\emph{Hodnota termu} $t$ v realizaci $\mathcal{M}$ jazyka $L$ při daném ohodnocení $e$ proměnných, označovaná $t[e]$, se definuje indukcí následovně:
+\begin{enumerate}[(i)]
+	\item Je-li $t$ proměnná $x$, potom $t[e]$ je $e(x)$
+	\item je-li $t$ term tvaru $f(t_1, \dots, t_n)$, kde $f$ je funkční symbol četnosti $n$ a $t_1, \dots, t_n$ jsou termy, potom $t[e]$ je $f_\mathcal{M}(t_1[e], \dots, t_n[e])$
+\end{enumerate}
+\end{mydef}
+
+\begin{mydef}
+Nechť $\mathcal{M}$ je realizace jazyka $L$, nechť $e$ je ohodnocení proměnných a nechť $\varphi$ je formule jazyka $L$. Indukcí podle složitosti formule $\varphi$ definujeme, co znamená, že \emph{formule $\varphi$ je pravdivá v $\mathcal{M}$ při ohodnocení $e$}. Tuto skutečnost budeme značit $\mathcal{M} \models \varphi[e]$
+\begin{enumerate}[(i)]
+	\item Je-li $\varphi$ atomická formule tvaru $p(t_1, \dots, t_n)$, kde $p$ je predikátový symbol četnosti $n$ a $t_1, \dots, t_n$ jsou termy, pak $\mathcal{M} \models \varphi[e]$ právě když $(t_1[e], \dots, t_n[e]) \in p_\mathcal{M}$.
+	\item Je-li $\varphi$ atomická formule tvaru $t_1 = t_2$, kde $t_1, t_2$ jsou termy, pak $\mathcal{M} \models \varphi[e]$ právě když $t_1[e]$ je tentýž prvek jako $t_2[e]$ v $M$
+	\item Je-li $\varphi$ tvaru $\lnot \psi$, kde je $\psi$ je formule jazyka $L$, pak $\mathcal{M} \models \varphi[e]$ je právě když $\mathcal{M} \not\models \psi[e]$.
+	\item Je-li $\varphi$ některého z tvarů $(\eta \land \psi), (\eta \lor \psi), (\eta \to \psi), (\eta \leftrightarrow \psi)$, kde $\eta$, $\psi$ jsou formule, klademe: \\
+	$\mathcal{M} \models (\eta \land \psi)[e]$ právě když současně $\mathcal{M} \models \eta[e]$ a $\mathcal{M} \models \psi[e]$. \\
+	$\mathcal{M} \models (\eta \lor \psi)[e]$ právě platí alespoň jedno z $\mathcal{M} \models \eta[e]$ a $\mathcal{M} \models \psi[e]$ a podobně další logické spojky.
+	\item Je-li $\varphi$ tvaru $(\forall x \psi)$, kde $\psi$ je formule jazyka $L$, pak $\mathcal{M} \models \varphi[e]$ právě když pro každý prvek $m \in M$ je $\mathcal{M} \models \psi[e(x/m)]$.
+	\item Je-li $\varphi$ tvaru $(\exists x \psi)$, kde $\psi$ je formule jazyka $L$, pak $\mathcal{M} \models \varphi[e]$ právě když existuje $m \in M$ taková, že $\mathcal{M} \models \psi[e(x/m)]$.
+\end{enumerate}
+\end{mydef}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Formální systém predikátové logiky (axiomy a odvozovací pravidla, dokazatelnost, model a důsledek teorie, věty o úplnosti a kompaktnosti, prenexní tvar formulí).} \label{cha:7}
 \chapter{Algebraické struktury (grupy, okruhy, obory integrity a tělesa, svazy a Boolovy algebry, univerzální algebry).} \label{cha:8}
 \chapter{Základní algebraické metody (podalgebry, homomorfismy, přímé součiny, kongruence a faktorové algebry, normální podgrupy a ideály okruhů).} \label{cha:9}
