@@ -8,6 +8,8 @@
 
 \usepackage{amsthm}
 \newtheorem{mydef}{Definice}
+\newtheorem{veta}{Věta}
+\newtheorem{lemma}{Lemma}
 
 \usepackage{geometry}
 \usepackage{layout}
@@ -272,11 +274,110 @@ Nechť $\mathcal{M}$ je realizace jazyka $L$, nechť $e$ je ohodnocení proměnn
 \end{enumerate}
 \end{mydef}
 
+\begin{mydef}
+Řekneme, že formule $\varphi$ jazyka $L$ je \emph{logicky platná}, jestliže pro každou realizaci $\mathcal{M}$ jazyka $L$ je $\mathcal{M} \models \varphi$, píšeme $\models \varphi$.
+\end{mydef}
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Formální systém predikátové logiky} \label{cha:7}
+
+1. semestr, MAT, \texttt{logikaaktual3.pdf}, 5. kapitola
+
+(axiomy a odvozovací pravidla, dokazatelnost, model a důsledek teorie, věty o úplnosti a kompaktnosti, prenexní tvar formulí)
+
+\section{Axiomy}
+
+Budujeme predikátovou logiku jako formální axiomatický systém. Jazyk $L$ predikátové logiky přebíráme z předchozího s tím, že z logických spojek bereme jako základní $\lnot$ a $\to$ (ostatní mohou být definovány jako ve výrokovém počtu). Z kvantifikátorů bereme jako základní $\forall$, kvantifikátor $\exists$ je možno zavést takto: Je-li $\varphi$ formule, pak $\exists x \varphi$ je zkratka pro $\lnot(\forall x (\lnot \varphi))$. Omezíme se tedy pouze na ty formule, které jsou vytvořeny z atomických formulí jen pomocí spojek $\lnot$, $\to$ a kvantifikátoru $\forall$.. Axiomy predikátové logiky lze rozdělit do čtyř skupin.
+
+\subsection{Schémata výrokových axiomů}
+
+Jsou-li $\varphi, \psi, \eta$ formule jazyka $L$, pak
+
+$$ \varphi \to (\psi \to \varphi) $$
+
+$$(\varphi \to (\psi \to \eta)) \to ((\varphi \to \psi) \to (\varphi \to \eta)) $$
+
+$$((\lnot \psi) \to (\not \varphi)) \to (\varphi \to \psi)$$
+
+jsou axiomy predikátové logiky.
+
+\subsection{Schéma axiomu kvantifikátoru}
+
+Jsou-li $\varphi, \psi$ formule a je-li $x$ proměnná, která nemá volný výskyt ve formuli $\varphi$, pak
+
+$$ (\forall x (\varphi \to \psi)) \to (\varphi \to (\forall x \psi)) $$
+
+je axiom predikátové logiky.
+
+\subsection{Schéma axiomu substituce}
+
+Je-li $\varphi$ formule, $x$ proměnná a $t$ term substituovatelný za $x$ do $\varphi$, pak
+
+$$ (\forall x \varphi) \to \varphi_x[t] $$
+
+je axiom predikátové logiky.
+
+Jestliže $t = x$, pak schéma axiomu substituce má tvar
+
+$$ (\forall x \varphi) \to \varphi $$
+
+\subsection{Schémata axiomů rovnosti}
+
+Je-li $x$ proměnná, pak $x = x$ je axiom. Jsou-li $x_1, \dots, x_n, y_1, \dots, y_n$ proměnné a je-li $f$ funkční symbol s četností $n$, pak
+
+$$(x_1 = y_1 \to (x_2 = y_2 \to ( \dots (x_n = y_n \to f(x_1, \dots, x_n) = f(y_1, \dots, y_n)) \dots ))) $$
+
+je axiom. Jsou-li $x_1, \dots, x_n, y_1, \dots, y_n$ proměnné, je-li $p$ predikátový symbol s četností $n$, pak
+
+$$(x_1 = y_1 \to (x_2 = y_2 \to ( \dots (x_n = y_n \to p(x_1, \dots, x_n) = p(y_1, \dots, y_n)) \dots ))) $$
+
+je axiom. 
+
+\section{Odvozovací pravidla predikátové logiky}
+
+\subsection{Pravidlo odloučení (modus ponens}
+Z formulí $\varphi, \varphi \to \psi$ se odvodí formule $\psi$.
+
+\subsection{Pravidlo zobecnění (generalizace)}
+Pro libovolnou proměnnou $x$ se z formule $\varphi$ odvodí formule $\forall x \varphi$.
+
+Spolu se schématy výrokových axiomů a pravidle odloučení přechází do predikátové logiky celá výroková logika.
+
+\begin{veta}
+(O korektnosti) Libovolná formule jazyka $L$ dokazatelná v predikátové logice 1. řádu je logicky platnou formulí, tj. je splněna v každé realizaci jazyka L.
+\end{veta}
+
+\begin{lemma}
+(Pravidlo $\forall$) Je-li $\vdash \varphi \to \psi$ a proměnná $x$ nemá volný výskyt ve $\varphi$, pak $\vdash \varphi \to (\forall x \psi)$.
+\end{lemma}
+
+\begin{lemma}
+(Pravidlo $\exists$) Je-li $\vdash \varphi \to \psi$ a proměnná $x$ nemá volný výskyt ve $\psi$, pak $\vdash (\exists x \varphi) \to \psi$.
+\end{lemma}
+
+\begin{lemma}
+Je-li $\varphi$ formule, $x$ proměnná, $t$ term substituovatelný za $x$ do $\varphi$, pak $\vdash \varphi_x[t] \to (\exists x \varphi)$
+\end{lemma}
+
+\begin{lemma}
+Nechť $\varphi'$ je instancí formule $\varphi$, tj. nechť $\varphi'$ je tvaru $\varphi_{x_1, \dots, x_n}[t_1, \dots t_n]$ pro nějaké termy $t_1, \dots, t_n$ substituovatelné za $x_1, \dots, x_n$ do $\varphi$. Jestliže $\vdash \varphi$, pak $\vdash \varphi'$.
+\end{lemma}
 
 
 
@@ -296,7 +397,6 @@ Nechť $\mathcal{M}$ je realizace jazyka $L$, nechť $e$ je ohodnocení proměnn
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Formální systém predikátové logiky (axiomy a odvozovací pravidla, dokazatelnost, model a důsledek teorie, věty o úplnosti a kompaktnosti, prenexní tvar formulí).} \label{cha:7}
 \chapter{Algebraické struktury (grupy, okruhy, obory integrity a tělesa, svazy a Boolovy algebry, univerzální algebry).} \label{cha:8}
 \chapter{Základní algebraické metody (podalgebry, homomorfismy, přímé součiny, kongruence a faktorové algebry, normální podgrupy a ideály okruhů).} \label{cha:9}
 \chapter{Obory integrity a dělitelnost (okruhy polynomů, pravidla dělitelnosti, Gaussovy a Eukleidovy okruhy).} \label{cha:10}
