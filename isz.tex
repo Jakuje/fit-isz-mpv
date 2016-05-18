@@ -49,7 +49,6 @@
 \ref{cha:8}
 \ref{cha:9}
 \ref{cha:10}
-
 \ref{cha:11}
 \ref{cha:12}
 \ref{cha:13}
@@ -71,7 +70,6 @@
 \ref{cha:28}
 \ref{cha:29}
 \ref{cha:30}
-
 \ref{cha:31}
 \ref{cha:32}
 \ref{cha:33}
@@ -93,7 +91,6 @@
 \ref{cha:48}
 \ref{cha:49}
 \ref{cha:50}
-
 \ref{cha:51}
 \ref{cha:52}
 \ref{cha:53}
@@ -115,16 +112,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Metodika návrhu HW/SW codesign, platformy, programovatelné obvody.} \label{cha:1}
-\chapter{Výpočetní modely (StateCharts, Kahnova síť procesů, synchronní dataflow).} \label{cha:2}
-\chapter{Specifikace (chování, struktura), syntéza (alokace, přidělení, plánování) a integrace systémů (rozhraní, synchronizace, komunikace).} \label{cha:3}
-\chapter{Syntéza HW z vyšších programovacích jazyků (reprezentace, alokace, plánování, přiřazení) a jazyk Catapult C.} \label{cha:4}
-\chapter{Odhady (přesnost, věrnost, metriky, metody) a optimalizace vlastností systému (příkon, energie).} \label{cha:5}
+X. semestr, XXX, ??
+\chapter{Výpočetní modely} \label{cha:2}
+X. semestr, XXX, ??
 
+(StateCharts, Kahnova síť procesů, synchronní dataflow)
+\chapter{Specifikace (chování, struktura), syntéza (alokace, přidělení, plánování) a integrace systémů (rozhraní, synchronizace, komunikace).} \label{cha:3}
+X. semestr, XXX, ??
+\chapter{Syntéza HW z vyšších programovacích jazyků (reprezentace, alokace, plánování, přiřazení) a jazyk Catapult C.} \label{cha:4}
+X. semestr, XXX, ??
+\chapter{Odhady (přesnost, věrnost, metriky, metody) a optimalizace vlastností systému (příkon, energie).} \label{cha:5}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Jazyk a sémantika predikátové logiky} \label{cha:6}
-
 1. semestr, MAT, \texttt{logikaaktual3.pdf}, 3., 4. kapitola
 
 (termy, formule, realizace jazyka, pravdivost formulí)
@@ -231,20 +232,6 @@ Nechť $\mathcal{M}$ je realizace jazyka $L$, nechť $e$ je ohodnocení proměnn
 \end{enumerate}
 \end{mydef}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{comment}
 \section{Ostatní}
 
@@ -433,51 +420,38 @@ Nechť $\mathcal{M}$ je realizace jazyka $L$, nechť $e$ je ohodnocení proměnn
 
 \section{Axiomy}
 
-Budujeme predikátovou logiku jako formální axiomatický systém. Jazyk $L$ predikátové logiky přebíráme z předchozího s tím, že z logických spojek bereme jako základní $\lnot$ a $\to$ (ostatní mohou být definovány jako ve výrokovém počtu). Z kvantifikátorů bereme jako základní $\forall$, kvantifikátor $\exists$ je možno zavést takto: Je-li $\varphi$ formule, pak $\exists x \varphi$ je zkratka pro $\lnot(\forall x (\lnot \varphi))$. Omezíme se tedy pouze na ty formule, které jsou vytvořeny z atomických formulí jen pomocí spojek $\lnot$, $\to$ a kvantifikátoru $\forall$.. Axiomy predikátové logiky lze rozdělit do čtyř skupin.
+%Budujeme predikátovou logiku jako formální axiomatický systém. Jazyk $L$ predikátové logiky přebíráme z předchozího s tím, že z logických spojek bereme jako základní $\lnot$ a $\to$ (ostatní mohou být definovány jako ve výrokovém počtu). Z kvantifikátorů bereme jako základní $\forall$, kvantifikátor $\exists$ je možno zavést takto: Je-li $\varphi$ formule, pak $\exists x \varphi$ je zkratka pro $\lnot(\forall x (\lnot \varphi))$. Omezíme se tedy pouze na ty formule, které jsou vytvořeny z atomických formulí jen pomocí spojek $\lnot$, $\to$ a kvantifikátoru $\forall$.. Axiomy predikátové logiky lze rozdělit do čtyř skupin.
 
 \subsection{Schémata výrokových axiomů}
 
 Jsou-li $\varphi, \psi, \eta$ formule jazyka $L$, pak
-
-$$ \varphi \to (\psi \to \varphi) $$
-
-$$(\varphi \to (\psi \to \eta)) \to ((\varphi \to \psi) \to (\varphi \to \eta)) $$
-
-$$((\lnot \psi) \to (\not \varphi)) \to (\varphi \to \psi)$$
-
+\begin{eqnarray*}
+&\varphi \to (\psi \to \varphi) & \\
+&(\varphi \to (\psi \to \eta)) \to ((\varphi \to \psi) \to (\varphi \to \eta)) & \\
+&((\lnot \psi) \to (\not \varphi)) \to (\varphi \to \psi) & 
+\end{eqnarray*}
 jsou axiomy predikátové logiky.
 
 \subsection{Schéma axiomu kvantifikátoru}
-
 Jsou-li $\varphi, \psi$ formule a je-li $x$ proměnná, která nemá volný výskyt ve formuli $\varphi$, pak
-
 $$ (\forall x (\varphi \to \psi)) \to (\varphi \to (\forall x \psi)) $$
-
 je axiom predikátové logiky.
 
 \subsection{Schéma axiomu substituce}
-
 Je-li $\varphi$ formule, $x$ proměnná a $t$ term substituovatelný za $x$ do $\varphi$, pak
-
 $$ (\forall x \varphi) \to \varphi_x[t] $$
-
 je axiom predikátové logiky.
 
 Jestliže $t = x$, pak schéma axiomu substituce má tvar
-
 $$ (\forall x \varphi) \to \varphi $$
 
+
 \subsection{Schémata axiomů rovnosti}
-
 Je-li $x$ proměnná, pak $x = x$ je axiom. Jsou-li $x_1, \dots, x_n, y_1, \dots, y_n$ proměnné a je-li $f$ funkční symbol s četností $n$, pak
-
 $$(x_1 = y_1 \to (x_2 = y_2 \to ( \dots (x_n = y_n \to f(x_1, \dots, x_n) = f(y_1, \dots, y_n)) \dots ))) $$
-
 je axiom. Jsou-li $x_1, \dots, x_n, y_1, \dots, y_n$ proměnné, je-li $p$ predikátový symbol s četností $n$, pak
-
 $$(x_1 = y_1 \to (x_2 = y_2 \to ( \dots (x_n = y_n \to p(x_1, \dots, x_n) = p(y_1, \dots, y_n)) \dots ))) $$
-
-je axiom. 
+je axiom.
 
 \section{Odvozovací pravidla predikátové logiky}
 
@@ -487,8 +461,9 @@ Z formulí $\varphi, \varphi \to \psi$ se odvodí formule $\psi$.
 \subsection{Pravidlo zobecnění (generalizace)}
 Pro libovolnou proměnnou $x$ se z formule $\varphi$ odvodí formule $\forall x \varphi$.
 
-Spolu se schématy výrokových axiomů a pravidle odloučení přechází do predikátové logiky celá výroková logika.
+%Spolu se schématy výrokových axiomů a pravidle odloučení přechází do predikátové logiky celá výroková logika.
 
+\section{Dokazatelnost?}
 \begin{veta}
 (O korektnosti) Libovolná formule jazyka $L$ dokazatelná v predikátové logice 1. řádu je logicky platnou formulí, tj. je splněna v každé realizaci jazyka L.
 \end{veta}
@@ -509,6 +484,7 @@ Je-li $\varphi$ formule, $x$ proměnná, $t$ term substituovatelný za $x$ do $\
 Nechť $\varphi'$ je instancí formule $\varphi$, tj. nechť $\varphi'$ je tvaru $\varphi_{x_1, \dots, x_n}[t_1, \dots t_n]$ pro nějaké termy $t_1, \dots, t_n$ substituovatelné za $x_1, \dots, x_n$ do $\varphi$. Jestliže $\vdash \varphi$, pak $\vdash \varphi'$.
 \end{lemma}
 
+\subsection{Uzávěr formule}
 \begin{mydef}
 Jsou-li $x_1, \dots, x_n$ všechny volné proměnné ve formuli $\varphi$ v nějakém pořadí, pak formuli $(\forall x_1 \dots \forall x_n \varphi$ nazveme uzávěrem formule $\varphi$.
 \end{mydef}
@@ -545,12 +521,12 @@ Je-li $f$ funkční symbol četnosti $n$, je-li $p$ predikátová symbol četnos
 	\item $\vdash s_1 = t_1 \to (s_2 = t_2 \to \dots (s_n = t_n \to f(s_1, \dots, s_n) = f(t_1, \dots, t_n)) \dots ) $
 	\item $\vdash s_1 = t_1 \to (s_2 = t_2 \to \dots (s_n = t_n \to p(s_1, \dots, s_n) = p(t_1, \dots, t_n)) \dots ) $
 \end{enumerate}
-
 \end{lemma}
 
 \section{Prenexní tvar formulí}
 Základní tvar formulí.
 
+\begin{comment}
 \begin{lemma}
 Buď $i_1, \dots, i_n$ libovolná permutace čísel $\{1, \dots, n\}$. Nechť $x_1, \dots, x_n$ jsou proměnné a $A$ formule predikátové logiky. Pak platí:
 \begin{enumerate}
@@ -583,6 +559,7 @@ pro opačnou implikaci $B \to A$ platí:
 $$ \vdash \forall x (B \to A) \leftrightarrow (\exists x B \to A)$$
 $$ \vdash \exists x (B \to A) \leftrightarrow (\forall x B \to A)$$
 \end{veta}
+\end{comment}
 
 \begin{mydef}
 Nechť $A$ je formule predikátové logiky. Formule $A'$ je \emph{variantou} formule $A$, jestliže vznikne z $A$ postupným nahrazením podformulí tvaru $(Qx) B$ podformulemi $(Q y) B_x[y]$, kde $Q$ je obecný nebo existenční kvantifikátor a $y$ je proměnná, která není volná v $B$.
@@ -606,24 +583,32 @@ Ke každé formuli $A$ lze sestrojit formuli $A'$ v prenexním tvaru tak, že $\
 \subsection{Převedení formule na prenexní tvar}
 \begin{description}
 	\item[Vyloučení zbytečných kvantifikátorů] vynecháme všechny kvantifikátory $\forall x$, resp. $\exists x$ v podformulích tvaru $\forall x B$ nebo $\exists x B$, pokud se proměnná $x$ nevyskytuje volně v $B$.
+
 	\item[Přejmenování proměnných] Vyhledáme podformuli $Q x A$ nejvíce vlevo takovou, že proměnná $x$ se vyskytuje volně v $A$. Pokud $x$ má ještě další výskyt ve výchozí formuli, nahradíme podformuli $Q x A$ její variantou $Q x' A'$, kde $x'$ je proměnná různá od všech proměnných vyskytujících se v převáděné formuli. Tento proces opakujeme do té doby, až všechny kvantifikátory mají různé proměnné a žádná proměnná není v získané formule současně volná i vázaná (formule s čistými proměnnými).
+
 	\item[Eliminace spojky $\leftrightarrow$] provede se podle následujícího schématu:
 	$$ A \leftrightarrow B \dots (A \to B) \land (B \to A)$$
+
 	\item[Přesun negace dovnitř] - provádíme postupně náhrady podformulí podle schémat
-	$$ \lnot (\forall x A)	\dots \exists x \lnot A$$
-	$$ \lnot (\exists x A)	\dots \forall x \lnot A$$
-	$$ \lnot (A \to B)		\dots A \land \lnot B$$
-	$$ \lnot (A \lor B)		\dots \lnot A \land \lnot B$$
-	$$ \lnot (A \land B)	\dots \lnot A \lor \lnot B$$
-	$$ \lnot (\lnot A )		\dots A$$
+	\begin{eqnarray*}
+	& \lnot (\forall x A)	\dots \exists x \lnot A & \\
+	& \lnot (\exists x A)	\dots \forall x \lnot A & \\
+	& \lnot (A \to B)		\dots A \land \lnot B & \\
+	& \lnot (A \lor B)	\dots \lnot A \land \lnot B & \\
+	& \lnot (A \land B)	\dots \lnot A \lor \lnot B & \\
+	& \lnot (\lnot A )	\dots A &
+	\end{eqnarray*}
+
 	\item[Přesun kvantifikátoru doleva] pro podformuli $B$, ve které se nevyskytuje proměnná $x$, provádíme náhrady podle schémat
-	$$ (QxA) \lor B		\dots Qx(A \lor B) $$
-	$$ (QxA) \land B	\dots Qx(A \land B) $$
-	$$ (QxA) \to B		\dots \bar{Q}x(A \to B) $$
-	$$ B \to (QxA)		\dots Qx(B \to A) $$
+	\begin{eqnarray*}
+	& (QxA) \lor B	\dots Qx(A \lor B) &\\
+	& (QxA) \land B	\dots Qx(A \land B) &\\
+	& (QxA) \to B		\dots \bar{Q}x(A \to B) &\\
+	& B \to (QxA)		\dots Qx(B \to A) &\\
+	& (\exists x A) \lor (\exists y B) 	\dots \exists x (A \lor B_y[x]) &\\
+	& (\forall x A) \land (\forall y B) 	\dots \forall x (A \land B_y[x]) &
+	\end{eqnarray*}
 	kde $\bar{Q}$ je kvantifikátor "opačný" ke $Q$. N+kde lze snížit počet kvantifikátorů pomocí schémat
-	$$ (\exists x A) \lor (\exists y B) 	\dots \exists x (A \lor B_y[x]) $$
-	$$ (\forall x A) \land (\forall y B) 	\dots \forall x (A \land B_y[x]) $$
 \end{description}
 
 \section{Věta o úplnosti}
@@ -638,6 +623,8 @@ Je-li $L$ jazyk 1. řádu a $T$ množina formulí jazyka $L$, říkáme, že $T$
 (tedy platí $T \vdash \varphi$ a zároveň $T \vdash \lnot \varphi$)
 
 Důsledek: Nechť $T$ je množina formulí a nechť $\varphi'$ je uzávěr formule $\varphi$. Potom $T \vdash \varphi$, právě když $T \cup \{\lnot \varphi'\}$ je sporná teorie.
+
+\subsection{Model a důsledek teorie}
 
 \begin{mydef}
 Buď $T$ teorie s jazykem $L$ a nechť $\mathcal{M}$ je nějaká realizace jazyka $L$. Řekněme, že $\mathcal{M}$ je model teorie $T$, jestliže $\mathcal{M} \models \varphi$ pro každou formuli $\varphi \in T$. Pak píšeme $\mathcal{M} \models T$.
@@ -678,6 +665,10 @@ Jazyk $L'$ je rozšířením jazyka $L$ jestliže každý speciální symbol jaz
 \end{mydef}
 
 \begin{lemma}
+(Heinkin) K libovolné teorii lze sestrojit Heinkinovu teorii $T_H$, která je konzervativním rozšířením teorie $T$.
+\end{lemma}
+
+\begin{lemma}
 Teorie $T$ je bezesporná, právě když každá její konečná podmnožina $Q \subseteq T$ je bezesporná.
 \end{lemma}
 
@@ -686,10 +677,16 @@ Teorie $T$ je bezesporná, právě když každá její konečná podmnožina $Q 
 \end{veta}
 
 \section{Věta o kompaktnosti a věta Herbrandova}
-TODO XXX
 
+\begin{veta}
+(O kompaktnosti) Nechť $T$ je množina formulí jazyka $L$. Pak teorie $T$ má nějaký model, právě když každá její konečná podmnožina $Q \subseteq T$ má model.
+\end{veta}
 
+\begin{veta}
+(Löwenheim,Skolem) Má-li teorie $T$ s jazykem $L$ nekonečný model, pak má model libovolné mohutnosti $n \geq max\{\aleph_0, |L|\}$
+\end{veta}
 
+??? more?
 
 
 
