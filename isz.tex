@@ -686,7 +686,7 @@ Teorie $T$ je bezesporná, právě když každá její konečná podmnožina $Q 
 (Löwenheim,Skolem) Má-li teorie $T$ s jazykem $L$ nekonečný model, pak má model libovolné mohutnosti $n \geq max\{\aleph_0, |L|\}$
 \end{veta}
 
-??? more?
+Is there more?
 
 
 
@@ -694,7 +694,103 @@ Teorie $T$ je bezesporná, právě když každá její konečná podmnožina $Q 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Algebraické struktury (grupy, okruhy, obory integrity a tělesa, svazy a Boolovy algebry, univerzální algebry).} \label{cha:8}
+\chapter{Algebraické struktury} \label{cha:8}
+
+1. semestr, MAT, \texttt{Zaklady\_obecne\_algebry.pdf}, 1. - 5. kapitola
+
+(grupy, okruhy, obory integrity a tělesa, svazy a Boolovy algebry, univerzální algebry)
+
+\section{Operace a zákony}
+
+\begin{mydef}
+Buď $A$ množina, $n \in \mathbb{N}_0$. Potom zobrazení $\omega : A^n \to A$ se nazývá n-ární operace na $A$. Tedy pro $n \in \mathbb{N}$:
+
+$$ \omega : A^n \to A $$
+$$ \omega : (x_1, \dots, x_n) \to \omega x_1 \dots x_n$$
+\end{mydef}
+
+\begin{mydef}
+Buď $A$ množina, $n \in \mathbb{N}_0, D \subseteq A^n$. Potom zobrazení $\omega : D \to A$ se nazývá n-ární parciální operace na $A$.
+\end{mydef}
+
+\begin{mydef}
+Buď $A$ množina $I$ množina (indexů). Pro $i \in I$ buď $\omega_i$ n-ární operace na $A$, $n_i \in \mathbb{N}$. Potom $\mathcal{A} := (A, (\omega_i)_{i \in I}$ označujeme (univerzální) algebru s nosnou množinou $A$ a souborem operací $(\omega_i)_{i \in I} =: \Omega$.
+\end{mydef}
+
+\begin{mydef}
+Buď $A$ množina, $\circ$ binární operace na $A$. Prvek $e \in A$ se nazývá
+a) \emph{levý neutrální prvek} vzhledem k $\circ: \Leftrightarrow x \in A : e \circ x = x$,
+b) \emph{pravý neutrální prvek} vzhledem k $\circ: \Leftrightarrow x \in A : x \circ e = x$,
+c) \emph{neutrální prvek} vzhledem k $\circ: \Leftrightarrow x \in A : e \circ x = x \circ e = x$
+\end{mydef}
+
+\begin{veta}
+Buď $\circ$ binární operace na $A$, $e_1$ levý neutrální prvek a $e_2$ pravý neutrální prvek. Potom platí: $e_1 = e_2$ a $e_1 (= e_2)$ je neutrální prvek.
+\end{veta}
+Existuje nanejvýše jeden neutrální prvek.
+
+\begin{mydef}
+Buď $A$ množina $\circ$ binární operace, $e$ neutrální prvek, $x \in A$. Potom nazýváme prvek $y \in A$
+a) \emph{levým inverzním prvkem} k $x: \Leftrightarrow y \circ x = e$
+b) \emph{pravým inverzním prvkem} k $x: \Leftrightarrow x \circ y = e$
+c) \emph{inverzním prvkem} k $x: \Leftrightarrow x \circ y = y \circ x = e$
+\end{mydef}
+
+\begin{mydef}
+Prvek $x$ se nazývá invertibilní: $\Leftrightarrow$ existuje inverzní prvek k $x$.
+\end{mydef}
+
+\begin{mydef}
+Buď $A$ množina, $\circ$ binární operace na $A$. $\circ$ se nazývá \emph{asociativní}: $\Leftrightarrow \forall x,y,z \in A: (x \circ y) \circ = x \circ (y \circ z)$ (asociativní zákon). 
+\end{mydef}
+
+\begin{veta}
+Buď $\circ$ \textbf{asociativní} binární operace na $A$, $x \in A$, $y_1$ levý inverzní prvek k $x$, $y_2$ pravý inverzní prvek k $x$. Potom platí $y_1 = y_2$.
+\end{veta}
+
+Je-li operace asociativní, existuje ke každému prvku nejvýše jeden inverzní prvek.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Základní algebraické metody (podalgebry, homomorfismy, přímé součiny, kongruence a faktorové algebry, normální podgrupy a ideály okruhů).} \label{cha:9}
 \chapter{Obory integrity a dělitelnost (okruhy polynomů, pravidla dělitelnosti, Gaussovy a Eukleidovy okruhy).} \label{cha:10}
 \chapter{Teorie polí (minimální pole, rozšíření pole, konečná pole a jejich konstrukce).} \label{cha:11}
