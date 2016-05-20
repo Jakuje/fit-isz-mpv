@@ -9,7 +9,7 @@
 \usepackage{tikz-qtree}
 
 \usepackage{amsthm}
-\newtheorem{mydef}{Definice}
+\newtheorem{mydef}{Definice}[chapter]
 \newtheorem{veta}{Věta}
 \newtheorem{lemma}{Lemma}
 
@@ -766,27 +766,176 @@ Buď $A \not= \emptyset$ a $\circ$ asociativní binární operace na $A$. Potom 
 Binární operace $\circ$ na $A$ se nazývá operace s krácením: $\Leftrightarrow \forall a, x_1, x_2, y_1, y_2 \in A: (a \circ x_1 = a \circ x_2 \Rightarrow x_1 = x_2)$ (levý zákon o krácení) $\land (y_1 \circ a = y_2 \circ a \Rightarrow y_1 = y_2$ (pravý zákon o krácení).
 \end{mydef}
 
+\begin{mydef}
+Binární operace $\circ$ na $A$ se nazývá komutativní: $\Leftrightarrow \forall x,y \in A: x \circ y = y \circ x$ (komutativní zákon).
+\end{mydef}
 
+\begin{mydef}
+Pokud jsou $+, \cdot$ binární operace na $A$, potom se $\cdot$ nazývá distributivní nad $+$: $\Leftrightarrow \forall x,y,z \in A: x \cdot (y + z) = x \cdot y + x \cdot z$ (levý komutativní zákon) $\land (y + z) \cdot x = y \cdot x + z \cdot x$ (pravý komutativní zákon).
+\end{mydef}
 
+\section{Důležité typy algeber}
+\begin{mydef}
+Algebra $(A, \cdot)$ typu (2) se nazývá \emph{grupoid}.
+\end{mydef}
 
+\begin{mydef}
+Grupoid $(H, \cdot)$ se nazývá \emph{pologrupa}: $\Leftrightarrow \cdot$ je asociativní.
+\end{mydef}
 
+\begin{mydef}
+\begin{enumerate}[a)]
+	\item Pologrupa $(H, \cdot)$ se nazývá \emph{monoid} typu (2): $\Leftrightarrow$ existuje neutrální prvek $e$.
+	\item Algebra $(H, \cdot, e)$ typu (2,0) se nazývá \emph{monoid} typu (2, 0): $\Leftrightarrow$ platí následující zákony pro všechna $x,y,z \in H$:
+	\begin{enumerate}[1)]
+		\item $x(yz) = (xy)z$
+		\item $ex = x$, $xe = x$
+	\end{enumerate}
+\end{enumerate}
+\end{mydef}
 
+\begin{mydef}
+\begin{enumerate}[a)]
+	\item Monoid $G(, \circ)$ s neutrálním prvkem $e$ se nazývá \emph{grupa} typu (2): $\Leftrightarrow$ každý prvek $x \in G$ je invertibilní, tj., $\forall x \in G \exists x^{-1} \in G: x x^{-1} = x^{-1} x = e$.
+	\item Algebra $(G, \cdot, e, ^{-1}$ typu (2, 0, 1) se nazývá \emph{grupa} typu (2, 0, 1): $\Leftrightarrow$ platí následující zákony pro všechna $x, y, z \in G$:
+	\begin{enumerate}[1)]
+		\item $x(yz) = (xy)z$
+		\item $ex = x$, $xe = x$
+		\item $x x^{-1} = e$, $x^{-1} x = e$
+	\end{enumerate}
+	\item Grupa $(G, \cdot)$, resp. $(G, \cdot, e, ^{-1})$ se nazývá \emph{komutativní nebo abelovská}ů $\Leftrightarrow \forall x,y \in G: xy = yx$.
+\end{enumerate}
+\end{mydef}
 
+\begin{mydef}
+\begin{enumerate}[a)]
+	\item Algebra $(R, +, \cdot)$ typu (2, 2) se nazývá \emph{okruh} typu (2, 2): $\Leftrightarrow$
+	\begin{enumerate}[1)]
+		\item $(R, +)$ je abelovská grupa
+		\item $(R, \cdot)$ je pologrupa
+		\item $\cdot$ je distributivní nad $+$
+	\end{enumerate}
+	\item Algebra $(R, +, 0, -, \cdot)$ typu (2, 0, 1, 2) se nazývá \emph{okruh} typu (2, 0, 1, 2): $\Leftrightarrow$
+		\begin{enumerate}[1)]
+		\item $(R, +, 0, -)$ je abelovská grupa
+		\item $(R, \cdot)$ je pologrupa
+		\item $\cdot$ je distributivní nad $+$
+	\end{enumerate}
+	Prvek $0$ se nazývá "nulový prvek" okruhu. Budeme psát $x - y:= x + (-y)$
+\end{enumerate}
+\end{mydef}
 
+\begin{mydef}
+\begin{enumerate}[a)]
+	\item Algebra $(R, +, 0, -, \cdot, 1)$ typu (2, 0, 1, 2, 0) se nazývá \emph{okruh s jednotkovým prvkem}: $\Leftrightarrow$
+	\begin{enumerate}[1)]
+		\item $(R, +, 0, - \cdot)$ je okruh
+		\item $1$ je neutrální prvek vzhledem k $\cdot$, tj. $\forall x \in R: 1 \cdot x = x \cdot 1 = x$ (1 se nazývá \emph{jednotkový prvek} okruhu).
+	\end{enumerate}
+	\item Okruh $(R, +, 0, -, \cdot)$ se nazývá \emph{komutativní}: $\Leftrightarrow \forall x ,y \in R: xy = yx$
+	\item Algebra $(R, +, 0, -, \cdot, 1)$ se nazývá \emph{komutativní okruh s jednotkovým prvkem}: $\Leftrightarrow$
+		\begin{enumerate}[1)]
+		\item $(R, +, 0, -, \cdot)$ je komutativní okruh
+		\item $1$ je neutrální prvek vzhledem k $\cdot$.
+	\end{enumerate}
+\end{enumerate}
+\end{mydef}
 
+\begin{mydef}
+Komutativní okruh s jednotkovým prvkem $(R, +, 0, -, \cdot, 1)$ se nazývá \emph{obor integrity}: $\Leftrightarrow$
+\begin{enumerate}
+	\item $R \\ \{0\} \not= \emptyset$ (tj. $0 \not= 1$
+	\item $\forall x,y \in R: x \not= 0 \land y \not= 0 \Rightarrow xy \not= 0$ (tj. neexistují dělitelé nuly).
+\end{enumerate}
+$\cdot$ je operace s krácením na $R \\ \{0\}$.
 
+$(R \\ \{0\}, \cdot, 1)$ je komutativní monoid.
+\end{mydef}
 
+\begin{mydef}
+\begin{enumerate}[a)]
+	\item Okruh s jednotkovým prvkem $(R, +, 0, -, \cdot, 1)$ se nazývá těleso: $\Leftrightarrow$
+	\begin{enumerate}[1)]
+		\item $0 \not= 1$
+		\item $(R \\ \{0\}, \cdot)$ je grupa
+	\end{enumerate}
+	\item Komutativní těleso se nazývá \emph{pole}.
+\end{enumerate}
+\end{mydef}
 
+\begin{veta}
+Každé \emph{pole} je \emph{obor integrity}. Každý konečný obor integrity je pole.
+\end{veta}
 
+\begin{mydef}
+Buď $(K, +, 0, -, \cdot, 1)$ pole, $I = {a, b, c} \cup K$, kde $a,b,c \not\in K$, $a,b,c$ po dvou různé. Algebra $(V, (\omega_i)_{i \in I}$ typu $(2, 0, 1, (1)_{\lambda \in K})$ se nazývá vektorový prostor nad $K$: $\Leftrightarrow$
+\begin{enumerate}[1)]
+	\item $(V, \omega_a, \omega_b, \omega_c) =: (V, +, 0, -)$ je abelovská grupa,
+	\item $\forall x,y \in V, \lambda, \mu \in K$:\\
+	$$\omega_\lambda(x + y) = \omega_\lambda(x) + \omega_\lambda(y) $$
+	$$\omega_{\lambda + \mu}(x) = \omega_\lambda(x) + \omega_\mu(x) $$
+	$$\omega_{\lambda \mu}(x) = \omega_\lambda( \omega_\mu(x)) $$
+	$$\omega_1(x) = x $$
+\end{enumerate}
+\end{mydef}
 
+\begin{mydef}
+Algebra $(V, \cap, \cup)$ typu $(2, 2)$ se nazývá \emph{svaz}: $\Leftrightarrow$ pro všechna $a,b,c \in V$ platí:
+\begin{enumerate}[1)]
+	\item $a \cap b = b \cap a$,
+		$a \cup b = b \cup a$
+	\item $a \cap (b \cap c) = (a \cap b) \cap c$,
+		$a \cup (b \cup c) = (a \cup b) \cup c$
+	\item $a \cap (a \cup b) = a$,
+		$a \cup (a \cap b) = a$
+\end{enumerate}
+Podle 1) a 2) jsou $\cap$, $\cup$ komutativní a asociativní, tj. $(V, \cap)$, $(V, \cup)$ jsou komutativní pologrupy. Zákony uvedení v bodě 3) se nazývají absorpční zákony.
 
+$(V, \cap, \cup)$ je svaz $\Leftrightarrow$ $(V, \cup, \cap)$ je svaz -- princip duality pro svazy.
+\end{mydef}
 
+\begin{mydef}
+Svaz $(V, \cap, \cup)$ se nazývá distributivní: $\Leftrightarrow$ pro všechna $a, b, c \in V$ platí 
+\begin{enumerate}[4)]
+	\item $a \cap (b \cup c) = (a \cap b) \cup (a \cap c)$,
+		$a \cup (b \cap c) = (a \cup b) \cap (a \cup c)$
+\end{enumerate}
+\end{mydef}
 
+\begin{mydef}
+Buď $(V, \cap, \cup)$ svaz.
+Prvek $0 \in V$ se nazývá \emph{nulový prvek svazu $V$}: $\Leftrightarrow \forall a \in V: a \cup 0 = a$ (tj. 0 je neutrální vzhledem k $\cup$).
+Prvek $1 \in V$ se nazývá \emph{jednotkový prvek svazu $V$}: $\Leftrightarrow \forall a \in V: 1 \cap a = a$ (tj. neutrální vzhledem k $\cap$).
+\end{mydef}
 
+\begin{mydef}
+Algebra $(V, \cap, \cup, 0, 1)$ typu (2, 2, 0, 0) se nazývá \emph{ohraničený svaz}: $\Leftrightarrow$
+\begin{enumerate}[1)]
+	\item $(V, \cap, \cup)$ je svaz,
+	\item $0$ je nulový prvek svazu $V$,
+	\item $1$ je jednotkový prvek svazu $V$.
+\end{enumerate}
+\end{mydef}
 
+\begin{mydef}
+Ohraničený svaz $(V, \cap, \cup, 0, 1)$ se nazývá komplementární: $\Leftrightarrow \forall x \in V \exists a' \in V: a \cap a' = 0 \land a \cup a' = 1$. Prvek $a'$ se nazývá \emph{komplement} prvku $a$.
+\end{mydef}
 
+\begin{mydef}
+Distributivní a komplementární svaz $(V, \cap, \cup, 0, 1)$ se nazývá Boolův svaz.
+\end{mydef}
 
+\begin{veta}
+Je-li $(V, \cap, \cup, 0, 1)$ Booleův svaz, pak existuje ke každému $a \in V$ přesně jeden komplement $a'$.
+\end{veta}
 
+\begin{mydef}
+Algebra $(B, \cap, \cup, 0, 1, ')$ typu (2, 2, 0, 0, 1) se nazývá Booleova algebra: $\Leftrightarrow$
+\begin{enumerate}[1)]
+	\item $(B, \cap, \cup, 0, 1)$ je ohraničený svaz
+	\item $\forall a \in B: a \cap a' = 0 \land a \cup a' = 1$.
+\end{enumerate}
+\end{mydef}
 
 
 
