@@ -696,7 +696,7 @@ Is there more?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Algebraické struktury} \label{cha:8}
 
-1. semestr, MAT, \texttt{Zaklady\_obecne\_algebry.pdf}, 1. - 5. kapitola
+1. semestr, MAT, \texttt{Zaklady\_obecne\_algebry.pdf}, 1. kapitola?
 
 (grupy, okruhy, obory integrity a tělesa, svazy a Boolovy algebry, univerzální algebry)
 
@@ -1051,9 +1051,100 @@ Dělení se zbytkem: $\forall k,l \in Z, l \not= 0 \exists q,r \in Z: 0 \leq  r 
 
 Je-li $o(a) = \infty$, pak jsou mocniny prvku $a$ navzájem různé. Je-li $o(a) = n$, potom $a^r = a^s \Leftrightarrow r \equiv s \text{ mod } n$
 
+3. 5. kapitola?
+
+
+
+
+
+
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Základní algebraické metody (podalgebry, homomorfismy, přímé součiny, kongruence a faktorové algebry, normální podgrupy a ideály okruhů).} \label{cha:9}
+\chapter{Základní algebraické metody} \label{cha:9}
+
+1. semestr, MAT, \texttt{Zaklady\_obecne\_algebry.pdf}, 2. kapitola
+
+(podalgebry, homomorfismy, přímé součiny, kongruence a faktorové algebry, normální podgrupy a ideály okruhů)
+
+\section{Podalgebry}
+
+\begin{mydef}
+Buď $A$ množina, $\omega: A^n \to A$ n-ární operace na $A$ ($n \in N_0)$, $T \subseteq A$. Potom se množina $T$ nazývá uzavřená vzhledem k $\omega: \Leftrightarrow \omega(T^n) \subseteq T$ (tj. $t_1, \dots, t_n \in T \Rightarrow \omega t_1 \dots t_n \in T$, v případě $n = 0: \omega \in T$.
+\end{mydef}
+
+\begin{mydef}
+Buď $\mathcal{A} = (A, (\omega_i)_{i \in I}$ algebra typu $(n_i)_{i \in I}$, $T \subseteq A$. Potom se množina $T$ nazývá uzavřená vzhledem k $(\omega)_{i \in I}: \Leftrightarrow T$ je uzavřená vzhledem k $\omega_i$ pro všechna $i \in I$. V tomto případě se pomocí vztahu $\omega_i^*x_1 \dots x_{n_1}$, $(x_1, \dots x_n) \in T^{n_i}$, definuje $n_i$-ární operace $\omega_i^*$'na $T$, tj $\omega_i^* = \omega_i|T^{n_i}$. Algebra $(T, (\omega_i^*)_{i \in I}$ se nazývá podalgebra algebry $\mathcal{A}$. Většinou píšeme: $\omega_i^* =: \omega_i$.
+\end{mydef}
+
+$(\mathbb{N}, +)$ je podpologrupa $(\mathbb{Z}, +)$ (ale není grupa -- chybí inverzní prvek).
+
+$(\mathbb{N}, +, \cdot)$ je podalgebrou $(\mathbb{Z}, +, \cdot)$ (ale není podokruhem).
+
+$(\mathbb{R}, +, 0, -, \cdot, 1)$ je podpolem $(\mathbb{C}, +, 0, -,\cdot, 1)$ zatímco $(\mathbb{Z}, +, 0, -,\cdot, 1)$
+
+\begin{veta}
+Buď $(A, \Omega)$ algebra a $(T_j)_{j \in J}$ soubor podalgeber. Potom je $\bigcap_{\{j \in J\}} T_j$ rovněž podalgebra.
+\end{veta}
+
+\begin{veta}
+Buď $(A, \Omega)$ algebra a $S \subseteq A$ podmnožina. Potom je
+
+$$\left< S \right> := \bigcap\{T | T \supseteq S, T \text{je podalgebra algebry} (A, \Omega)\}$$
+
+je nejmenší podalgebra algebry $(A, \Omega)$, která $S$ obsahuje.
+\end{veta}
+
+\begin{mydef}
+$\left< S \right>$ se nazývá podalgebra algebry $(A, \Omega)$ generovaná množinou $S$. Množina $S$ se nazývá systém generátorů podalgebry $\left< S \right>$.
+\end{mydef}
+
+\begin{veta}
+Buď $(G, \cdot, e, ^{-1})$ grupa, $x \in G, S = \{x\}$. Potom platí:
+
+$$\left< x \right> := \left< S \right> = \{x^k | k \in \mathbb{Z}\}$$
+\end{veta}
+
+\begin{mydef}
+$\left< x \right>$ se nazývá podgrupa grupy $(G, \cdot, e, ^{-1})$ generovaná prvkem $x$.
+\end{mydef}
+
+\begin{mydef}
+Grupa $(G, \cdot, e, ^{-1})$ se nazývá cyklická: $\Leftrightarrow \exists x \in G: G = \left< x \right>$
+\end{mydef}
+
+
+
+\section{Homomorfismy}
+\section{Přímé součiny}
+\section{Kongruence a faktorové algebry}
+\section{Normální podgrupy}
+\section{Ideály okruhů}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Obory integrity a dělitelnost (okruhy polynomů, pravidla dělitelnosti, Gaussovy a Eukleidovy okruhy).} \label{cha:10}
 \chapter{Teorie polí (minimální pole, rozšíření pole, konečná pole a jejich konstrukce).} \label{cha:11}
 \chapter{Metrické prostory (příklady, konvergence posloupností, spojitá a izometrická zobrazení, úplnost, Banachova věta o pevném bodu).} \label{cha:12}
