@@ -796,7 +796,7 @@ Grupoid $(H, \cdot)$ se nazývá \emph{pologrupa}: $\Leftrightarrow \cdot$ je as
 
 \begin{mydef}
 \begin{enumerate}[a)]
-	\item Monoid $G(, \circ)$ s neutrálním prvkem $e$ se nazývá \emph{grupa} typu (2): $\Leftrightarrow$ každý prvek $x \in G$ je invertibilní, tj., $\forall x \in G \exists x^{-1} \in G: x x^{-1} = x^{-1} x = e$.
+	\item Monoid $(G, \circ)$ s neutrálním prvkem $e$ se nazývá \emph{grupa} typu (2): $\Leftrightarrow$ každý prvek $x \in G$ je invertibilní, tj., $\forall x \in G \exists x^{-1} \in G: x x^{-1} = x^{-1} x = e$.
 	\item Algebra $(G, \cdot, e, ^{-1}$ typu (2, 0, 1) se nazývá \emph{grupa} typu (2, 0, 1): $\Leftrightarrow$ platí následující zákony pro všechna $x, y, z \in G$:
 	\begin{enumerate}[1)]
 		\item $x(yz) = (xy)z$
@@ -829,7 +829,7 @@ Grupoid $(H, \cdot)$ se nazývá \emph{pologrupa}: $\Leftrightarrow \cdot$ je as
 \begin{enumerate}[a)]
 	\item Algebra $(R, +, 0, -, \cdot, 1)$ typu (2, 0, 1, 2, 0) se nazývá \emph{okruh s jednotkovým prvkem}: $\Leftrightarrow$
 	\begin{enumerate}[1)]
-		\item $(R, +, 0, - \cdot)$ je okruh
+		\item $(R, +, 0, -, \cdot)$ je okruh
 		\item $1$ je neutrální prvek vzhledem k $\cdot$, tj. $\forall x \in R: 1 \cdot x = x \cdot 1 = x$ (1 se nazývá \emph{jednotkový prvek} okruhu).
 	\end{enumerate}
 	\item Okruh $(R, +, 0, -, \cdot)$ se nazývá \emph{komutativní}: $\Leftrightarrow \forall x ,y \in R: xy = yx$
@@ -844,12 +844,11 @@ Grupoid $(H, \cdot)$ se nazývá \emph{pologrupa}: $\Leftrightarrow \cdot$ je as
 \begin{mydef}
 Komutativní okruh s jednotkovým prvkem $(R, +, 0, -, \cdot, 1)$ se nazývá \emph{obor integrity}: $\Leftrightarrow$
 \begin{enumerate}
-	\item $R \\ \{0\} \not= \emptyset$ (tj. $0 \not= 1$
+	\item $R \backslash \{0\} \not= \emptyset$ (tj. $0 \not= 1$
 	\item $\forall x,y \in R: x \not= 0 \land y \not= 0 \Rightarrow xy \not= 0$ (tj. neexistují dělitelé nuly).
 \end{enumerate}
-$\cdot$ je operace s krácením na $R \\ \{0\}$.
-
-$(R \\ \{0\}, \cdot, 1)$ je komutativní monoid.
+$\cdot$ je operace s krácením na $R \backslash \{0\}$.
+$(R \backslash \{0\}, \cdot, 1)$ je komutativní monoid.
 \end{mydef}
 
 \begin{mydef}
@@ -857,7 +856,7 @@ $(R \\ \{0\}, \cdot, 1)$ je komutativní monoid.
 	\item Okruh s jednotkovým prvkem $(R, +, 0, -, \cdot, 1)$ se nazývá těleso: $\Leftrightarrow$
 	\begin{enumerate}[1)]
 		\item $0 \not= 1$
-		\item $(R \\ \{0\}, \cdot)$ je grupa
+		\item $(R \backslash \{0\}, \cdot)$ je grupa
 	\end{enumerate}
 	\item Komutativní těleso se nazývá \emph{pole}.
 \end{enumerate}
@@ -868,7 +867,7 @@ Každé \emph{pole} je \emph{obor integrity}. Každý konečný obor integrity j
 \end{veta}
 
 \begin{mydef}
-Buď $(K, +, 0, -, \cdot, 1)$ pole, $I = {a, b, c} \cup K$, kde $a,b,c \not\in K$, $a,b,c$ po dvou různé. Algebra $(V, (\omega_i)_{i \in I}$ typu $(2, 0, 1, (1)_{\lambda \in K})$ se nazývá vektorový prostor nad $K$: $\Leftrightarrow$
+Buď $(K, +, 0, -, \cdot, 1)$ pole, $I = \{a, b, c\} \cup K$, kde $a,b,c \not\in K$, $a,b,c$ po dvou různé. Algebra $(V, (\omega_i)_{i \in I}$ typu $(2, 0, 1, (1)_{\lambda \in K})$ se nazývá vektorový prostor nad $K$: $\Leftrightarrow$
 \begin{enumerate}[1)]
 	\item $(V, \omega_a, \omega_b, \omega_c) =: (V, +, 0, -)$ je abelovská grupa,
 	\item $\forall x,y \in V, \lambda, \mu \in K$:\\
@@ -937,18 +936,120 @@ Algebra $(B, \cap, \cup, 0, 1, ')$ typu (2, 2, 0, 0, 1) se nazývá Booleova alg
 \end{enumerate}
 \end{mydef}
 
+\subsection{Strom algeber}
+\begin{itemize}
+\item Booleův svaz
+ \begin{itemize}
+ \item Distributivní svaz
+  \begin{itemize}
+  \item Svaz $(V, \cap, \cup)$
+   \begin{itemize}
+   \item $(V, \cap)$, $(V, \cup)$ jsou komutativní pologrupy (komutativní a asociativní zákony)
+   \item Absorpční zákony
+   \end{itemize}
+  \item Distributivní zákony
+  \end{itemize}
+ \item Komplementární svaz
+  \begin{itemize}
+  \item Ohraničený svaz
+   \begin{itemize}
+   \item Svaz $(V, \cap, \cup)$
+   \item $0$ je nulový prvek svazu $V$
+   \item $1$ je jednotkový prvek svazu $V$
+   \end{itemize}
+  \item Komplement $'$
+  \end{itemize}
+ \end{itemize}
+\item Vektorový prostor nad $K$
+ \begin{itemize}
+ \item Pole $(K, +, 0, -, \cdot, 1)$
+ \item Abelovská grupa: $(V, \omega_a, \omega_b, \omega_c) = (V, +, 0, -)$ je 
+ \item ??? zákony
+ \end{itemize}
+\item Pole
+ \begin{itemize}
+ \item Konečný
+ \item Obor Integrity
+  \begin{itemize}
+  \item Komutativní okruh s jednotkovým prvkem
+   \begin{itemize}
+   \item $(R, +, 0, -)$ je komutativní okruh
+   \item 1 je neutrální prvek vzhledem k $\cdot$
+   \end{itemize}
+  \item $1 \not= 0$
+  \item neexistují dělitelé nuly
+  \end{itemize}
+ \end{itemize}
+\item Pole
+ \begin{itemize}
+ \item Komutativní
+ \item Těleso
+  \begin{itemize}
+  \item Okruh s jednotkovým prvkem
+   \begin{itemize}
+   \item $(R, +, 0, -, \cdot)$ je okruh typu $(2, 0, 1, 2)$ nebo $(R, +, \cdot)$
+    \begin{enumerate}
+    \item $(R, +, 0, -)$ je abelovská grupa nebo $(R, +)$
+     \begin{enumerate}
+     \item \textbf{Grupa} $(G, \cdot, e, ^{-1})$ nebo $(G, \circ)$
+     \item Komutativní zákony
+     \end{enumerate}
+    \item $(R, \cdot)$ je pologrupa
+    \item $\cdot$ je distributivní nad $+$
+    \end{enumerate}
+   \item $1$ je neutrální prvek vzhledem k $\cdot$
+   \end{itemize}
+  \item $0 \not= 1$
+  \item $(R \backslash \{0\}, \cdot)$ je grupa
+  \end{itemize}
+ \end{itemize}
 
+\item Grupa
+      \begin{itemize}
+      \item Monoid
+       \begin{itemize}
+       \item Pologrupa $(H, \cdot)$, $(H, \cdot, e)$
+        \begin{itemize}
+        \item Grupoid
+         \begin{enumerate}
+		 \item Algebra $(A, \cdot)$ typu 2
+		 \end{enumerate}
+        \item $\cdot$ asociativní
+        \end{itemize}
+       \item neutrální prvek
+       \item x(yz) = (xy)z
+       \end{itemize}
+      \item x(yz) = (xy)z
+      \item neutrální prvek
+      \item každý prvek je invertibilní
+      \end{itemize}
+\end{itemize}
 
+\section{Základní pojmy teorie grup}
 
+\paragraph{Grupoid}
+Součin: $a_1, a \dots a_n := (a_1 \dots a_{n-1})a_n$
 
+Mocniny: $a^1 = a$, $a^{n+1} = (a^n)a$
 
+\paragraph{Grupa}
+$(ab)^{-1} = b^{-1}a^{-1}$
 
+$a^0 = e$;
+$a^{-n} = (a^{-1})^n$;
+$a^n a^m = a^{n+m}$;
+$(a^m)^n = a^{mn}$;
+$(a b)^n = a^n b^n$ (pokud je $\cdot$ komutativní)
 
+Kardinální číslo ($a^n$) se nazává \emph{řád prvku}: $o(a) := |\{a^0 = e, a^1, a^{-1}, a^2, a^{-2}, \dots\}| = |\{ a^k | k \in Z\}$.
 
+$|G|$ (mohutnost množiny) se nazývá řád grupy/algebry.
 
+Dělení se zbytkem: $\forall k,l \in Z, l \not= 0 \exists q,r \in Z: 0 \leq  r < |l| \land k = lq + r$.
 
+"$r$ je kongruentní s $s$ modulo $n$": $n|(r - s)$ ($n$ dělí $(r-s)$).
 
-
+Je-li $o(a) = \infty$, pak jsou mocniny prvku $a$ navzájem různé. Je-li $o(a) = n$, potom $a^r = a^s \Leftrightarrow r \equiv s \text{ mod } n$
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
