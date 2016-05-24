@@ -7,6 +7,7 @@
 \usepackage{enumerate}
 \usepackage{verbatim}
 \usepackage{tikz-qtree}
+\usepackage{mathtools}
 
 \usepackage{amsthm}
 \newtheorem{mydef}{Definice}[chapter]
@@ -1208,15 +1209,135 @@ Buďte $\mathcal{A} = (A, (\omega_i)_{i \in I})$ a $\mathcal{A}^* = (A^*, (\omeg
 	\item \emph{epimorfizmus}, pokud $f$ je surjektivní (v tomto případě se nazývá $\mathcal{A}^*$ homomorfní obraz $\mathcal{A}$).
 	\item \emph{monomorfizmus}, pokud je $f$ injektivní (v tomto případě se $\mathcal{A}$ nazývá izomorfně uzavřená v $\mathcal{A}^*$).
 \end{enumerate}
+
+$g \circ f$ zachovává homomorfismus a isomorfismus.
+
+$f^{-1}$ zachovává homomorfismus.
 \end{mydef}
 
+\begin{veta}
+Buď $(H, \cdot)$ pologrupa, $(H^*, \cdot)$ grupoid a $f: H \to H^*$ homomorfizmus. Potom je podalgebra $(f(H), \cdot)$ grupoidu $(H^*, \cdot)$ pologrupa.
 
+Platí také pro: (abelovské) grupy, (komutativní) okruhy, okruhy s jednotkovým prvkem, svazy, Booleovy algebry, vektorové prostory nad K.
+\end{veta}
 
+Rozlišujeme fundamentální operace a odvozené operace (tvořené konečným počtem proměnných a symbolů operací).
 
-\section{Přímé součiny}
+Izomorfismus je pouze přeznačení. Algebry jsou "stejné", izomorfizmus zachovává algebraické vlastnosti.
+
+\begin{veta}
+(Cayleyova věta o reprezentaci) Buď $(G, \cdot, e, ^{-1})$ grupa. Potom je $G$ izomorfní s podgrupou symetrické grupy $(S_G, \circ, id_G, ^{-1})$. Krátce: Každá grupa je izomorfní s nějakou grupou permutací.
+\end{veta}
+
+\section{Přímé součiny} % XXX ???
 \section{Kongruence a faktorové algebry}
+
+\begin{mydef}
+Buď $\mathcal{A} = (A, (\omega_i)_{i \in I})$ algebra typu $(n_i)_{i \in I}$ a $\pi$ relace ekvivalence na $A$. $\pi$ se nazývá (relace) kongruence na $\mathcal{A} : \Leftrightarrow$ pro všechna $i \in I$, kde $n_i > 0, a_1, \dots, a_{n_i}, b_1, \dots, b_{n_i} \in A$ platí
+
+$$ a_1 \pi b_1 \land \dots \land a_{n_i} \pi b_{n_i} \Leftarrow \omega_i a_i \dots a_{n_i} \pi \omega_i b_1 \dots b_{n_i} $$
+\end{mydef}
+
+\begin{veta}
+Buď $\mathcal{A} = (A, (\omega_i)_{i \in I})$ algebra a $\pi$ kongruence na $\mathcal{A}$. Potom jsou vztahy
+
+$$ \omega_i^*[a_1)_\pi \dots [a_{n_i}]_\pi := [\omega_i a_1 \dots a_{n_i}]_\pi, n > 0, a_1, \dots a_{n_1} \in A$$
+
+$$ \omega_i^* := [\omega_i]_\pi, n_i = 0 $$
+
+definovány operace $(\omega_i^*)_{i \in I}$ na faktorové množině $A/\pi$
+\end{veta}
+
+\begin{mydef}
+Algebra $\mathcal{A}/\pi := (A/\pi, (\omega_i^*)_{i \in I})$ se nazývá faktorová algebra algebry $\mathcal{A}$ podle kongruence $\pi$. Často klademe $\omega_i := \omega_i^*$.
+\end{mydef}
+
+$(\mathbb{Z}, +, 0, -, \cdot, 1)$ je komutativní okruh s jednotkovým prvkem, který se nazývá okruh zbytkových tříd modulo $n$.
+
+\begin{veta}
+Buď $\mathcal{A} := (A, (\omega_i)_{i \in I})$ algebra, $\pi$ kongruence na $\mathcal{A}$. Potom je zobrazení
+$$
+ \nu =
+   \begin{dcases}
+     A \to A / \pi \\
+     a \mapsto [a]_\pi
+   \end{dcases}
+$$
+surjektivní homomorfizmus algebry $\mathcal{A}$ na $\mathcal{A}/\pi$, který se nazývá přirozený homomorfizmus.
+\end{veta}
+
+$\mathcal{A}/\pi$ je homomorfní obraz $\mathcal{A}$ a každý zákon, který platí v $\mathcal{A}$ platí také v $\mathcal{A}/\pi$ (pologrupy, (abelovské grupy), vektorové prostory, (komutativní) okruhy, okruhy s jednotkovým prvkem, svazy, Booleovy algebry). Nemusí být u oboru integrity!
+
+\begin{veta}
+(O homomorfizmu) Buďte $\mathcal{A} := (A, (\omega_i)_{i \in I})$ a  $\mathcal{A^*} := (A^*, (\omega_i^*)_{i \in I})$ algebry téhož typu $(n_i)_{i \in I}$ a $f: A \to A^*$ homomorfizmus. Potom je jádro $\pi_j$ kongruencí na $\mathcal{A}$ a existuje přesně jeden injektivní homomorfizmus $g$ z $\mathcal{A}/\pi$ do $\mathcal{A}^*$ takový, že $f = g \circ \nu$ ($\nu$ je přirozené zobrazení).
+\end{veta}
+
+Pro podalgebry $(f(A), (\omega_i^*)_{i \in I})$ algebry $\mathcal{A}^*$ platí $(f(A), (\omega_i^*)_{i \in I}) \cong \mathcal{A}/\pi_f$, tedy je každý homomorfní obraz algebry izomorfní s nějakou faktorovou algebrou.
+
+Relace rovnosti $\iota = \{(x, x) | (x \in A\}$ a univerzální relace $\alpha = A \times A$ jsou vždy kongruencemi na $\mathcal{A}$. Platí $\mathcal{A}/\iota \cong \mathcal{A}$ a $|\mathcal{A}/\alpha| \leq 1$. $\mathcal{A}/\iota$ a $\mathcal{A}/\alpha$ jsou triviální faktorové algebry.
+
+\begin{mydef}
+Algebra $\mathcal{A}$ se nazývá prostá, má-li pouze triviální kongruence.
+\end{mydef}
+
+\subsection{Relace kongruence na grupách a okruzích}
+
+\begin{veta}
+Buď $(G, \cdot, e, ^{-1})$ grupa a $\pi$ relace ekvivalence na $G$. Potom platí
+\begin{enumerate}[a)]
+	\item $\pi$ je kongruence na $(G, \cdot, e, ^{-1}) \Leftrightarrow \pi$ je kongruence na $(G, \cdot)$
+	\item Je-li $\pi$ kongruence na $(G, \cdot)$ a $[e]_\pi =: N$, potom platí
+	\begin{enumerate}[i)]
+		\item $N$ je podgrupa $(G, \cdot, e, ^{-1})$
+		\item $x N x^{-1} = \{x y x^{-1} | y \in N\} \subseteq N$ pro všechna $x \in G$ 
+		\item $x \pi y \Leftrightarrow x^{-1} y \in N$ pro všechna $x, y \in G$ (tj. $[x]_\pi = x N$ pro všechna $x \in G$).
+	\end{enumerate}
+\end{enumerate}
+\end{veta}
+
+\begin{mydef}
+Podgrupa $N$ grupy $(G, \cdot, e, ^{-1})$ se nazývá normální podgrupa grupy $G$ (symbolicky $N \triangleleft G$): $\Leftrightarrow x N x^{-1} \in N$ pro všechna $x \in G$.
+\end{mydef}
+(v abelovské grupě je každá podgrupa normální)
+
+\begin{lemma}
+Por podgrupu $N$ grupy $G$ jsou následující tvrzení ekvivalentní:
+\begin{enumerate}
+	\item $N$ je normální podgrupa grupy $G$
+	\item $\forall x \in G: x N x^{-1} = N$
+	\item $\forall x \in G: N x = x N$, tj. pravá třída rozkladu = levá třída rozkladu.
+\end{enumerate}
+\end{lemma}
+
+\begin{veta}
+Buď $(G, \cdot, e, ^{-1})$ grupa, $N \triangleleft G$ a $\pi$ buď binární relace na $G$ definovaná vztahem $x \pi y: \Leftrightarrow x^{-1}y \in N, x,y \in G$. Potom je $\pi$ relace kongruence na $G$, kde $[e]_\pi = N$.
+\end{veta}
+
+\begin{veta}
+Vztahem $\pi \mapsto [e]_\pi$ je definování bijektivní zobrazení množiny kongruencí na grupě G na množinu všech normálních podgrup grupy G. Inverzní zobrazení je dáno pomocí vztahu $N \mapsto \pi$, kde $x \pi y: \Leftrightarrow x^{-1}y \in N$.
+\end{veta}
+
+Chceme-li najít všechny homomorfní obrazy -- až na izomorfizmus -- nějaké grupy $G$, můžeme tedy určit všechny normální podgrupy $N$ grupy $G$ a vytvořit faktorové algebry $G/\pi$ pomocí odpovídajících kongruencí. Pokud normální podgrupě $N$ odpovídá kongruence $\pi$, píšeme $G/N := G/\pi = \{x N | x \in G\}$. Takováto faktorová algebra se nazývá faktorgrupa grupy $G$.
+
+Triviálním kongruencím $\iota = \{(x, x) | x \in G\}$ a $\alpha = G \times G$ odpovídají tzv. triviální normální podgrupy ${e}$ a $G$. $G$ je prostá $\Leftrightarrow G$ má pouze triviální podgrupy.
+
+\begin{veta}
+Buď $G$ grupa, $U$ podgrupa, kde $[G:U] = 2$ (index $U$ v $G$). Potom platí $U \triangleleft G$.
+\end{veta}
+
 \section{Normální podgrupy}
 \section{Ideály okruhů}
+
+\begin{mydef}
+Buď $(R, +, 0, -, \cdot)$ okruh a $I$ podokruh okruhu $R$. Potom se $I$ nazývá:
+\begin{itemize}
+	\item \emph{levý ideál} okruhu R: $\Leftrightarrow \forall r \in R: rI := \{ri | i \in I\} \subseteq I$
+	\item \emph{pravý ideál} okruhu R: $\Leftrightarrow \forall r \in R: Ir := \{ir | i \in I\} \subseteq I$
+	\item \emph{ideál} okruhu R (formálně $I \triangleleft R$): $\Leftrightarrow \forall r \in R: Ir  \subseteq I \land rI \subseteq I$
+\end{itemize}
+\end{mydef}
+
+$R$ a $\{0\}$ jsou vždy ideály okruhu $R$, takzvané triviální ideály.
 
 
 
