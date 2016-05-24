@@ -1119,9 +1119,100 @@ $\left< x \right>$ se nazývá podgrupa grupy $(G, \cdot, e, ^{-1})$ generovaná
 Grupa $(G, \cdot, e, ^{-1})$ se nazývá cyklická: $\Leftrightarrow \exists x \in G: G = \left< x \right>$
 \end{mydef}
 
+\begin{itemize}
+	\item pro $(\mathbb{Z}, +, 0, -)$ platí $\mathbb{Z} = \left< 1 \right> = \left< -1 \right>$
+	\item pro $(\mathbb{Z}_m, +, 0, -)$ platí $\mathbb{Z}_m = \left< 1 \right> = \left< k \right>$, kde $NSD(m, k) = 1$
+\end{itemize}
+
+\subsection{Relace ekvivalence a rozklad na třídy ekvivalence?} % XXX
+\begin{mydef}
+Je-li $M$ množina, potom se podmnožina $R$ množiny $M \times M$ nazývá binární relace na $M$. Místo $(x, y) \in R$ píšeme většinou $xRy$. Speciální relace $\alpha_M := M \times M$ se nazývá univerzální relace, $\iota_M := \{(x, x) | x \in M\}$ se nazývá identická relace nebo relace rovnosti.
+\end{mydef}
+
+\begin{mydef}
+Relace $R \subseteq M \times M$ se nazývá:
+\begin{enumerate}[1)]
+	\item \emph{reflexivní}: $\Leftrightarrow \iota_M \subseteq R$, tj. $\forall x \in M: xRx$
+	\item \emph{symetrická}: $\Leftrightarrow \forall x, y \in M: xRy \Leftarrow yRx$
+	\item \emph{antisymetrická}: $\Leftrightarrow \forall x, y \in M: xRy \land yRx \Leftarrow x = y$
+	\item \emph{transitivní}: $\Leftrightarrow \forall x, y, z \in M: xRy \land yRz \Leftarrow xRz$
+\end{enumerate}
+Relace splňující 1), 2) a 4) se nazývá relace \emph{ekvivalence}, relace splňující 1), 3) a 4) se nazývá relace \emph{(částečného) uspořádání)}.
+\end{mydef}
+
+\begin{mydef}
+Buď $M$ množina. $\mathcal{P} \subseteq \mathcal{P}(M)$ se nazývá rozklad množiny $M$ na třídy ekvivalence: $\Leftrightarrow$
+\begin{enumerate}[1)]
+	\item $\bigcup_{C \in \mathcal{P}} C = M$
+	\item $\emptyset \not\in \mathcal{P}$
+	\item $A, B \in \mathcal{P}  \Leftarrow A = B \lor A \cap B = \emptyset$ (tj. množiny v $\mathcal{P}$ jsou po dvou disjunktní.
+\end{enumerate}
+\end{mydef}
+
+\begin{veta}
+Buď $\pi$ relace ekvivalence na množině $M$, $a \in M$, $[a]_\pi := \{b \in M | b \pi a\}$, tzv. třída ekvivalence prvku $a$ a $M/\pi := \{[a]_\pi | a \in M\}$ tzv. faktorová množina množiny M podle ekvivalence $\pi$. Potom je $M/\pi$ rozklad množiny na třídy ekvivalence.
+
+Je-i naopak $\mathcal{P}$ rozklad množiny $M$ na třídy ekvivalence a $\pi$ je definováno vztahem $a \pi b \Leftrightarrow \exists C \in \mathcal{P}: a, b \in C$, potom je $\pi$ relace ekvivalence na množině $M$, a platí $M/\pi' = \mathcal{P}$.
+
+$\pi \mapsto M/\pi$ je bijektivní zobrazení množiny všech relací ekvivalence na množině M na množinu všech rozkladů množiny M na třídy ekvivalence. Inverzní zobrazení je dáno výše uvedeným předpisem $\mathcal{P} \mapsto \pi$.
+\end{veta}
+
+\begin{veta}
+Buďte $M, N$ množiny, $f: M \to N$ zobrazení a $x \pi_f y: \Leftrightarrow f(x) = f(y)$. Potom platí:
+\begin{enumerate}[a)]
+	\item $\pi_f$ je relace ekvivalence na $M$, která se nazývá jádro $f$.
+	\item Zobrazení
+	$M/_{\pi_f} \to f(M) := \{f(x) | x \in M\} \subseteq N$\\
+	$[x]_{\pi_f} \mapsto f(x)$\\
+	je korektně definováno a bijektivní.
+\end{enumerate}
+\end{veta}
+
+\subsection{Rozklad grupy na třídy podle podgrupy}
+
+\begin{veta}
+Buď $(G, \cdot, e, ^{-1})$ grupa a $(H, \cdot, e, ^{-1})$ podgrupa grupy $G$. Buď dále $\pi \subseteq G \times G$ podmnožina definovaná pomocí vztahu $x \pi y: \Leftrightarrow x^{-1}y \in H. x, y \in G$. Potom je $\pi$ relace ekvivalence na $G$.
+\end{veta}
+
+\begin{mydef}
+Buď $(G, \cdot, e, ^{-1})$ grupa, $A, B \subseteq G$. Potom se nazývá $AB := \{ab | a \in A, b \in B\}$ složený součin A a B. Speciální případy: $A = \{a\}: AB := aB = \{ab | b \in B\}, B = \{b\}: AB := Ab = \{ab | a \in A\}$. Pro podgrupu H grupy G se nazývá $aH$ levá třída rozkladu grupy G podle H a $Ha$ se nazývá pravá třída rozkladu grupy G podle H ($a \in G$ pevné ale libovolné).
+\end{mydef}
+
+\begin{veta}
+Buď $(G, \cdot, e, ^{-1})$ grupa, $H$ podgrupa grupy $G$, $a, b \in G$. Potom je vztahem $i: aH \to bH; ax \mapsto bx$ definováno bijektivní zobrazení.
+\end{veta}
 
 
 \section{Homomorfismy}
+
+\begin{mydef}
+Buďte $\mathcal{A} = (A, (\omega_i)_{i \in I})$ a $\mathcal{A}^* = (A^*, (\omega^*_i)_{i \in I}$ algebry téhož typu $(n_i)_{i \in I}$. Zobrazení $f: A \to A^*$ se nazývá homomorfizmus algebry $\mathcal{A}$ do algebry $\mathcal{A}^*: \Leftrightarrow$
+\begin{enumerate}
+	\item Pro $i \in I$, kde $n_i > 0$ platí $\forall x_1, \dots, x_{n_i} \in A: f(\omega_ix_1 \dots x_{n_i}) = \omega_i^*f(x_1)\dots f(x_{n_1})$
+	\item pro $i \in I$, kde $n_i = 0$, platí $f(\omega_i) = \omega_i^*$
+\end{enumerate}
+\end{mydef}
+
+\begin{lemma}
+Buďte $(G, \cdot, e, ^{-1})$ a $(H, \cdot, e, ^{-1})$ grupy, $f: G \to H$. Potom platí $f$ je homomorfismus grupy $(G, \cdot, e, ^{-1})$ do grupy $(H, \cdot, e, ^{-1}) \Leftrightarrow f$ je homomofizmus grupy $(G, \cdot)$ do grupy $(H, \cdot)$.
+\end{lemma}
+
+Pro vektorové prostory a okruhy ...
+
+\begin{mydef}
+Buďte $\mathcal{A} = (A, (\omega_i)_{i \in I})$ a $\mathcal{A}^* = (A^*, (\omega^*_i)_{i \in I}$ algebry téhož typu $(n_i)_{i \in I}$ a $f: A \to A^*$ homomorfizmus algebry $\mathcal{A}$ do algebry $\mathcal{A}^*$. $f$ se nazývá:
+\begin{enumerate}
+	\item \emph{izomorfizmus}, pokud $f$ je bijektivní (v tomto případě říkáme, že $\mathcal{A}$ je izomorfní obraz $\mathcal{A}^*$, a píšeme $\mathcal{A} \cong \mathcal{A}^*$).
+	\item \emph{endomorfizmus}, pokud $\mathcal{A} = \mathcal{A}^*$
+	\item \emph{automorfismus}, pokud $\mathcal{A} = \mathcal{A}^*$ a $f$ je izomorfismus.
+	\item \emph{epimorfizmus}, pokud $f$ je surjektivní (v tomto případě se nazývá $\mathcal{A}^*$ homomorfní obraz $\mathcal{A}$).
+	\item \emph{monomorfizmus}, pokud je $f$ injektivní (v tomto případě se $\mathcal{A}$ nazývá izomorfně uzavřená v $\mathcal{A}^*$).
+\end{enumerate}
+\end{lemma}
+
+
+
+
 \section{Přímé součiny}
 \section{Kongruence a faktorové algebry}
 \section{Normální podgrupy}
