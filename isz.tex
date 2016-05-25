@@ -1052,7 +1052,147 @@ Dělení se zbytkem: $\forall k,l \in Z, l \not= 0 \exists q,r \in Z: 0 \leq  r 
 
 Je-li $o(a) = \infty$, pak jsou mocniny prvku $a$ navzájem různé. Je-li $o(a) = n$, potom $a^r = a^s \Leftrightarrow r \equiv s \text{ mod } n$
 
-3. 5. kapitola?
+
+
+\section{Svazy a Booeovy algebry}
+\subsection{(Částečně uspořádané množiny}
+
+$M$ je množina, $R$ je relace na $M$. 
+
+Částečné uspořádání $(M, R)$ = reflexivita, antisymetrie, tranzitivita.
+
+$(M, R)$ Řetězec nebo Lineárně uspořádaná množina: navíc srovnatelnost: $\forall x,y \in M: xRy \lor yRx$.
+
+\begin{mydef}
+Buď $(M, \leq)$ uspořádaná množina. Potom se $k \in M$ nazývá nejmenší (resp. největší) prvek množiny $M :\Leftrightarrow \forall x \in M: k \leq x$ (resp. $k \geq x$).
+\end{mydef}
+
+Existuje vždy nejvýše jeden nejmenší resp. největší prvek.
+
+\begin{mydef}
+Buď $(M, \leq)$ uspořádaná množina. Potom se $m \in M$ nazývá minimální (resp. maximální) prvek množiny $M :\Leftrightarrow \forall x \in M: x \leq m$ (resp. $x \geq m$) $\Leftarrow x = m$.
+\end{mydef}
+
+\begin{veta}
+\begin{enumerate}[a)]
+	\item Buď $(M, \leq)$ uspořádaná množina a $N \subseteq M$. Potom je $(N, \leq)$ rovněž uspořádaná množina. Je-li $(M, \leq)$ řetězec, potom je také $(N, \leq)$ řetězec. Přitom $(N, \leq)$ zkráceně označuje $(N, \leq \cap (N \times N))$.
+	\item Je-li $(M, \leq)$ uspořádaná množina, potom také $(M, \geq)$ je uspořádaná množina (tzv. \uv{princip duality uspořádané množiny}). Také maximální a minimální prvek.
+\end{enumerate}
+\end{veta}
+
+\begin{mydef}
+Buď $(M, \leq)$ uspořádaná množina a $N \subseteq M$. Potom se nazývá $u \in M$ dolní závora množiny $N : \Leftrightarrow \forall x \in N: u \leq x$. Největší prvek množiny všech dolních závor se nazývá \emph{infimum} množiny $N$, formálně inf $N$ nebo $\bigcap N$. Prvek $v \in M$ se nazývá horní závora množiny $N: \Leftrightarrow \forall x \in N: x \in N: x \leq v$. Nejmenší horní závora se nazývá suprémum množiny $N$, formálně sup $N$ nebo $\bigcup N$.
+\end{mydef}
+
+\paragraph{Hasseův diagram} Buď $(M, \leq)$ konečná uspořádaná množina a nechť relace "sousední" je definována takto:
+
+a, b sousedí: $\Leftrightarrow \begin{cases}
+a < b \text{nebo} b < a \\
+\text{neexistuje c taková, že} a < c < b \text{nebo} b < c < a
+\end{cases}$
+
+Potom je Hasseův diagram $(M, \leq)$ dán grafy relace \uv{sousedí}. (Množina uzlů je M; je-li $a < b$, nakreslí se uzel $a$ \uv{níže} než uzel $b$ a $a$ se spojí s $b$ hranou, pokud jsou $a$ a $b$ sousední).
+
+\subsection{(Částečná) uspořádaní a svazy}
+\begin{mydef}
+Buď $(V, \leq)$ uspořádaná množina. $(V, \leq)$ se nazývá svazově uspořádaná: $\Leftrightarrow sup\{a, b\}$ a $inf\{a, b\}$ existují pro všechna $a, b \in V$.
+\end{mydef}
+
+\begin{lemma}
+Buď $(V, \cap, \cup)$ svaz, potom platí:
+\begin{enumerate}[a)]
+	\item $\forall a \in V: a \cap a = a = a \cup a$
+	\item $\forall a, b \in V: a \cap b = a \Leftrightarrow a \cup b = b$
+\end{enumerate}
+\end{lemma}
+
+\begin{veta}
+\begin{enumerate}
+	\item Buď $(V, \cap, \cup)$ svaz. Pokud definujeme relaci $\leq$ na $V$ pomocí vztahu $a \leq b: \Leftrightarrow a \cap b = a, a,b \in B$, potom je $(V, \leq)$ svazově uspořádaná množina.
+	\item Buď $(V, \leq)$ svazově uspořádaná množina. Definujeme-li na $V$ binární operace $\cap, \cup$ pomocí vztahů $a \cap b := inf\{a, b\}$ a $a \cap b := sup\{a, b\}, a, b \in V$, potom je $(V, \cap, \cup)$ svaz.
+	\item Přiřazení definovaná v a) a b) jsou navzájem inverzní.
+\end{enumerate}
+\end{veta}
+
+Princip duality pro svazy:
+
+$(V, \cap, \cup)$ svaz $\Leftrightarrow (V, \cup, \cap)$ svaz
+
+$(V, \leq)$ svazově uspořádaný $\Leftrightarrow (V, \geq)$ svazově uspořádaný
+
+\subsection{Booleovy algebry}
+
+Dualita: $(B, \cap, \cup, 0, 1, ')$ Booleova algebra $\Leftrightarrow (B, \cup, \cap, 1, 0, ')$ Booleova algebra
+
+\begin{lemma}
+Buď $(V, \cap, \cup)$ svaz. Potom platí:
+\begin{enumerate}[a)]
+	\item $\forall a,b,c \in V: a \cap (b \cup c) = (a \cap b) \cup (a \cap c) \Leftrightarrow \forall a, b, c \in V: a \cup (b \cap c) = (a \cup b) \cap (a \cup c)$
+	\item $\forall a \in V: 0 \cup a = a \Leftrightarrow \forall a \in V: 0 \cap a = 0$
+	\item $\forall a \in V: 1 \cap a = a \Leftrightarrow \forall a \in V: 1 \cup a = 1$
+\end{enumerate}
+\end{lemma}
+
+\begin{veta}
+(Věta o komplementech) Buď $(B, \cap, \cup, 0, 1, ')$ Booleova algebra. Potom platí:
+\begin{enumerate}[a)]
+	\item Jsou-li $a, a^*$ prvky množiny $B$, kde $a \cup a^* = 1$ a $a \cap a^* = 0$, pak platí $a^* = a'$
+	\item $(a')' = a$ pro všechna $a \in B$
+	\item $0' = 1$ a $1' = 0$
+	\item $(a \cup b)' = a' \cap b'$ a $(a \cap b) = a' \cup b'$ pro všechna $a, b \in B$ (De Morganovy zákony)
+\end{enumerate}
+\end{veta}
+
+\begin{veta}
+(Věta o homomorfizmech) Buďte $(B, \cap, \cup, 0, 1, ')$ a $(C, \cap, \cup, 0, 1, ')$ Booleovy algebry, $\varphi: B \to C$ surjektivní zobrazení. Potom platí $\varphi$ je homomorfizmus $(B, \cap, \cup, 0, 1, ')$ do $(C, \cap, \cup, 0, 1, ') \Leftrightarrow \varphi$ je homomorfizmus $(B, \cap, \cup)$ do $(C, \cap, \cup)$ (tj. stačí aby $\varphi$ bylo konzistentní se svazovými operacemi).
+\end{veta}
+
+\subsection{Stoneova věta o reprezentaci}
+\begin{mydef}
+Buď $(V, \cap, \cup, 0, 1)$ svaz s nulovým a jednotkovým prvkem. Potom se $a \in V$ nazývá \emph{atom}: $\Leftrightarrow$
+\begin{enumerate}[1)]
+	\item $0 < a$
+	\item $0 \leq b \leq a \Leftarrow b = 0 \lor b = a$
+\end{enumerate}
+(tj. $a$ je horním sousedním prvkem nulového prvku.)
+\end{mydef}
+
+\begin{lemma}
+Buď $(B, \cap, \cup, 0, 1, ')$ konečná Booleova algebra. Potom ke každému prvku $b \in B \backslash \{0\}$ existuje atom $a \in B$, kde $a \leq b$. (Toto platí i pro libovolní konečné svazy.).
+\end{lemma}
+
+\begin{veta}
+(Stoneova věta) Buď $(B, \cap, \cup, 0, 1, ')$ konečná Booleova algebra a $M := \{a \in B | a \text{atom algebry} \}$. Potom platí:
+
+$$ (B, \cap, \cup, 0, 1, ') \cong (\mathcal{P}(M), \cap, \cup, \emptyset, M, ')$$
+
+přičemž  vztahem $\varphi(b) := \{a \in M | a \leq b\}$ je dán izomorfizmus $\varphi: B \to \mathcal{P}(M)$.
+\end{veta}
+
+$|M| = |M_1| \Leftarrow (\mathcal{P}(M), \cap, \cup, \emptyset, M, ') \cong (\mathcal{P}(M_1), \cap, \cup, \emptyset, M_1, ')$
+
+$|M| = n \in \mathbb{N}_0 \Leftarrow |\mathcal{P}(M)| = 2^n$
+
+Je-li $B$ konečná Booleova algebra, potom platí $|B| = 2^n$ pro libovolné $n \in \mathbb{N}_0$ pro libovolné $n \in \mathbb{N}_0$. Ke každému $n \in \mathbb{N}_0$ tak existuje -- až na izomorfizmus -- přesně jedna Booleova algebra s $2^n$ prvky, totiž $\mathcal{P}(\{0, 1, \dots, n-1\})$.
+
+\begin{mydef}
+Buď $M$ množina.  $\mathcal{K} \in \mathcal{P}(M)$ se nazývá množinový okruh: $\Leftrightarrow$ pro všechna $A, B \in \mathcal{K}$ platí:
+\begin{enumerate}[1)]
+	\item $A \cup B \in \mathcal{K}$
+	\item $A \cap B \in \mathcal{K}$
+	\item $A \cap B' = A \backslash B \in \mathcal{K}$
+\end{enumerate}
+\end{mydef}
+
+\begin{mydef}
+Buď $\mathcal{K} \in \mathcal{P}(M)$ množinový okruh a nechť $M \in \mathcal{K}$. Potom Booleova algebra $(\mathcal{K}, \cap, \cup, \emptyset, M, ')$ se nazývá algebra množinového okruhu.
+\end{mydef}
+
+Algebra množinového okruhu je tedy podalgebra $(\mathcal{P}(M), \cap, \cup, \emptyset, M, ')$
+
+\begin{mydef}
+(Stoneova věta) Každá Booleova algebra je izomorfní s nějakou algebrou množinového okruhu.
+\end{mydef}
 
 
 
@@ -1066,7 +1206,13 @@ Je-li $o(a) = \infty$, pak jsou mocniny prvku $a$ navzájem různé. Je-li $o(a)
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+5. kapitola ??? % XXX
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Základní algebraické metody} \label{cha:9}
 
