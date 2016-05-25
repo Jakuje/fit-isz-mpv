@@ -1229,7 +1229,6 @@ Izomorfismus je pouze přeznačení. Algebry jsou "stejné", izomorfizmus zachov
 (Cayleyova věta o reprezentaci) Buď $(G, \cdot, e, ^{-1})$ grupa. Potom je $G$ izomorfní s podgrupou symetrické grupy $(S_G, \circ, id_G, ^{-1})$. Krátce: Každá grupa je izomorfní s nějakou grupou permutací.
 \end{veta}
 
-\section{Přímé součiny} % XXX ???
 \section{Kongruence a faktorové algebry}
 
 \begin{mydef}
@@ -1338,6 +1337,70 @@ Buď $(R, +, 0, -, \cdot)$ okruh a $I$ podokruh okruhu $R$. Potom se $I$ nazýv�
 \end{mydef}
 
 $R$ a $\{0\}$ jsou vždy ideály okruhu $R$, takzvané triviální ideály.
+
+\begin{lemma}
+Buď $(R, +, 0, -, \cdot, 1)$ okruh s jednotkovým prvkem a $I$ ideál okruhu $R$. Potom platí $1 \in I \Leftrightarrow I = R$.
+\end{lemma}
+
+\begin{veta}
+Každé těleso má pouze triviální ideály.
+\end{veta}
+
+\begin{veta}
+Buď $(R, +, 0, -, \cdot, 1)$ komutativní okruh s jednotkovým prvkem, který má pouze triviální ideály. Potom je $R$ pole nebo $R = \{0\}$
+\end{veta}
+
+Komutativní okruh $R \not= \{0\}$ s jednotkovým prvkem je pole $\Leftrightarrow R$ má pouze triviální ideály.
+
+\begin{veta}
+Buď $(R, +, 0, -, \cdot)$ okruh.
+\begin{enumerate}[a)]
+	\item Je-li $\pi$ kongruence na $R$, potom je $I := [0]_\pi$ ideál okruhu R, a platí $R/\pi = R/I = \{x + I | x \in R\}$
+	\item Je-li $I$ ideál okruhu $R$ a $\pi$ binární relace na $R$ definovaná vztahem $x \pi y :\Leftrightarrow y - z \in I, x,y \in R$, potom je $\pi$ kongruence na $R$ a $[0]_\pi = I$
+	\item $\pi \mapsto [0]_\pi$ definuje bijektivní zobrazení množiny všech kongruencí na $R$ na množinu všech ideálů okruhu $R$. Inverzní zobrazení je dáno vztahem $I \mapsto \pi$, kde $\pi$ je kongruence definovaná v b). 
+\end{enumerate}
+\end{veta}
+
+Okruh $R$ je prostý $\Leftrightarrow$ $R$ má pouze triviální kongruence $\Leftrightarrow$ $R$ má pouze triviální ideály $\{0\} := (0)$ a $R$.
+
+\begin{veta}
+Komutativní okruh $R \not= \{0\}$ s jednotkovým prvkem je prostý právě tehdy, když je pole
+\end{veta}
+
+\section{Přímé součiny}
+
+\begin{mydef}
+Buďte $\mathcal{A}_k = (A_k, \omega_i^{(k)_{i \in I}}, k \in K$ algebry téhož typu $(n_i)_{i \in I}$ a $A := \Pi_{k \in K} A_k = \{(a_k)_{k \in K} | a_k \in A_k\}$ kartézský součin všech množin $A_k$. Pro všechna $i \in I$ buď operace $\omega_i$ na $A$ definována vztahem:
+
+$$ \omega_i(a_k^{(1)})_{k \in K} \dots (a_k^{n_i})_{k \in K} := (\underbrace{\omega_i^{(k)}a_k^{(1)} \dots a_k^{(n_i)}}_{\in A_k})_{k \in K} \text{pro} n_i > 0 $$
+
+$$ \omega_i := (\omega_i^{(k)})_{k \in K} \text{pro} n_i = 0 $$
+
+Algebra $(A, (\omega_i)_{i \in I})$ se nazývá přímý součin algeber $\mathcal{A}_k$ a značí se $\Pi_{k \in K} \mathcal{A}_k$.
+\end{mydef}
+
+\begin{veta}
+Pokud platí při vhodných termech $t_1, t_2$ zákon tvaru $\forall x_1, \dots x_n : t(x_1, \dots, x_n) = t_2(x_1, \dots, x_n)$ ve všech algebrách $\mathcal{A}_k, k \in K$, potom platí také v $\Pi_{k \in K}\mathcal{A}_k$.
+\end{veta}
+
+Důsledek: Přímé součiny pologrup (grup, vektorových prostorů, okruhů, Booleových algeber) jsou opět pologrupy (grupy, vektorové prostoru, okruhy, Booleovy algebry). Nikoliv však pro obory integrity!
+
+Přímý součin je až na izomorfizmus komutativní ($A_1 \times A_2 \cong A_2 \times A_1$ a asociativní (uzávorkování).
+
+\begin{veta}
+Grupa $C_n \times C_m$ je cyklická $\Leftrightarrow \text{NSD}(m, n) = 1$.
+\end{veta}
+
+Je-li $n = p_1^{e_1} \dots p_k^{e_k}$ rozklad na prvočinitele čísla $n \in N$, potom platí $C_n \cong C_{p_1{e_1}} \times \dots \times C_{p_k{e_k}}$.
+
+\begin{veta}
+(Hlavní věta o konečně generovaných abelovských grupách) Je-li $G = \left< x_1, \dots, x_m \right>$ abelovská grupa generovaná prvky $x_1, \dots x_m$, potom platí:
+
+$$ G \cong C_\infty^k \times C_{n_1} \times C_{n_r} $$
+
+přičemž $k \geq 0 (C_\infty^0 := \{e\}), n_i = \mathbb{N}, r \geq 0$. Přitom platí $G$ je konečná $\Leftrightarrow k = 0$.
+\end{veta}
+($C_\infty$ označuje nekonečnou cyklickou grupu.)
 
 
 
