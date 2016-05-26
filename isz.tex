@@ -1711,7 +1711,63 @@ Je-li $K$ konečné pole (např. $K = \mathbb{Z}_p, p$ prvočíslo), $f: K \to K
 Buď $(I, +, 0, -, \cdot, 1)$ obor integrity. Jsou-li $a, b \in I$, potom říkáme, že prvek $a$ je dělitelný prvkem $b$ a $b$ se nazývá dělitel prvku $a$ ($b$ \uv{dělí} $a$, formálně $b|a$): $\Leftrightarrow \exists c \in I: a = bc$.
 \end{mydef}
 
-% XXX TODO
+Elementární pravidla dělitelnosti:
+\begin{enumerate}[1)]
+	\item $\forall a \in I: a | 0$
+	\item $\forall a \in I: 1 | a$
+	\item $\forall a \in I: a | a$
+	\item $\forall a,b,c \in I: a|b \land b|c \Leftarrow a|c$
+	\item $\forall a,b,c \in I: a|b \Leftarrow a|bc$
+	\item $\forall a,b,c \in I: a|b \land a|c \Leftarrow a|b+c$
+	\item $\forall a,b,c \in I, c \not= 0: a|b \Leftrightarrow ac|bc$
+	\item $\forall a,b,c,d \in I: a|b \land c|d \Leftarrow ac|bd$
+	\item $\forall a,b \in I, n \in \mathbb{N}: a|b \Leftarrow a^n|b^n$
+\end{enumerate}
+
+\begin{mydef}
+Buď $(I, +, 0, -, \cdot, 1)$ obor integrity. Dělitel prvku 1 se nazývá jednotka oboru integrity $I$. Buď $E(I)$ množina všech jednotek $I$. Prvky $a, b \in I$ se nazývají asociované (formálně $a \sim b$): $\Leftrightarrow \exists e \in E(I): a = be$.
+\end{mydef}
+
+\begin{veta}
+\begin{enumerate}[a)]
+	\item $e \in I$ je jednotka oboru integrity $I \Leftrightarrow \exists f \in I: ef = 1$
+	\item $(E(I(, \cdot))$ je abelovská grupa, která se nazývá grupa jednotek oboru integrity  $I$.
+	\item $\sim$ je relace kongruence na $(I, \cdot)$
+	\item $\forall a, b \in I: a \sim b \Leftrightarrow a|b \lor b|a$
+\end{enumerate}
+\end{veta}
+
+\begin{mydef}
+Buď $(I, +, 0, -, \cdot, 1)$ obor integrity, $a \in I$.
+\begin{description}
+	\item[Triviální dělitelé prvku $a$] jsou všechna $e \in E(I)$ a všechna $b$ taková, že $b \sim a$
+	\item[Vlastní dělitelé prvku $a$] jsou všechna $b$ taková, že $b | a, b \not\in E(I)$ a $b \not\sim a$
+\end{description}
+\end{mydef}
+
+\begin{mydef}
+Prvek $a \in I \backslash E(I), a \not= 0$ se nazývá ireducibilní prvek: $\Leftrightarrow a$ má pouze triviální dělitele. (např. prvočísla v $\mathbb{Z}$.)
+\end{mydef}
+
+\begin{mydef}
+$p \in I \backslash E(I), p \not= 0$ se nazývá prvočinitel: $\Leftrightarrow p|ab \Leftarrow p|a \lor p|b$
+\end{mydef}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \chapter{Teorie polí (minimální pole, rozšíření pole, konečná pole a jejich konstrukce).} \label{cha:11}
