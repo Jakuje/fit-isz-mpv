@@ -1514,17 +1514,17 @@ Komutativní okruh $R \not= \{0\}$ s jednotkovým prvkem je prostý právě tehd
 \section{Přímé součiny}
 
 \begin{mydef}
-Buďte $\mathcal{A}_k = (A_k, \omega_i^{(k)_{i \in I}}, k \in K$ algebry téhož typu $(n_i)_{i \in I}$ a $A := \Pi_{k \in K} A_k = \{(a_k)_{k \in K} | a_k \in A_k\}$ kartézský součin všech množin $A_k$. Pro všechna $i \in I$ buď operace $\omega_i$ na $A$ definována vztahem:
+Buďte $\mathcal{A}_k = (A_k, \omega_i^{(k)_{i \in I}}, k \in K$ algebry téhož typu $(n_i)_{i \in I}$ a $A := \prod\limits_{k \in K} A_k = \{(a_k)_{k \in K} | a_k \in A_k\}$ kartézský součin všech množin $A_k$. Pro všechna $i \in I$ buď operace $\omega_i$ na $A$ definována vztahem:
 
 $$ \omega_i(a_k^{(1)})_{k \in K} \dots (a_k^{n_i})_{k \in K} := (\underbrace{\omega_i^{(k)}a_k^{(1)} \dots a_k^{(n_i)}}_{\in A_k})_{k \in K} \text{pro} n_i > 0 $$
 
 $$ \omega_i := (\omega_i^{(k)})_{k \in K} \text{pro} n_i = 0 $$
 
-Algebra $(A, (\omega_i)_{i \in I})$ se nazývá přímý součin algeber $\mathcal{A}_k$ a značí se $\Pi_{k \in K} \mathcal{A}_k$.
+Algebra $(A, (\omega_i)_{i \in I})$ se nazývá přímý součin algeber $\mathcal{A}_k$ a značí se $\prod\limits_{k \in K} \mathcal{A}_k$.
 \end{mydef}
 
 \begin{veta}
-Pokud platí při vhodných termech $t_1, t_2$ zákon tvaru $\forall x_1, \dots x_n : t(x_1, \dots, x_n) = t_2(x_1, \dots, x_n)$ ve všech algebrách $\mathcal{A}_k, k \in K$, potom platí také v $\Pi_{k \in K}\mathcal{A}_k$.
+Pokud platí při vhodných termech $t_1, t_2$ zákon tvaru $\forall x_1, \dots x_n : t(x_1, \dots, x_n) = t_2(x_1, \dots, x_n)$ ve všech algebrách $\mathcal{A}_k, k \in K$, potom platí také v $\prod\limits_{k \in K}\mathcal{A}_k$.
 \end{veta}
 
 Důsledek: Přímé součiny pologrup (grup, vektorových prostorů, okruhů, Booleových algeber) jsou opět pologrupy (grupy, vektorové prostoru, okruhy, Booleovy algebry). Nikoliv však pro obory integrity!
@@ -1588,18 +1588,120 @@ $(R[x], +, 0, -, \cdot, 1)$ je komutativní okruh s jednotkovým prvkem.
 \end{veta}
 
 \begin{mydef}
-Je-li $p(x) = \sum_{l = 0}^n a_k x^k$, kde $a_n \not= 0$, pak se $n$ nazývá stupeň polynomu $p(x)$ (píšeme $n = grad p(x)$). 
+Je-li $p(x) = \sum_{l = 0}^n a_k x^k$, kde $a_n \not= 0$, pak se $n$ nazývá stupeň polynomu $p(x)$ (píšeme $n = \text{grad } p(x)$). 
 \end{mydef}
 
 \begin{mydef}
-Je-li $p(x) = \sum_{k = 0}^n a_k x^k \in R[x]$, pak se prvky $a_x$ nazývají koeficienty polynomu $p(x)$. $0 \in R[x]$ je nulový polynom a $a \in R \subseteq R[x]$ se nazývá konstantní polynom. Platí-li $grad p(x) = n$ a $a_n = 1$, pak se $p(x)$ nazývá normalizovaný polynom. Polynomy tvaru $ax + b$, kde $a \not= 0$ se nazývají lineární polynomy.
+Je-li $p(x) = \sum_{k = 0}^n a_k x^k \in R[x]$, pak se prvky $a_x$ nazývají koeficienty polynomu $p(x)$. $0 \in R[x]$ je nulový polynom a $a \in R \subseteq R[x]$ se nazývá konstantní polynom. Platí-li $\text{grad } p(x) = n$ a $a_n = 1$, pak se $p(x)$ nazývá normalizovaný polynom. Polynomy tvaru $ax + b$, kde $a \not= 0$ se nazývají lineární polynomy.
 \end{mydef}
 
-% XXX TODO
+\begin{veta}
+Je-li $R$ obor integrity, potom je také $R[x]$ obor integrity, a pro $p(x), q(x) \in R[x] \backslash \{0\}$ platí $\text{grad } (p(x)q(x)) = \text{grad } p(x) + \text{grad } q(x)$.
+\end{veta}
 
+Není-li R obor integrity, pak ani $R[x]$ není obor integrity, neboť $r$ je podokruh  okruhu $R[x]$.
 
+\subsection{Polynomy $n$ neurčitých $x_1, \dots x_n$}
 
+Indukcí definujeme
 
+$$R[x_1] := R[x], R[x_1, \dots, x_n] := (r[x_1, \dots, x_{n-1}])[x_n], n > 1$$
+
+Potom platí
+
+$$ R[x_1, \dots, x_n] = \{ \sum\limits_{0 \leq i_i, \dots, i_n \leq m} a_{i_i \dots i_n} x_1^{i_1} \dots x_n^{i_n} | m \in \mathbb{N}_0, a_{i_1} \dots a_{i_n} \in R \} $$
+
+\subsection{Polynomy a funkce}
+\paragraph{Princip dosazování} Buď $(R, +, 0, -, \cdot, 1)$ komutativní okruh s jednotkovým prvkem a $p(x) = a_n x^n + \dots + a_1 x + a_0 \in R[x]$. Pro $a \in R$ je potom $p(a) := a_n a^n + \dots + a_1 a + a_0$ opět prvkem z $R$ který se nazývá \emph{hodnota polynomu v $a$}. Funkce
+
+$$ \begin{dcases}
+R \to R \\
+a \mapsto p(a)
+\end{dcases} $$
+
+se nazývá polynomiální funkce indukovaná polynomem $p(x)$ a často se taká označuje $p$.
+
+\begin{veta}
+Zobrazení
+$$ \begin{dcases}
+R[x] \to R \\
+p(x) \mapsto p(a)
+\end{dcases} $$
+je pro pevně dané $a \in R$ surjektivní homomorfizmus $R[x]$ na $R$.
+\end{veta}
+
+\begin{mydef}
+Buď $p(x) \in R[x]$ (komutativní okruh s jednotkovým prvkem). Potom se $a \in R$ nazývá kořen polynomu $p(x): \Leftrightarrow p(a) = 0$. Polynom $p(x)$ se nazývá dělitelný polynomem $q(x) \in R[x]$ (formálně $q(x) | p(x)$): $\Leftrightarrow p(x) = q(x)r(x)$ kde $r(x) \in R[x]$.
+\end{mydef}
+
+\begin{veta}
+Je-li $a$ kořen polynomu $p(x)$, pak je $p(x)$ dělitelný lineárním polynomem $x - a$ (a opačně).
+\end{veta}
+
+Nechť je $R$ obor integrity (např. $R = \mathbb{Z}$ nebo $R$ pole). Je-li $\text{grad } p(x) = n$ a platí $(x - a)^k | p(x)$ , tj. $p(x) = (x -a)^k q(x)$, potom je $k + \text{ grad } q(x) = \text{ grad } p(x) = n$, z čehož plyne $k \leq n$.
+
+\begin{mydef}
+Buď $p(x) \in R[x] \backslash \{0\}$ a nechť $a \in R$ je kořenem $p(x)$. Potom největší číslo $k \in \mathbb{N}$ takové, že $(x - a)^k | p(x)$, se nazývá násobnost kořene $a$.
+
+$l \leq \text{ grad } p(x)$
+\end{mydef}
+
+\begin{veta}
+Nechť $a_1, \dots a_r$ jsou po dvou různé kořeny polynomu $p(x) \in R[x] \backslash \{0\}$ s násobností $k_1 ,\dots, k_r$. Potom platí
+
+$$ (x - a)^{k_1} \dots (x - a)^{k_r} | p(x)$$
+\end{veta}
+
+Potom platí: $k_1 + \dots + k_r \leq \text{ grad } p(x)$
+
+\begin{veta}
+Buďte $p(x), q(x) \in R[x] \backslash \{0\}, \text{ grad } p(x) \leq n$ a $p(b_i) = q(b_i)$ pro $n+1$ po dvou různých prvků $b_0, \dots, b_n$ množiny $R$. Potom platí $p(x) = q(x)$.
+\end{veta}
+
+\begin{mydef}
+Pole $K$ se nazývá algebraicky uzavření, jestliže každý polynom $p(x) \in K[x] \ K$ má alespoň jeden kořen.
+\end{mydef}
+Pokud má nad oborem integrity každý lineární polynom kořen, pak je tento obor integrity pole ($ax - 1 (a \not=0)$ má kořen $c \Leftarrow ac = 1 \Leftarrow c = a^{-1}$).
+
+\begin{veta}
+(Gaussova základní věta algebry) Pole $\mathbb{C}$ je algebraicky uzavřené.
+\end{veta}
+
+\begin{veta}
+Je-li $K$ pole, potom jsou následující tvrzení ekvivalentní:
+\begin{enumerate}[a)]
+	\item $K$ je algebraicky uzavřené
+	\item Pro všechna $p(x) \in K[x]$, kde $\text{ grad } p(x) = n > 0$, platí $p(x) = c(x - b_1)^{k_1} \dots (x - b_r)^{k_r}$, kde $b_1, \dots, b_r, c \in K$ a $k_1 + \dots + k_r = n$.
+\end{enumerate}
+\end{veta}
+
+Výpočet kořenů nad poli:
+\begin{enumerate}[1)]
+	\item $\text{grad } p(x) = 1$: $ax + b$:  triviální
+	\item $\text{grad } p(x) = 2$: $p(x) = ax^2 + bx + c (a \not= 0)$ má kořeny $\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$ (2 resp. 4 zde označuje 1 + 1 resp. 1+1+1+1; vyjádření kořenů musí existovat a musí být $1+1 \not= 0$.
+	\item $\text{grad } p(x) = 3, 4$ Cardanovy vzorce
+	\item $\text{grad } p(x) > 4$  nejsou obecné vzorce
+\end{enumerate}
+
+\subsection{Interpolace pomocí polynomů}
+Buď $K$ pole a $f: K \to K$ funkce. \textbf{Zadáno}: $b_i = f(a_i)$  pro po dvou různá $a_i \in K, 1 \leq i \leq n$ (např. výsledek řady měření). \textbf{Hledá se}: $p(x) \in K[x]$, kde $p(a_i) = b_i = f(a_i), 1 \leq i \leq n$ a $\text{ grad } p(x) < n$. (Existuje nejvýše jeden takový polynom $p(x)$ z $p(a_i), 1 \leq i \leq n$, kde $\text{grad } p(x), \text{ grad } q(x) < n$ totiž plyne $p = q$.)
+
+\subsubsection{Lagrangerovy interpolační vzorce}
+Buď
+$$q_i(x) := \prod\limits_{1 \leq j \leq n, j \not=i} (x - a_j) = \dots (x - a_{i-1}) (x - a_{i+1}) \dots (x - a_n)$$
+Potom platí:
+$$q_i(a_k) =  \begin{dcases}
+0 \text{pro} i \not= k \\
+\prod\limits_{1 \leq j \leq n, j \not=i} (a_k - a_j) \not= 0 \text{pro } i = k
+\end{dcases}$$
+Pro 
+$$ p(x) := \sum\limits_{i = 1}^n b_i \frac{q_i(x)}{q i (a_i)} $$
+Potom platí $$ p(a_j) = b_j, 1 \leq j \leq n $$
+
+Je-li $K$ konečné pole (např. $K = \mathbb{Z}_p, p$ prvočíslo), $f: K \to K$, potom existuje polynom $p(x) \in K[x]$ takový, že $f(a) = p(a)$ pro všechna $a \in K$.
+
+% \subsubsection{Newtonovy interpolačnı́ vzorce}
+% XXX ???
 
 \section{Obory integrity a dělitelnost}
 \subsection{Jednoduchá pravidla dělitelnosti}
