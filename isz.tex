@@ -1901,7 +1901,7 @@ Buď $(K, +, 0, -, \cdot, 1)$ pole, kde char $K = 0$. Potom je $\{ \frac{n \cdot
 
 Každé minimální pole je izomorfní se $\mathbb{Z}_p (p \in \mathbb{P})$ nebo $\mathbb{Q}$.
 
-\subsection{Rozšíření pole}
+\section{Rozšíření pole}
 \begin{mydef}
 Buďte $K, L$ pole a $K$ podpole pole $L$. Potom $L$ se nazývá nadpole nebo rozšíření pole $K$.
 \end{mydef}
@@ -1910,9 +1910,55 @@ Pole $L$ se nazývá \emph{kořenové pole} polynomu $f(x)$ vzhledem ke $K$, pok
 
 Buď $L$ takové kořenové pole polynomu $f(x)$ vzhledem ke $K$. Potom je
 
-$K(\alpha_1, \dots, \alpha_n) := \bagcap \{M \subseteq L | M \text{ podpole pole } L, K \subseteq M, \alpha_1, dots, \alpha_n \in M \}$
+$K(\alpha_1, \dots, \alpha_n) := \bigcap \{M \subseteq L | M \text{ podpole pole } L, K \subseteq M, \alpha_1, dots, \alpha_n \in M \}$
 
 nejmenší podpole pole L, které obsahuje pole $K$ a prvky $\alpha_1, \dots, \alpha_n$. $K(\alpha_1, \dots, \alpha_n)$ se nazývá \emph{rozkladové pole} polynomu $f(x)$ vzhledem ke K.
+
+\begin{veta}
+(Kroneckerova věta) Ke každému $f(x) \in K[x], f(x) \not= 0$, existuje kořenové pole a tedy rozkladové pole polynomu $f(x)$ vzhledem ke K.
+\end{veta}
+
+Je-li $L$ nadpole pole $K$, potom je $L$ také vektorovým prostorem nad $K$. Vztahem $\text{dim}_K K =: [L : K]$ definujeme tzv. stupeň rozšíření $L$ pole $K$. Je-li $[L : K] < \infty$, pak se $L$ nazývá \emph{konečné rozšíření} pole $K$.
+
+\begin{enumerate}
+	\item $[ L : K] = 1 \Leftrightarrow L = K$
+	\item Je-li $p(x) \in K[x]$ ireducibilní polynom stupně $k$, pak existuje rozšíření $L$ pole $K$ a prvek $\alpha \in L$ tak, že $p(x) = 0$ a $\{1, \alpha, \dots, \alpha^{k-1}\}$ je báze $L$ nad $K$. Tedy platí $ [L : K] = k$.
+\end{enumerate}
+
+\begin{mydef}
+Buď $L$ nadpole pole $K$ a $\alpha \in L$.
+$\alpha$ se nazývá \emph{algebraický} prvek nad $K: \Leftrightarrow \exists f(x) \in K[x] \backslash \{0\}: f(\alpha) = 0$. \\
+$\alpha$ se nazývá \emph{transcendentní} prvek nad $K: \Leftrightarrow \not\exists f(x) \in K[x] \backslash \{0\}: f(\alpha) = 0$.
+\end{mydef}
+
+\begin{mydef}
+Je-li $L$ nadpole pole $K$ a $S \subseteq L$, pak definujeme rozšíření $K(S)$ pole $K$ takto:
+
+$$K(S) := \bigcap \{E \subseteq L | E \text{ je podpole pole L, které obsahuje } K \cup S\}$$
+
+Je-li $S = \{u_1, \dots, u_r\}$ konečné, pak píšeme $K(S) =: K(u_1, \dots, u_r)$. Je-li speciálně $S = \{\alpha\}$ jednoprvkové, pak píšeme $K(S) =: K(\alpha)$ (\uv{jednoduché rozšíření} pole K).
+\end{mydef}
+
+\section{Konečná pole (Galoisova pole)}
+
+\begin{veta}
+Řád každého konečného pole je mocnina prvočísla $p^n (p \in \mathbb{P}, n \in \mathbb{N})$. Obráceně ke každé mocnině čísla $p^n$ existuje až na izomorfizmus jediné pole $K$ takové, že $|K| = p^n$.
+\end{veta}
+Způsob zápisu pro $K$, kde $|K| = p^n: K = GF(p^n)$ (Galoisovo pole).
+
+\begin{veta}
+Je-li $K$ konečné pole, pak je grupa $(K \backslash \{0\}, \cdot)$ cyklická.
+\end{veta}
+
+\subsection{Konstrukce konečného pole $K$}
+
+Každý generátor grupy $(K \ \{0\}, \cdot)$ se nazývá primitivní prvek $K$. Je-li $\alpha$ primitivní prvek $K$, pak $K = \{0, 1, \alpha, \alpha^2, \dots, \alpha^{|K|-2}\}$. Buď $\mathbb{Z}_q, q \in \mathbb{P}$, minimální podpole pole $K$. Pak pro libovolná primitivní prvek $\alpha$ z $K$ platí $K \cong \mathbb{Z}_q(\alpha)$ a $\alpha$ je algebraický prvek nad $\mathbb{Z}_q$ (neboť je kořenem polynomu $x^{|K|-1} - 1 \in \mathbb{Z}_q[x]$). Buď $f(x)$ minimální polynom kořene $\alpha$ vzhledem k $\mathbb{Z}_q$. Potom je $f(x)$ ireducibilní a platí
+
+$$ \mathbb{Z}_q(\alpha) = \{a_0 + a_1 \alpha + \dots + a_{n-1}\alpha^{m-1} | a_i \in \mathbb{Z}_q\}$$
+
+kde $m = \text{ grad } f(x)$. Odtud dostáváme $|\mathbb{Z_q}(\alpha)| = q^m$ a z podmínky $|\mathbb{Z}_q(\alpha)| = |K| = p^n$ nyní vyplývá $q = p$ a $m = n$.
+
+
 
 
 
