@@ -1070,7 +1070,7 @@ Buď $(M, \leq)$ uspořádaná množina. Potom se $k \in M$ nazývá nejmenší 
 Existuje vždy nejvýše jeden nejmenší resp. největší prvek.
 
 \begin{mydef}
-Buď $(M, \leq)$ uspořádaná množina. Potom se $m \in M$ nazývá minimální (resp. maximální) prvek množiny $M :\Leftrightarrow \forall x \in M: x \leq m$ (resp. $x \geq m$) $\Leftarrow x = m$.
+Buď $(M, \leq)$ uspořádaná množina. Potom se $m \in M$ nazývá minimální (resp. maximální) prvek množiny $M :\Leftrightarrow \forall x \in M: x \leq m$ (resp. $x \geq m$) $\Rightarrow x = m$.
 \end{mydef}
 
 \begin{veta}
@@ -1152,7 +1152,7 @@ Buď $(V, \cap, \cup)$ svaz. Potom platí:
 Buď $(V, \cap, \cup, 0, 1)$ svaz s nulovým a jednotkovým prvkem. Potom se $a \in V$ nazývá \emph{atom}: $\Leftrightarrow$
 \begin{enumerate}[1)]
 	\item $0 < a$
-	\item $0 \leq b \leq a \Leftarrow b = 0 \lor b = a$
+	\item $0 \leq b \leq a \Rightarrow b = 0 \lor b = a$
 \end{enumerate}
 (tj. $a$ je horním sousedním prvkem nulového prvku.)
 \end{mydef}
@@ -1169,9 +1169,9 @@ $$ (B, \cap, \cup, 0, 1, ') \cong (\mathcal{P}(M), \cap, \cup, \emptyset, M, ')$
 přičemž  vztahem $\varphi(b) := \{a \in M | a \leq b\}$ je dán izomorfizmus $\varphi: B \to \mathcal{P}(M)$.
 \end{veta}
 
-$|M| = |M_1| \Leftarrow (\mathcal{P}(M), \cap, \cup, \emptyset, M, ') \cong (\mathcal{P}(M_1), \cap, \cup, \emptyset, M_1, ')$
+$|M| = |M_1| \Rightarrow (\mathcal{P}(M), \cap, \cup, \emptyset, M, ') \cong (\mathcal{P}(M_1), \cap, \cup, \emptyset, M_1, ')$
 
-$|M| = n \in \mathbb{N}_0 \Leftarrow |\mathcal{P}(M)| = 2^n$
+$|M| = n \in \mathbb{N}_0 \Rightarrow |\mathcal{P}(M)| = 2^n$
 
 Je-li $B$ konečná Booleova algebra, potom platí $|B| = 2^n$ pro libovolné $n \in \mathbb{N}_0$ pro libovolné $n \in \mathbb{N}_0$. Ke každému $n \in \mathbb{N}_0$ tak existuje -- až na izomorfizmus -- přesně jedna Booleova algebra s $2^n$ prvky, totiž $\mathcal{P}(\{0, 1, \dots, n-1\})$.
 
@@ -1278,9 +1278,9 @@ Je-li $M$ množina, potom se podmnožina $R$ množiny $M \times M$ nazývá bin�
 Relace $R \subseteq M \times M$ se nazývá:
 \begin{enumerate}[1)]
 	\item \emph{reflexivní}: $\Leftrightarrow \iota_M \subseteq R$, tj. $\forall x \in M: xRx$
-	\item \emph{symetrická}: $\Leftrightarrow \forall x, y \in M: xRy \Leftarrow yRx$
-	\item \emph{antisymetrická}: $\Leftrightarrow \forall x, y \in M: xRy \land yRx \Leftarrow x = y$
-	\item \emph{transitivní}: $\Leftrightarrow \forall x, y, z \in M: xRy \land yRz \Leftarrow xRz$
+	\item \emph{symetrická}: $\Leftrightarrow \forall x, y \in M: xRy \Rightarrow yRx$
+	\item \emph{antisymetrická}: $\Leftrightarrow \forall x, y \in M: xRy \land yRx \Rightarrow x = y$
+	\item \emph{transitivní}: $\Leftrightarrow \forall x, y, z \in M: xRy \land yRz \Rightarrow xRz$
 \end{enumerate}
 Relace splňující 1), 2) a 4) se nazývá relace \emph{ekvivalence}, relace splňující 1), 3) a 4) se nazývá relace \emph{(částečného) uspořádání)}.
 \end{mydef}
@@ -1290,7 +1290,7 @@ Buď $M$ množina. $\mathcal{P} \subseteq \mathcal{P}(M)$ se nazývá rozklad mn
 \begin{enumerate}[1)]
 	\item $\bigcup_{C \in \mathcal{P}} C = M$
 	\item $\emptyset \not\in \mathcal{P}$
-	\item $A, B \in \mathcal{P}  \Leftarrow A = B \lor A \cap B = \emptyset$ (tj. množiny v $\mathcal{P}$ jsou po dvou disjunktní.
+	\item $A, B \in \mathcal{P}  \Rightarrow A = B \lor A \cap B = \emptyset$ (tj. množiny v $\mathcal{P}$ jsou po dvou disjunktní.
 \end{enumerate}
 \end{mydef}
 
@@ -1378,7 +1378,7 @@ Izomorfismus je pouze přeznačení. Algebry jsou "stejné", izomorfizmus zachov
 \begin{mydef}
 Buď $\mathcal{A} = (A, (\omega_i)_{i \in I})$ algebra typu $(n_i)_{i \in I}$ a $\pi$ relace ekvivalence na $A$. $\pi$ se nazývá (relace) kongruence na $\mathcal{A} : \Leftrightarrow$ pro všechna $i \in I$, kde $n_i > 0, a_1, \dots, a_{n_i}, b_1, \dots, b_{n_i} \in A$ platí
 
-$$ a_1 \pi b_1 \land \dots \land a_{n_i} \pi b_{n_i} \Leftarrow \omega_i a_i \dots a_{n_i} \pi \omega_i b_1 \dots b_{n_i} $$
+$$ a_1 \pi b_1 \land \dots \land a_{n_i} \pi b_{n_i} \Rightarrow \omega_i a_i \dots a_{n_i} \pi \omega_i b_1 \dots b_{n_i} $$
 \end{mydef}
 
 \begin{veta}
@@ -1661,7 +1661,7 @@ Buďte $p(x), q(x) \in R[x] \backslash \{0\}, \text{ grad } p(x) \leq n$ a $p(b_
 \begin{mydef}
 Pole $K$ se nazývá algebraicky uzavření, jestliže každý polynom $p(x) \in K[x] \ K$ má alespoň jeden kořen.
 \end{mydef}
-Pokud má nad oborem integrity každý lineární polynom kořen, pak je tento obor integrity pole ($ax - 1 (a \not=0)$ má kořen $c \Leftarrow ac = 1 \Leftarrow c = a^{-1}$).
+Pokud má nad oborem integrity každý lineární polynom kořen, pak je tento obor integrity pole ($ax - 1 (a \not=0)$ má kořen $c \Rightarrow ac = 1 \Rightarrow c = a^{-1}$).
 
 \begin{veta}
 (Gaussova základní věta algebry) Pole $\mathbb{C}$ je algebraicky uzavřené.
@@ -1716,12 +1716,12 @@ Elementární pravidla dělitelnosti:
 	\item $\forall a \in I: a | 0$
 	\item $\forall a \in I: 1 | a$
 	\item $\forall a \in I: a | a$
-	\item $\forall a,b,c \in I: a|b \land b|c \Leftarrow a|c$
-	\item $\forall a,b,c \in I: a|b \Leftarrow a|bc$
-	\item $\forall a,b,c \in I: a|b \land a|c \Leftarrow a|b+c$
+	\item $\forall a,b,c \in I: a|b \land b|c \Rightarrow a|c$
+	\item $\forall a,b,c \in I: a|b \Rightarrow a|bc$
+	\item $\forall a,b,c \in I: a|b \land a|c \Rightarrow a|b+c$
 	\item $\forall a,b,c \in I, c \not= 0: a|b \Leftrightarrow ac|bc$
-	\item $\forall a,b,c,d \in I: a|b \land c|d \Leftarrow ac|bd$
-	\item $\forall a,b \in I, n \in \mathbb{N}: a|b \Leftarrow a^n|b^n$
+	\item $\forall a,b,c,d \in I: a|b \land c|d \Rightarrow ac|bd$
+	\item $\forall a,b \in I, n \in \mathbb{N}: a|b \Rightarrow a^n|b^n$
 \end{enumerate}
 
 \begin{mydef}
@@ -1750,7 +1750,7 @@ Prvek $a \in I \backslash E(I), a \not= 0$ se nazývá ireducibilní prvek: $\Le
 \end{mydef}
 
 \begin{mydef}
-$p \in I \backslash E(I), p \not= 0$ se nazývá prvočinitel: $\Leftrightarrow p|ab \Leftarrow p|a \lor p|b$
+$p \in I \backslash E(I), p \not= 0$ se nazývá prvočinitel: $\Leftrightarrow p|ab \Rightarrow p|a \lor p|b$
 \end{mydef}
 
 
