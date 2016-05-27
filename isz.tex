@@ -1753,6 +1753,79 @@ Prvek $a \in I \backslash E(I), a \not= 0$ se nazývá ireducibilní prvek: $\Le
 $p \in I \backslash E(I), p \not= 0$ se nazývá prvočinitel: $\Leftrightarrow p|ab \Rightarrow p|a \lor p|b$
 \end{mydef}
 
+Prvočinitel $\Leftrightarrow$ je ireducibilní prvek.
+
+\section{Gaussovy okruhy}
+
+\begin{mydef}
+Obor integrity $I$ se nazývá Gaussův okruh: $\Leftrightarrow$ Ke každému prvku $a \in I \backslash E(I), a \not= 0$, existují prvočinitelé $p_1, \dots, p_r$ (nikoliv nutně po dvou různí) tak, že platí $a = p_1 \dots p_r$
+\end{mydef}
+
+\begin{veta}
+(Jednoznačnost rozkladu na prvočinitele) Buď $I$ Gaussův okruh, $a \in I \backslash E(I), a \not= 0, a = p_1^{(1)} \dots p_{r_1}^{(1)} = p_1^{(2)} \dots p_{r_2}^{(2)}$, kde $p_i^{(1)}, p_j^{(2)}$ jsou prvočinitelé. Potom je $r_1 = r_2 := r$ a existuje permutace množiny $\{1, \dots r\}$ taková, že $p_i^{(1)} \sim p_{\pi(i)}^{(2)}, i = 1, \dots, r$.
+\end{veta}
+
+$\mathbb{Z}$ a $K[x]$ (K pole) jsou Gaussovy okruhy.
+
+\begin{mydef}
+Buď $I$ obor integrity, $a_1, \dots, a_n \in I$.
+\begin{enumerate}[1)]
+	\item $d \in I$ se nazývá \emph{největší společný dělitel} (NSD) prvků $a_1, \dots a_n \in I: \Leftrightarrow$ (i) $d | a_i, i = 1, \dots, n$ a (ii) $\forall t \in I: t|a_i, i = 1, \dots, n \Rightarrow t | d$
+	\item $v \in I$ se nazývá \emph{nejmenší společný násobek} (NSN) prvků $a_1, \dots a_n \in I: \Leftrightarrow$ (i) $a_i | v, i = 1, \dots, n$ a (ii) $\forall w \in I: a_i | w, i = 1, \dots, n \Rightarrow v | w$
+\end{enumerate}
+\end{mydef}
+
+\begin{veta}
+V Gaussově okruhu $I$ je každý ireducibilní prvek prvočinitelem.
+\end{veta}
+
+\begin{veta}
+Je-li $I$ Gaussův okruh, $a \in I \backslash E(I), a \not=0$, potom platí $a = e p_1^{e_1} \dots p_r^{e_r}$, kde $e \in E(I), p_1, \dots p_r$ jsou normovaní navzájem různí prvočinitelé $e_i \in \mathbb{N}$. 
+\end{veta}
+
+\begin{lemma}
+Buď $I$ Gaussův okruh, $a, b \in I \backslash \{0\}, a = fp_1^{f_1} \dots p_r^{f_r}, b = g p_1^{g_1} \dots p_r^{g_r}$ ($p_j$ normovaní navzájem různí prvočinitelé, $f_j, g_j \in \mathbb{N}_0, f,g \in E(I)$). Potom platí $a|b \Leftrightarrow f_j \leq g_j$ pro $j = 1, \dots, r$.
+\end{lemma}
+
+\begin{veta}
+Buď $I$ Guassův okruh, $a_1, \dots, a_n \in I, a_i \not= 0, a_i = e_i p_1^{e_{1i}} \dots p_r^{e_{ri}}, e_i \in E(I), p_j$ navzájem různí normovaní prvočinitelé, $e_{ji} \in \mathbb{N_0}$. Potom platí:
+
+$$ \text{NSD}(a_1, \dots, a_n) = p_1^{\text{min}_{1 \leq n \leq n}(e_{1i})} \dots p_r^{\text{min}_{1 \leq n \leq n}(e_{ri})}$$
+
+a
+
+$$ \text{NSN}(a_1, \dots, a_n) = p_1^{\text{max}_{1 \leq n \leq n}(e_{1i})} \dots p_r^{\text{max}_{1 \leq n \leq n}(e_{ri})}$$
+
+Jsou-li některá $a_i = 0$, potom je NDS$(a_1, \dots, a_n) = $NSD$(a_i|a_i \not= 0)$; jsou-li všechna $a_i = 0$, potom je NDS$(a_1, \dots a_n) = 0$. Jsou-li některá $a_i = 0$, pak je $NSN(a_1, \dots, a_n) = 0$.
+\end{veta}
+
+\begin{veta}
+Buď $I$ Gaussův okruh a $\cap, \cup$ binární operace na $I / \sim= \{[a]_\sim | a \in I\}$ definovaní vztahy:
+
+$$[a]_\sim \cap [b]_\sim := [NSD(a, b)]_\sim $$
+$$[a]_\sim \cup [b]_\sim := [NSN(a, b)]_\sim $$
+
+Potom jsou $\cap, \cup$ korektně definovány (tj. nezávisle na volbě reprezentantů) a $(I / \sim, \cap, \cup)$ je svaz s nulovým prvkem $[1]_\sim = E(I)$ a jednotkovým prvkem $[0]_\sim = \{0\}$ (svaz dělitelů). Příslušné uspořádání $\leq$ je dáno vztahem: $[a]_\sim \leq [b]_\sim : \Leftrightarrow a|b$.
+\end{veta}
+
+$(\mathbb{Z}/ \sim, \cap, \cup) \equiv (\mathbb{N}_0, NSD, NSN)$
+
+\section{Eukleidovy okruhy}
+\begin{mydef}
+Obor integrity $I$ se nazývá Eukleidův okruh: $\Leftrightarrow$ existuje zobrazení $H: I \backslash \{0\} \to \mathbb{N}_0$ (Eukleidovské ohodnocení) s následující vlastností: pro všechna $a \in I \backslash \{0\}, b \in I$ existují $q, r \in I$ tak, že $b=aq + r$, kde $r = 0 \lor H(r) < H(a)$ (dělení se zbytkem).
+\end{mydef}
+
+$\mathbb{Z}$ je Ekleidův okruh, kde $H(a) := |a|$. Každé pole je Eukleidův okruh ($q = a^{-1}b, r = 0$).
+
+\begin{veta}
+$K[x]$ (K pole) je Eukleidův okruh, kde $H(p(x)) := \text{ grad }p(x)$, tj. pro $p(x) \not= 0$, $p_1(x)$ libovolné, je $p_1(x) = p(x)q(x) + r(x)$, kde $r(x) = 0$ nebo grad $r(x) < \text{grad }p(x)$.
+\end{veta}
+
+Libovolný polynom $p(x) \in K[x]$ a libovolný prvek $a \in K$ existuje $r \in K$ tak, že $p(x) = (x - a)q(x) + p(a)$.
+
+\begin{veta}
+Každý Eukleidův okruh je Gaussův okruh.
+\end{veta}
 
 
 
@@ -1766,10 +1839,8 @@ $p \in I \backslash E(I), p \not= 0$ se nazývá prvočinitel: $\Leftrightarrow 
 
 
 
-
-
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Teorie polí (minimální pole, rozšíření pole, konečná pole a jejich konstrukce).} \label{cha:11}
 \chapter{Metrické prostory (příklady, konvergence posloupností, spojitá a izometrická zobrazení, úplnost, Banachova věta o pevném bodu).} \label{cha:12}
 \chapter{Normované a unitární prostory (základní vlastnosti a příklady, normované prostory konečné dimenze, uzavřené ortonormální systémy a Fourierovy řady).} \label{cha:13}
