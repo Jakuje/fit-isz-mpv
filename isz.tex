@@ -1841,7 +1841,93 @@ Každý Eukleidův okruh je Gaussův okruh.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Teorie polí (minimální pole, rozšíření pole, konečná pole a jejich konstrukce).} \label{cha:11}
+\chapter{Teorie polí} \label{cha:11}
+
+1. semestr, MAT, \texttt{Zaklady\_obecne\_algebry.pdf}, 6. kapitola
+
+(minimální pole, rozšíření pole, konečná pole a jejich konstrukce)
+
+\section{Minimální pole}
+\begin{mydef}
+Pole $(K, +, 0, -, \cdot, 1)$ se nazývá minimální, pokud nemá žádná jiná podpole než sama sebe.
+\end{mydef}
+
+\begin{veta}
+Každé pole má vždy jediné podpole, které je minimální.
+\end{veta}
+
+\begin{lemma}
+Buď $(R, +, 0, -, \cdot, 1)$ okruh s jednotkovým prvkem. Pak $\{n \cdot 1 | n \in \mathbb{Z}\}$ je komutativní podokruh okruhu R s tímtéž jednotkovým prvkem 1, totiž podokruh generovaný prvkem 1.
+\end{lemma}
+
+\begin{mydef}
+Buď $(R, +, 0, -, \cdot)$ okruh. Pak symbolem char $R$ označíme charakteristiku okruhu $R$, tj. nejmenší číslo $n \in \mathbb{N}$ takové, že pro každé $a \in R$ platí $n \cdot a = 0$ (kde $n \cdot a := \underbrace{a + a + \dots + a}_{n\text{-krát}}$. Pokud takové číslo neexistuje, pak klademe char $R = 0$.
+
+Je-li $(R, +, 0, -, \cdot, 1)$ okruh s jednotkovým prvkem a $n \in \mathbb{N}$, pak pro každé $a \in R$ platí $n \cdot a = 0$, právě když platí $n \cdot 1 = 0$ (platí-li $n \cdot 1 = 0$ a je-li $a \in R$ libovolný prvek, pak máme $n \cdot a = \underbrace{a + a + \dots + a}_{n\text{-krát}} = (\underbrace{1 + 1 + \dots + 1}_{n\text{-krát}})\cdot a = (n \cdot 1) \cdot a = 0 \cdot a = 0$; opačná implikace je zřejmá). Je-li tedy R okruh s jednotkovým prvkem $1$, pak char R je nejmenší číslo $n \in N$ pro něž platí $n \cdot 1 = 0$, případně char $R = 0$ pokud takové číslo neexistuje. Odtud ihned plyne, že platí
+
+$\text{char }R = \begin{dcases}
+o(1), \text{ pokud } o(1) \in \mathbb{N}, \\
+0, \text{ pokud } o(1) = \infty
+\end{dcases}$
+
+($o(1)$ značí řád prvku $1$ v abelovské grupě $(R, +)$, tedy $o(1) = |\{n \cdot 1 | n \in \mathbb{Z}\}|$ pokud je tato kardinalita konečná, jinak $\infty$.
+\end{mydef}
+
+$\text{char }R = \begin{dcases}
+|\{n \cdot 1 | n \in \mathbb{Z}\}|, \text{ pokud se jedná o končnou kardinality }, \\
+0, \text{ jinak }
+\end{dcases}$
+
+Okruh zbytkových tříd: $\mathbb{Z}_n$: char $\mathbb{Z}_n = n (n \in \mathbb{N}_0)$, char $\mathbb{Z} = 0$.
+
+\begin{lemma}
+Buď $(R, +, 0, -, \cdot, 1)$ okruh s jednotkovým prvkem a nechť $m = \text{ char }R$. Potom $\{n \cdot 1 | n \in \mathbb{Z}\} \cong \mathbb{Z}_m$
+\end{lemma}
+
+\begin{lemma}
+\begin{enumerate}[1)]
+	\item Je-li $R$ obor integrity a $m = \text{ char }R$, potom také $\{n \cdot 1 | n \in \mathbb{Z}\}$, a tedy i $\mathbb{Z}_m$ je obor integrity, takže platí $m=0$ nebo $m \in \mathbb{P}$ ($\mathbb{P}$ značí množinu všech prvočísel).
+	\item Je-li $R$ obor integrity a char $R \in \mathbb{P}$, potom $\{n \cdot 1 | n \in \mathbb{Z}\}$ je pole.
+\end{enumerate}
+\end{lemma}
+
+\begin{veta}
+Buď $(K, +, 0, -, \cdot, 1)$ pole takové, že char $K \in \mathbb{P}$. Potom $\{n \cdot 1 | n \in \mathbb{Z}$ je minimální podpole pole K. V tomto případě tedy platí: minimální podpole pole K je izomorfní se $\mathbb{Z}_m$, kde $m = \text{ char } K$.
+\end{veta}
+
+\begin{veta}
+Buď $(K, +, 0, -, \cdot, 1)$ pole, kde char $K = 0$. Potom je $\{ \frac{n \cdot 1}{m \cdot 1} | n \in \mathbb{Z}, m \in \mathbb{Z} \backslash \{0\}\}$ nejmenším podpolem  a tudíž minimálním podpolem pole $K$. Toto minimální podpole je izomorfní s $\mathbb{Q}$. Přitom jsme položili $\frac{n \cdot 1}{m \cdot 1} := (n \cdot 1)(m \cdot 1)^{-1}$.
+\end{veta}
+
+Každé minimální pole je izomorfní se $\mathbb{Z}_p (p \in \mathbb{P})$ nebo $\mathbb{Q}$.
+
+\subsection{Rozšíření pole}
+\begin{mydef}
+Buďte $K, L$ pole a $K$ podpole pole $L$. Potom $L$ se nazývá nadpole nebo rozšíření pole $K$.
+\end{mydef}
+
+Pole $L$ se nazývá \emph{kořenové pole} polynomu $f(x)$ vzhledem ke $K$, pokud je rozšířením pole s právě $n$ kořeny.
+
+Buď $L$ takové kořenové pole polynomu $f(x)$ vzhledem ke $K$. Potom je
+
+$K(\alpha_1, \dots, \alpha_n) := \bagcap \{M \subseteq L | M \text{ podpole pole } L, K \subseteq M, \alpha_1, dots, \alpha_n \in M \}$
+
+nejmenší podpole pole L, které obsahuje pole $K$ a prvky $\alpha_1, \dots, \alpha_n$. $K(\alpha_1, \dots, \alpha_n)$ se nazývá \emph{rozkladové pole} polynomu $f(x)$ vzhledem ke K.
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Metrické prostory (příklady, konvergence posloupností, spojitá a izometrická zobrazení, úplnost, Banachova věta o pevném bodu).} \label{cha:12}
 \chapter{Normované a unitární prostory (základní vlastnosti a příklady, normované prostory konečné dimenze, uzavřené ortonormální systémy a Fourierovy řady).} \label{cha:13}
 \chapter{Obyčejné grafy (stupně uzlů, sledy, souvislost, izomorfismy, stromy, kostry, Kruskalův a Primův algoritmus pro hledání minimální kostry ohodnoceného grafu, eulerovské a hamiltonovské grafy, planarita a obarvitelnost).} \label{cha:14}
