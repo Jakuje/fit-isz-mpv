@@ -1977,9 +1977,210 @@ Při určování konečného pole $K = GF(p^n)$, tj. při sestavování tabulek 
 
 
 
-%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Metrické prostory (příklady, konvergence posloupností, spojitá a izometrická zobrazení, úplnost, Banachova věta o pevném bodu).} \label{cha:12}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Metrické prostory} \label{cha:12}
+
+%s/XXX/ρ/g
+
+1. semestr, MAT, \texttt{Zaklady\_funkcionalni\_analyzy\_opr.pdf}, 1. -  4. kapitola
+
+(příklady, konvergence posloupností, spojitá a izometrická zobrazení, úplnost, Banachova věta o pevném bodu)
+
+\section{Definice, příklady}
+\begin{mydef}
+Metrickým prostorem budeme rozumět dvojici $\mathcal{X} = (X, XXX)$, kde $X$ je množina, jejíž prvky nazýváme bodu a $XXX$ je tzv. vzdálenost (metrika), což je nezáporná reální funkce $XXX(x, y)$, která je definována pro každou dvojicí $x, y \in X$ (tedy $XXX: X \times X \to \mathbb{R}_0^+$ je zobrazení) a která splňuje tyto podmínky:
+\begin{enumerate}[1)]
+	\item $\forall x, y \in X: XXX(x, y) = 0 \Leftrightarrow x = y$
+	\item $\forall x, y \in X: XXX(x, y) = XXX(y, x)$ (symetrie)
+	\item $\forall x, y, z \in X: XXX(x, y) + XXX(y, z) \geq XXX(x, z)$ (trojúhelníková nerovnost)
+\end{enumerate}
+\end{mydef}
+
+Příklady:
+\begin{itemize}
+	\item Diskrétní metrický prostor $(X, XXX)$:
+	$$XXX(x, y) = \begin{dcases}
+	0 \text{v případě} x = y\\
+	1 \text{v případě} x \not= y
+	\end{dcases}$$
+	\item Metrický prostor $\mathbb{R}^1$ se vzdáleností $XXX(x, y) = |x-y|$
+	\item $n$-rozměrný euklidovský prostor $\mathbb{R}^n$ se vzdáleností $XXX(x, y) = \sqrt{\sum\limits_{k = 1}^n}(y_k - x_k)^2$. Tento metrický prostor $(\mathbb{R}^n, XXX)$ značíme $\mathbb{R}^n_1$.
+	\item Metrický prostor $\mathbb{R}^n_0$ používá vzdálenost $XXX_0(x, y) = \max\limits_{1 \leq k \leq n} |y_k - x_k|$
+	\item Množina $C(\left<a, b \right>)$ (často též značená $C^0\left<a,b\right>$) všech spojitých reálných funkcí, které jsou definovány na intervalu $\left<a, b\right>$, se vzdáleností: $XXX(f, g) = \max\limits_{a \leq t \leq b} | g(t) - f(t)$ také tvoří metrický prostor.
+	\item Označme symbolem $l_2$ metrický prostor, jehož body jsou posloupnosti reálných čísel
+	$x = (x_1, x_2, \dots, x_n, \dots)$
+	splňující podmínku
+	$\sum\limits_{k=1}^\infty x_k^2 < +\infty$
+	a v němž se vzdálenost definuje vztahem
+	$XXX(x, y) = \sqrt{\sum\limits_{k=1}^\infty(y_k - x_k)^2}$
+	\item Uvažujeme množinu všech spojitých funkcí na intervalu $\left<a, b\right>$. Vzdálenost definujeme jako $XXX(x, y) = \left( \int_a^b (x(t) - y(t))^2 dt \right)^\frac{1}{2}$. Tento metrický prostor budeme značit $C_2^0\left<a, b\right>$ a nazývat prostorem spojitých funkcí s kvadratickou metrikou.
+	\item Uvažujme množinu všech ohraničených posloupností $x = (x_1, x_2, \dots, x_n, \dots)$ reálných čísel. Položíme-li $XXX(x, y) = sup |x_k - y_k|$ dostaneme metrický prostor $M^\infty$.
+\end{itemize}
+
+\begin{mydef}
+Nechť $\mathcal{X} = (X, XXX)$ je libovolný metrický prostor. Metrický prostor $\mathcal{M} = (M, XXX)$ s toutéž metrikou $XXX$ uvažovanou pouze na množině $M \subset X$ se nazývá podprostorem metrického prostoru $X$.
+\end{mydef}
+
+\section{Konvergence posloupností}
+Buď $\mathcal{X} = (X, XXX)$ metrický prostor, $x_0 \in X, r \in \mathbb{R}^+$. \emph{Otevřenou koulí} $S(x_0, r)$ v metrickém prostoru $\mathcal{X}$ budeme nazývat množinu bodů $x \in X$, které vyhovují podmínce
+
+$$XXX(x, x_0) < r$$
+
+Bod $x_0$ se nazývá \emph{středem} a číslo $r$ \emph{poloměrem} této koule.
+
+\emph{Uzavřenou koulí} poloměru $\epsilon$ se středem $x_0$ budeme také nazývat $\epsilon$-okolím bodu $x_0$ a značit symbolem $0_\epsilon(x_0)$.
+
+Bod $x$ nazýváme bodem \emph{uzávěru množiny} $M$, jestliže jeho libovolné okolí obsahuje alespoň jeden bod z $M$. Množina všech bodů uzávěru množiny $M$ se označuje $\overline{M}$ a nazývá se \emph{uzávěrem} množiny.
+
+Protože každý bod, který náleží $M$ je bodem uzávěru množiny $M$ (tento bod totiž leží v každém svém okolí), platí $M \subseteq \overline{M}$.
+
+Množinu $M$, pro kterou platí $M = \overline{M}$, nazýváme \emph{uzavřenou}.
+
+Bod $x$ nazýváme \emph{vnitřním bodem množiny $M$}, existuje-li okolí $O_\epsilon(x)$ tohoto bodu, které je celé obsažené v množině $M$. Množinu, jejíž všechny body jsou vnitřní nazýváme \emph{otevřenou}.
+
+Zřejmě je tedy množina $M$ otevřená (uzavřená), právě když její doplněk je uzavřená (otevřená) množina.
+
+\begin{veta}
+Uzávěr uzávěru $M$ je roven uzávěru $M$:
+$$ \overline{\overline{M}} = \overline{M} $$
+\end{veta}
+
+\begin{veta}
+Jestliže $M_1 \subseteq M$, potom $\overline{M_1} \subseteq \overline{M}$
+\end{veta}
+
+\begin{veta}
+Uzávěr sjednocení je roven sjednocení uzávěrů:
+$$ \overline{M_1 \cup M_2} = \overline{M_1} \cup \overline{M_2} $$
+\end{veta}
+
+Nechť $x_1, x_2, \dots$ je posloupnost bodů v metrickém prostoru $\mathcal{X} = (X, XXX)$. Říkáme, že tato \emph{posloupnost konverguje k bodu} $x \in X$, jestliže ke každému reálnému číslu $\epsilon > 0$ lze najít takové přirozené čislo $N(\epsilon)$, že okolí $O_\epsilon(x)$ obsahuje všechny body $x_n$, kde $n \geq N(\epsilon)$. Bod $x$ se nazývá \emph{limita posloupnosti} $\{x_n\}$.
+
+Nebo: Posloupnost $\{x_n\}$ konverguje k bodu $x$, jestliže
+
+$$\lim\limits_{n\to \infty} XXX(x, x_n) = 0 $$
+
+Žádná posloupnost nemůže mít dvě různé limity. Jestliže posloupnost $\{x_n\}$ konverguje k bodu $x$, potom každá posloupnost vybraná z této posloupnosti konverguje k témuž bodu.
+
+\begin{veta}
+Aby bod $x$ byl bodem uzávěru množiny $M$, je nutné a stačí, aby existovala posloupnost $\{x_n\}$ bodů množiny $M$ konvergující k $x$.
+\end{veta}
+
+Nechť $A$ je podmnožina metrického prostoru $\mathcal{X}$. Množinu $A$ nazýváme hustotou v $\mathcal{X}$, jestliže $\overline{A} = \mathcal{X}$.
+
+Například množina racionálních čísel je hustá na číselní přímce.
+
+Metrický prostor $\mathcal{X}$, který obsahuje \emph{spočetnou} množinu, se nazývá \emph{separabilní}.
+
+Příklady separabilních metrických prostorů:
+\begin{itemize}
+	\item Diskrétní metrická prostor je separabilní, právě když je spočetný. V tomto prostoru je $\overline{M}$ libovolné množiny $M$ totožný s množinou $M$.
+	\item V metrickém prostoru $\mathbb{R}^1$ je hustou množinou množina racionálních čísel.
+	\item V metrickém prostorech $\mathbb{R}^n$, $\mathbb{R}^n_0$ je hustou množinou množina vektorů s racionálními souřadnicemi.
+	\item V metrickém prostorech $C^0\left<a, b\right>$ a $C_2^0\left<a, b\right>$ je hustou množinou množina polynomů s racionálními koeficienty.
+	\item V metrickém prostorech $I_2$ je hustou množinou množina všech posloupností $\{x_n\}$. kde $x_n$ jsou racionální čísla, přičemž počet čísel $x_n$ různých od nuly je pouze konečný a pro různé posloupnost obecně různý.
+\end{itemize}
+
+Příklad neseparabilního prostoru: Metrický prostor $M^\infty$ všech ohraničených posloupností není separabilní.
+
+\section{Spojitá zobrazení. Homeomorfismus. Izometrické zobrazení}
+\begin{mydef}
+Nechť $\mathcal{X} = (X, XXX)$ a $\mathcal{Y} = (Y, XXX^*)$ jsou dva různé metrické prostory. Zobrazení $f: \mathcal{X} \to \mathcal{Y}$ prostoru $\mathcal{X}$ do prostoru $\mathcal{Y}$ se nazývá spojité v bodě $x_0 \in X$, jestliže k libovolnému $\epsilon > 0$ lze najít takové $\delta > 0$, že pro všechny body $x$ s vlastností $XXX(x, x_0) < \delta$ platí
+$$XXX^*(f(x), f(x_0)) < \epsilon$$
+\end{mydef}
+
+Zobrazení $f: \mathcal{X} \to \mathcal{Y}$ se nazývá spojité, jestliže je spojité ve všech bodech prostoru $\mathcal{X}$.
+
+Je-li $\mathcal{Y}$ číselná přímka, potom spojité zobrazení $\mathcal{X}$ do $\mathcal{Y}$ se nazývá spojitou funkcí na $\mathcal{X}$.
+
+\begin{veta}
+Zobrazení $f: \mathcal{X} \to \mathcal{Y}$ je spojité v bodě $x$, právě když pro libovolnou posloupnost $\{x_n\}$, která konverguje k bodu $x$, konverguje posloupnost $\{f(x_n)\}$ k bodu $y = f(x)$.
+\end{veta}
+
+\begin{veta}
+Aby zobrazení $f: \mathcal{X} \to \mathcal{Y}$ bylo spojité, je nutné a stačí, aby vzor vzhledem k $f$ každé uzavřené množiny z $\mathcal{Y}$ byla uzavřená množina v $\mathcal{X}$.
+\end{veta}
+
+\begin{veta}
+Aby zobrazení $f: \mathcal{X} \to \mathcal{Y}$ bylo spojíté, je nutné a stačí, aby vzor každé otevřené množiny z $\mathcal{Y}$ byla otevřená množina.
+\end{veta}
+
+\begin{veta}
+Nechť $\mathcal{X}, \mathcal{Y}, \mathcal{Z}$ jsou metrické prostory a $f: \mathcal{X} \to \mathcal{Y}$, $\varphi: \mathcal{Y} \to \mathcal{Z}$ spojitá zobrazení. Potom zobrazení $z = \varphi(f(x))$ metrického prostoru $\mathcal{X}$ do metrického prostoru $\mathcal{Z}$ je spojité.
+\end{veta}
+
+\begin{mydef}
+Zobrazení $f$ se nazývá homeomorfismus, je-li vzájemně jednoznačné a jak zobrazení tak k němu inverzní zobrazení $f^{-1}$ jsou spojitá.
+
+Metrické prostory $\mathcal{X}$ a $\mathcal{Y}$ se nazývají homeomorfní, existuje-li mezi nimi homeomorfní zobrazení.
+\end{mydef}
+
+\begin{veta}
+Aby vzájemně jednoznačné zobrazení bylo homeomorfní, je nutné a stačí, aby uzavřené (otevřené) množiny odpovídaly uzavřeným (otevřeným) množinám.
+\end{veta}
+
+\begin{mydef}
+Říkáme, že vzájemně jednoznačné zobrazení $y = f(x)$ metrického prostoru $\mathcal{X} = (X, XXX)$ na metrický prostor $\mathcal{Y} = (Y, XXX^*)$ je izometrické, jestliže
+
+$$ XXX(x_1, x_2) = XXX^*(f(x_1), f(x_2)) \quad \forall x_1, x_2 \in X $$
+
+Samotné metrické prostory $\mathcal{X}$ a $\mathcal{Y}$ mezi kterými je možno stanovit izometrické zobrazení se nazývají izometrickými mezi sebou.
+\end{mydef}
+
+\section{Úplné metrické prostory}
+
+Číselná osa
+
+\begin{mydef}
+Posloupnost $\{x_n\}$ bodů metrického prostoru $\mathcal{X}$ budeme nazývat \emph{cauchyovskou} (nebo \emph{fundamentální}), jestliže splňuje Caughyovo kritérium, tj. jestliže ke každému $\epsilon > 0$ existuje takové kladné celé číslo $N(\epsilon)$, že
+$$ \forall m,n \geq N(\epsilon) \quad XXX(x_m, x_n) < \epsilon $$
+\end{mydef}
+
+\begin{mydef}
+Jestliže v metrickém prostoru $\mathcal{X}$ libovolná cauchyovská posloupnost konverguje (tj. existuje $x \in \mathcal{X}$ tak, že $XXX(x_n, x) \to 0$), potom nazýváme tento prostor \emph{úplný}.
+\end{mydef}
+
+Příklady:
+\begin{enumerate}
+	\item V diskrétním metrickém prostoru jsou cauchyovské pouze stacionární posloupnosti, tj. takové, v nichž se od určitého indexu stále opakuje tentýž bod. Každá taková posloupnost ovšem konverguje, tj. tento prostor jeúplný.
+	\item Úplnost prostoru $\mathbb{R}^1$, tj. úplnost množiny všech reálných čísel je známa z matematická analýzy.
+	\item Úplnost euklidovského prostoru $\mathbb{R}^n$ plyne snadno z úplnost prostoru $\mathbb{R}^1$: Nechť $\{x^{(p)}\}$ je cauchyovská posloupnost bodů
+	$$ x^{(p)} = (x^{(p)}_1, x^{(p)}_2, \dots, x^{(p)}_n) \in \mathbb{R}^n, p = 1, 2, \dots $$
+	\item Úplnost prostorů $\mathbb{R}^n_0, \mathbb{R}^n_1$ lze ukázat obdobně.
+	\item Také metrické prostory $C^0 \left<a, b \right>, l_2$ a $M^\infty$ jsou úplné.
+	\item Prostor $C_2^0 \left<a, b \right>$ není úplný.
+\end{enumerate}
+
+Není-li metrický prostor $\mathcal{X}$ úplný, pak jej lze vždy vnořit do úplného prostoru $\mathcal{X}^*$. Přesněji, existuje (až na izometrii) jediný úplný prostor $\mathcal{X}^*$ takový, že $\mathcal{X}$ je podprostor prostoru $\mathcal{X}^*$ a $\mathcal{X}$ je v $\mathcal{X}^*$ hustý.
+
+\section{Banachův princip pevného bodu (BPPB}
+
+\begin{mydef}
+Nechť $\mathcal{X} = (X, XXX)$ je metrický prostor. Zobrazení $A$ prostoru $\mathcal{X}$ do prostoru $\mathcal{X}$ se nazývá \emph{kontraktivní} (neboli kontrakce), existuje-li takové číslo $\alpha < 1$, ž epro libovolné dva body $x, y \in X$ platí nerovnost
+$$XXX(Ax, Ay) \leq \alpha XXX(x, y)$$
+\end{mydef}
+
+\begin{veta}
+Každé kontraktivní zobrazení je spojité.
+\end{veta}
+
+\begin{mydef}
+Bod $x$ se nazývá \emph{pevný bod} zobrazení $A$, jestliže $Ax$ = x. Jinak řečeno, pevné body jsou řešení rovnice $Ax = x$.
+\end{mydef}
+
+\begin{veta}
+(BPPB) Každé kontraktivní zobrazení definované v neprázdném úplném metrickém prostoru $\mathcal{X}$ má právě jeden pevný bod.
+\end{veta}
+
+\section{Aplikace BPPB}
+BPPB lze použít k důkazu vět o existenci a jednoznačnosti řešení pro rovnice různých typů. Kromě důkazu existence a jednoznačnosti řešení rovnice $Ax = x$ dává BPPB také praktickou metodu přibližného výpočtu tohoto řešení (nazývanou metoda postupných aproximací).
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Normované a unitární prostory (základní vlastnosti a příklady, normované prostory konečné dimenze, uzavřené ortonormální systémy a Fourierovy řady).} \label{cha:13}
 \chapter{Obyčejné grafy (stupně uzlů, sledy, souvislost, izomorfismy, stromy, kostry, Kruskalův a Primův algoritmus pro hledání minimální kostry ohodnoceného grafu, eulerovské a hamiltonovské grafy, planarita a obarvitelnost).} \label{cha:14}
 \chapter{Orientované grafy (orientované sledy, souvislost a silná souvislost, turnaje, eulerovské a hamiltonovské grafy, Dijkstrův a Floyd-Warshallův algoritmus pro hledání cesty minimální délky).} \label{cha:15}
