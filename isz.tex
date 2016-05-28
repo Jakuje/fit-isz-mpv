@@ -1958,7 +1958,12 @@ $$ \mathbb{Z}_q(\alpha) = \{a_0 + a_1 \alpha + \dots + a_{n-1}\alpha^{m-1} | a_i
 
 kde $m = \text{ grad } f(x)$. Odtud dostáváme $|\mathbb{Z_q}(\alpha)| = q^m$ a z podmínky $|\mathbb{Z}_q(\alpha)| = |K| = p^n$ nyní vyplývá $q = p$ a $m = n$.
 
-
+Při určování konečného pole $K = GF(p^n)$, tj. při sestavování tabulek jeho operací, lze proto postupovat následujícím způsobem:
+\begin{enumerate}
+	\item Za minimální podpole pole $K$ se vezme $\mathbb{Z}_p$.
+	\item Zvolíme normovaný ireducibilní polynom $q(x) \in \mathbb{Z}_p[x]$ stupně $n$. Nechť např. $q(x) = x^n - a_{n-1}x^{n-1} - \dots - a_1 x - x_0$ kde $a_i \in \mathbb{Z}_p$.
+	\item Položíme $q(\alpha) = 0$ a uvažujeme bází $\{1, \alpha, \dots, \alpha^{n-1}\}$ vektorového prostoru $GF(p^n)$ nad $\mathbb{Z}_p$ (víme, že $[GF(p^n): \mathbb{Z}_p] = n$). Spočítáme použitím $q(\alpha = 0)$ (tj. $a^n = a_0 + x_1 \alpha + \dots + a_{n-1}x^{n-1}$ mocniny $\alpha$. Platí-li $\alpha^{p^n-1} = 1$ pro $1 \leq j < p^n - 1$, je $\alpha$ primitivní prvek $GF(p^n)$. Jinak učiníme další pokus s novým polynomem $q(x)$.
+\end{enumerate}
 
 
 
