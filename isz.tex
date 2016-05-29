@@ -1981,8 +1981,6 @@ Při určování konečného pole $K = GF(p^n)$, tj. při sestavování tabulek 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Metrické prostory} \label{cha:12}
 
-%s/XXX/ρ/g
-
 1. semestr, MAT, \texttt{Zaklady\_funkcionalni\_analyzy\_opr.pdf}, 1. -  6. kapitola
 
 (příklady, konvergence posloupností, spojitá a izometrická zobrazení, úplnost, Banachova věta o pevném bodu)
@@ -2295,23 +2293,58 @@ Nechť  $\{x_\alpha\}$ je libovolná neprázdná množina prvků lineárního pr
 
 \section{Normovaná prostory konečné dimenze}
 
-Každý lineární prostor $X(x)$ konečné dimenze $n$ je izomorfní s euklidovským prostorem $\mathbb{R}^n$, a proto můžeme považovat prvky uvažovaného prostoru $X(n)$ za n-tice reálných čísel.
+Každý lineární prostor $X(n)$ konečné dimenze $n$ je izomorfní s euklidovským prostorem $\mathbb{R}^n$, a proto můžeme považovat prvky uvažovaného prostoru $X(n)$ za n-tice reálných čísel.
 
 \begin{veta}
-(Riesz) Nechť $X(n)$ je normovaný prostor konečné dimenze $n$. Aby posloupnost $\{x_\nu = ($.
+(Riesz) Nechť $X(n)$ je normovaný prostor konečné dimenze $n$. Aby posloupnost
+$\{x_\nu = (\xi_1^{(\nu)}, \xi_2^{(\nu)}, \dots, \xi_n^{(\nu)})$,
+konvergovala k prvku
+$x_0 = (\xi_1^{(0)}, \xi_2^{(0)}, \dots, \xi_n^{(0)}) \in X(n)$, je nutné a stačí, aby
+$\xi_k^{(\nu)} \to \xi_k^{(0)} (k = 1, 2, \dots, n).$
 \end{veta}
 
+\begin{lemma}
+Je-li posloupnost $\{x_\nu\}$ ohraničená, potom je ohraničená i každá posloupnost $\{\xi_k^{(\nu)} (k = 1, 2, \dots, n)$.
+\end{lemma}
 
+Důsledek: Každý normovaný prostor konečné dimenze je úplný.
 
+\section{Hilbertovy prostory}
+\subsection{Unitární prostory a jejich základní vlastnosti}
 
+\begin{mydef}
+Skalárním součinem v reálném lineárním prostoru $R$ nazýváme zobrazení $(-, -): R \to \mathbb{R}$, tedy reálnou funkci $(x, y)$ definovanou pro každou dvojici prvků $x, y \in R$, která splňuje tyto čtyři podmínky ($x, x_1, x_2, y \in R, \lambda $ je reálné číslo):
+\begin{enumerate}
+	\item $(x, y) = (y, x)$
+	\item $(x_1 + x_2, y) = (x_1, y) + (x_2, y)$
+	\item $(\lambda x, y) = \lambda(x, y)$
+	\item $(x, x) \geq 0$, přičemž $(x,x) = 0$, když a jen když $x = \theta$.
+\end{enumerate}
+\end{mydef}
 
+\begin{mydef}
+Lineární prostor, v němž je definován skalární součin se nazývá \emph{unitární prostor}. V unitárním prostoru $R$ se norma zavádí vztahem
+$||x|| = \sqrt{(x, x)}$
+\end{mydef}
 
+Množina $\{ x_\alpha \}$ nenulových vektorů $x_\alpha \in R$ se nazývá \emph{ortogonální} soustava, jestliže
+$(x_\alpha, x_\beta) = 0$ pro $\alpha \not= \beta$
 
+Soustava nenulových vektorů $x_\alpha \in R$ se nazývá \emph{ortonormální}, jestliže
+$$(x_\alpha, x_\beta) = \begin{dcases}
+0 \text{ pro } \alpha \not= \beta \\
+1 \text{ pro } \alpha = \beta
+\end{dcases}$$
 
+Je zřejmé, že je-li $\{x_\alpha\}$ ortogonální soustava, potom $\{x_\alpha / ||x_\alpha|| \}$ je ortonormální soustava. Úplná ortonormální soustava se nazývá ortonormální báze.
 
+\begin{veta}
+Je-li $\{x_\alpha\}$ ortogonální soustava, jsou vektory $x_\alpha$ lineárně nezávislé.
+\end{veta}
 
-
-
+\begin{mydef}
+Množina $\{x_\alpha\} \in R$ se nazývá úplná systém vektorů, jestliže uzávěr podprostoru generovaného množinou $\{x_\alpha\}$ je celý prostor $R$. Je-li $\{x_\alpha\}$ navíc ortogonální (ortonormální) soustavou, nazýváme ji \emph{ortogonální (ortonormální) báze}.
+\end{mydef}
 
 
 
