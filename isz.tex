@@ -11,8 +11,8 @@
 
 \usepackage{amsthm}
 \newtheorem{mydef}{Definice}[chapter]
-\newtheorem{veta}{Věta}
-\newtheorem{lemma}{Lemma}
+\newtheorem{veta}{Věta}[chapter]
+\newtheorem{lemma}{Lemma}[chapter]
 
 \usepackage{geometry}
 \usepackage{layout}
@@ -1518,7 +1518,7 @@ Buďte $\mathcal{A}_k = (A_k, \omega_i^{(k)_{i \in I}}, k \in K$ algebry téhož
 
 $$ \omega_i(a_k^{(1)})_{k \in K} \dots (a_k^{n_i})_{k \in K} := (\underbrace{\omega_i^{(k)}a_k^{(1)} \dots a_k^{(n_i)}}_{\in A_k})_{k \in K} \text{pro} n_i > 0 $$
 
-$$ \omega_i := (\omega_i^{(k)})_{k \in K} \text{pro} n_i = 0 $$
+$$ \omega_i := (\omega_i^{(k)})_{k \in K} \text{ pro } n_i = 0 $$
 
 Algebra $(A, (\omega_i)_{i \in I})$ se nazývá přímý součin algeber $\mathcal{A}_k$ a značí se $\prod\limits_{k \in K} \mathcal{A}_k$.
 \end{mydef}
@@ -1983,7 +1983,7 @@ Při určování konečného pole $K = GF(p^n)$, tj. při sestavování tabulek 
 
 %s/XXX/ρ/g
 
-1. semestr, MAT, \texttt{Zaklady\_funkcionalni\_analyzy\_opr.pdf}, 1. -  4. kapitola
+1. semestr, MAT, \texttt{Zaklady\_funkcionalni\_analyzy\_opr.pdf}, 1. -  6. kapitola
 
 (příklady, konvergence posloupností, spojitá a izometrická zobrazení, úplnost, Banachova věta o pevném bodu)
 
@@ -2181,7 +2181,144 @@ BPPB lze použít k důkazu vět o existenci a jednoznačnosti řešení pro rov
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Normované a unitární prostory (základní vlastnosti a příklady, normované prostory konečné dimenze, uzavřené ortonormální systémy a Fourierovy řady).} \label{cha:13}
+\chapter{Normované a unitární prostory} \label{cha:13}
+
+1. semestr, MAT, \texttt{Zaklady\_funkcionalni\_analyzy\_opr.pdf}, 7. -  ?. kapitola
+
+(základní vlastnosti a příklady, normované prostory konečné dimenze, uzavřené ortonormální systémy a Fourierovy řady)
+
+\section{Definice, příklady}
+
+\begin{mydef}
+Nechť $\mathcal{L}$ je neprázdná množina prvků $x, y, z, \dots$ a nechť je splněno těchto osm podmínek:
+\begin{enumerate}[I.]
+	\item $\mathcal{L}$ je komutativní grupa, tj. ke každým dvěma prvkům $x, y \in \mathcal{L}$ je jednoznačně přiřazen třetí prvek ležící v $\mathcal{L}$, který je nazývaný jejich součet a označovaný $x + y$, přičemž platí tyto čtyři axiomy:
+	\begin{enumerate}[1.]
+		\item $x + y = y + x$ (komutativita)
+		\item $x + (y + z) = (x + y) + z$ (asociativita)
+		\item v $\mathcal{L}$ existuje takový prvek (značíme jej $\theta$), že $x + \theta = x$ pro všechny prvky $x \in \mathcal{L}$ (existence nulového prvku)
+		\item Ke každému prvku $x \in \mathcal{L}$ existuje prvek, který značíme $-x$, takový, že $x + (-x) = \theta$ (existence opačného prvku)
+	\end{enumerate}
+	\item Ke každému číslu $\alpha$ nějakého číselného tělesa $T$ a ke každému prvku $x \in \mathcal{L}$ je jednoznačně přiřazen prvek $\alpha x \in \mathcal{L}$ (tzv. součin prvku $x$ a čísla $\alpha$), přičemž platí tyto dva axiomy:
+	\begin{enumerate}[1.]
+		\item $\alpha(\beta x) = (\alpha \beta) x \quad \alpha, \beta \in T, x \in \mathcal{L}$
+		\item $1 \cdot x = x \quad 1 \in T, x \in \mathcal{L}$
+	\end{enumerate}
+	\item Obě operace (tj. sčítání prvků a násobení prvku číslem) jsou svázány těmito dvěma zákony:
+	\begin{enumerate}[1.]
+		\item $(\alpha + \beta) x = \alpha x + \beta x, \quad \alpha, \beta \in T, x \in \mathcal{L}$
+		\item $\alpha (x + y) = \alpha x + \beta x, \quad \alpha \in T, x, y \in \mathcal{L}$
+	\end{enumerate}
+\end{enumerate}
+Množinu $\mathcal{L}$ potom nazýváme \emph{lineárním nebo vektorovým prostorem} nad číselným tělesem $T$. Podle toho, zde čísly $\alpha, \beta, \dots$ rozumíme komplexní čísla, resp. reálná čísla, mluvíme krátce o \emph{komplexním}, resp. \emph{reálném prostoru}. Prvky lineárního prostoru $\mathcal{L}$ nazýváme \emph{body} nebo \emph{vektory}, kdežto čísla $\alpha, \beta, \dots$ nazýváme \emph{skaláry}.
+\end{mydef}
+
+\begin{mydef}
+Lineární prostor $\mathcal{L}$ se nazývá \emph{normovaný}, jestliže každému prvku $x \in \mathcal{L}$ je přiřazeno reálné nezáporné číslo $||x||$, které se nazývá \emph{norma} prvku $x$, přičemž pro každé $x, y \in \mathcal{L}$ a $ \alpha \in T$ platí:
+\begin{enumerate}
+	\item $||x|| = 0$ když a jen když $x = \theta$
+	\item $||\alpha x|| = |\alpha| \cdot ||x||$ (homogenita)
+	\item $||x + y|| \leq ||x|| + ||y||$ (trojúhelníková nerovnost)
+\end{enumerate}
+Protože se zabýváme pouze lineárními prostory, budeme lineární normované prostory stručně nazývat \emph{normovanými prostory}.
+\end{mydef}
+
+Snadno je vidět, že každý lineární normovaný prostor i každá jeho podmnožina je současně metrickým prostorem.
+
+\begin{mydef}
+\emph{Úplný} lineární normovaný prostor se nazývá \emph{Banachovým prostorem}.
+\end{mydef}
+
+Příklady lineárních normovaných prostorů:
+\begin{enumerate}
+	\item Číselné těleso $T$ je normovaný prostor (nad $T$) s normou danou absolutní hodnotou. Např. reálná osa $\mathbb{R}^1$, tj. množina všech reálných čísel s obvyklými aritmetickými operacemi sčítání a násobení, je lineárním prostorem. Prostor $\mathbb{R}^1$ se stane normovaným prostorem jestliže pro každé číslo $x \in \mathbb{R}^1$ položíme $||x|| := |x|$.
+	\item Množina všech uspořádaných $n$-tic reálných, popřípadě komplexních čísel $x = (x_1, x_2, \dots)$, kde sčítání $n$-tic a násobení $n$-tic konstantou je definováno vztahy
+	$$(x_1, x_2, \dots, x_n) + (y_1, y_2, \dots, y_n) = (x_1 + y_1, x_2 + y_2, \dots, x_n + y_n) $$
+	$$\alpha (x_1, x_2, \dots, x_n) = (\alpha x_1, \alpha x_2, \dots, \alpha x_n) $$
+	je lineárním prostorem, který budeme nazývat \emph{n-rozměrným prostorem}. Jde-li o n-tice reálných čísel a jsou-li multiplikativní konstanty také reálná čísla, budeme mluvit o \emph{reálném n-rozměrném prostoru} a používat označení $\mathbb{R}^n$.
+	Normu v reálném n-rozměrném prostoru $\mathbb{R}^n$ s prvky $x = (x_1, x_2, \dots, x_n) $ definujeme předpisem
+	$$||x||_2 = \sqrt{\sum\limits_{k = 1}^n x_k^2}$$
+	V lineárním prostoru $\mathbb{R}^n$ lze definovat normu také předpisem
+	$$||x||_1 = \sum\limits_{k = 1}^n |x_k|$$
+	nebo
+	$$||x||_0 = \max\limits_{1 \leq k \leq n}^n |x_k|$$
+	V komplexním n-rozměrném prostoru $\mathbb{C}^n$ je potřeba  použít explicitní absolutní hodnotu. Nebo obecně:
+	$$||x||_p = \left( \sum\limits_{k = 1}^n |x_k|^p \right)^\frac{1}{p}$$
+	\item Množina všech spojitých reálných funkcí reálné proměnné na intervalu $\left<a, b\right>$ (popř. spojitých komplexních funkcí reálné proměnné) s běžnými operacemi sčítání funkcí a násobení funkce číslem je reálný (popř. komplexní) lineární prostor, která je jedním z nejdůležitějších v matematické analýze. Značíme jej $\mathbb{C}^0\left<a,b\right>$ nebo zkráceně $\mathbb{C}\left<a,b\right>$. V prostoru $\mathbb{C}^0\left<a,b\right>$ definujeme normu vztahem
+	$$||f|| = \max\limits_{a \leq t \leq b} |f(t)|$$
+	\item Nechť $\mathbb{C}_2^0\left<a,b\right>$ opět sestává ze všech spojitých funkcí, ale norma je definována vztahem
+	$$||f|| = \left( \int_a^b [f(t)]^2 dt \right)^\frac{1}{2}$$
+	\item Prostor $l_2$ všech posloupností $x = \{x_k\}_{k=1}^\infty$, které splňují podmínku
+	$$\sum\limits_{k=1}^\infty |x_k|^2 < + \infty$$
+	se stane lineárním normovaným prostorem, definujeme-li, že součet dvou prvků $x = (x_1, x_2, \dots, x_n, \dots)$ a $y = (y_1, y_2, \dots, y_n, \dots)$ z $l_2$ je roven
+	$$x + y = (x_1 + y_1, x_2 + y_2, \dots, x_n + y_n, \dots)$$
+	a že součin čísla $\alpha$ a prvku $x \in l_2$je dán vztahem
+	$$\alpha x = (\alpha x_1, \alpha x_2, \dots, \alpha x_n, \dots)$$
+	Normu v $l_2$ definujeme vztahem
+	$$||x|| = \sqrt{\sum\limits_{k = 1}^\infty |x_k|^2}$$
+	\item Prostor $c$ se sestává ze všech konvergentních posloupností. Prostor $c_0$ se sestává z posloupností $x = (x_1, x_2, \dots, x_n, \dots)$ reálných čísel, které splňují podmínku $\lim\limits{n \to \infty} = 0$. Sčítání prvků a násobení prvků skalárem se definují v prostorech $c$ a $c_0$ stejně jako v předchozím příkladě a norma je dána $||x|| = \max\limits_{1 \leq n \infty} |x_n|$
+	\item Množina $M^\infty$ všech ohraničených posloupností $x = \{x_k\}_{k=1}^\infty$ reálných (popř. komplexních) čísel s týmž operacemi jako v předchozích příkladech je lineární prostor. Normu v něm můžeme zavést vztahem $||x|| = \sup\limits_{1\leq n\leq \infty} |x_n|$
+\end{enumerate}
+Všechny příklady s výjimkou prostoru $\mathbb{C}_2^0\left<a,b\right>$ jsou Banachovými prostory.
+
+\begin{mydef}
+(Lineární nezávislost) Množina vektorů $\{x_1, x_2, \dots, x_n\}$ se nazývá lineárně závislá, jestliže existují konstanty $\alpha_1, \dots, \alpha_n$, z nichž aspoň jedna je různá od nuly a platí
+
+$$\alpha_1 x_1 + \alpha_2 x_2 + \dots + \alpha_n x_n = \theta$$
+
+V opačném případě se tato množina nazývá lineárně nezávislá. Jinak řečeno, množina se nazývá lineárně nezávislá, jestliže z předchozí rovnosti plyne, že $\alpha_1 = \alpha_2 = \dots = 0$.
+
+Nekonečná podmnožina prostoru $\mathcal{L}$ se nazývá \emph{lineárně nezávislá}, jestliže každá její konečná množina je lineárně nezávislá.
+
+Výraz $\alpha_1 x_1 + \alpha_2 x_2 + \dots + \alpha_n x_n$ nazýváme lineární kombinací prvků $x_1, x_2, \dots, x_n$.
+
+Jestliže v prostoru $\mathcal{L}$ lze najít $n$ lineárně nezávislých prvků, ale libovolné $n+1$ prvky jsou již lineárně závislé, říkáme, že prostor $\mathcal{L}$ má \emph{dimenzi (rozměr)} $n$. Jestliže v prostoru $\mathcal{L}$ lze nalézt nekonečný systém lineárně nezávislých prvků, říkáme, že prostor $\mathcal{L}$ má nekonečnou dimenzi.
+
+\emph{(Lineární) bází v n-rozměrném prostoru $\mathcal{L}$} nazýváme libovolný systém $n$ lineárně nezávislých prvků. Prostory $\mathbb{R}^n$ v reálném případě a $\mathbb{C}^n$ v komplexním případě mají dimenzi $n$.
+\end{mydef}
+
+Každý z předchozích příkladů má nekonečnou dimenzi.
+
+\begin{mydef}
+(Podprostory lineárního prostoru) Neprázdná podmnožina $\mathcal{L}^*$ lineárního prostoru $\mathcal{L}$ se nazývá \emph{podprostor} prostoru $\mathcal{L}$, jestliže sama tvoří lineární prostor vzhledem k operacím sčítání prvků a násobení skalárem, které jsou definovány v prostoru $\mathcal{L}$. Jinak řečeno, $\mathcal{L}^* \subset \mathcal{L}^*$ je podprostor, jestliže
+$x,y \in \mathcal{L}^* \Rightarrow \alpha x + \beta y \in \mathcal{L}^*$
+pro libovolná čísla $\alpha, \beta$.
+
+V každém lineárním prostoru $\mathcal{L}$ existuje podprostor, který se skládá pouze z nulového prvku $\theta$ a nazývá se \emph{nulový podprostor}. Také celý prostor $\mathcal{L}$ lze považovat za podprostor prostoru $\mathcal{L}$. Podprostor různý od prostoru $\mathcal{L}$ a obsahující aspoň jeden nenulový prvek se nazývá \emph{vlastní podprostor}.
+\end{mydef}
+
+\begin{mydef}
+Průnik libovolného systému $\{\mathcal{L}_\gamma\}$ podprostorů lineárního prostoru $\mathcal{L}$ je zřejmě opět podprostor.
+(Jestliže $\mathcal{L}^* = \bigcap\limits_\gamma \mathcal{L}_\gamma$ a $x, y \in \mathcal{L}^*$, potom také $\alpha x + \beta y \in \mathcal{L}^*$ pro všechna čísla $\alpha, \beta$.
+Nechť  $\{x_\alpha\}$ je libovolná neprázdná množina prvků lineárního prostoru $\mathcal{L}$. Průnik všech podprostorů obsahující množinu $\{x_\alpha\}$ nazveme \emph{podprostorem vytvořeným (generovaným) množinou} $\{x_\alpha\}$ nebo \emph{lineárním obalme množiny} $\{x_\alpha\}$. Tento podprostor budeme označovat $L\{x_\alpha\}$. Je to nejmenší podprostor obsahující množinu $\{x_\alpha\}$.
+\end{mydef}
+
+\section{Normovaná prostory konečné dimenze}
+
+Každý lineární prostor $X(x)$ konečné dimenze $n$ je izomorfní s euklidovským prostorem $\mathbb{R}^n$, a proto můžeme považovat prvky uvažovaného prostoru $X(n)$ za n-tice reálných čísel.
+
+\begin{veta}
+(Riesz) Nechť $X(n)$ je normovaný prostor konečné dimenze $n$. Aby posloupnost $\{x_\nu = ($.
+\end{veta}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Obyčejné grafy (stupně uzlů, sledy, souvislost, izomorfismy, stromy, kostry, Kruskalův a Primův algoritmus pro hledání minimální kostry ohodnoceného grafu, eulerovské a hamiltonovské grafy, planarita a obarvitelnost).} \label{cha:14}
 \chapter{Orientované grafy (orientované sledy, souvislost a silná souvislost, turnaje, eulerovské a hamiltonovské grafy, Dijkstrův a Floyd-Warshallův algoritmus pro hledání cesty minimální délky).} \label{cha:15}
 \chapter{Klasifikace gramatik, formálních jazyků a automatů přijímajících jazyky.} \label{cha:16}
