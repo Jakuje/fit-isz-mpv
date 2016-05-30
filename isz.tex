@@ -2077,7 +2077,7 @@ Příklady separabilních metrických prostorů:
 	\item V metrickém prostoru $\mathbb{R}^1$ je hustou množinou množina racionálních čísel.
 	\item V metrickém prostorech $\mathbb{R}^n$, $\mathbb{R}^n_0$ je hustou množinou množina vektorů s racionálními souřadnicemi.
 	\item V metrickém prostorech $C^0\left<a, b\right>$ a $C_2^0\left<a, b\right>$ je hustou množinou množina polynomů s racionálními koeficienty.
-	\item V metrickém prostorech $I_2$ je hustou množinou množina všech posloupností $\{x_n\}$. kde $x_n$ jsou racionální čísla, přičemž počet čísel $x_n$ různých od nuly je pouze konečný a pro různé posloupnost obecně různý.
+	\item V metrickém prostorech $l_2$ je hustou množinou množina všech posloupností $\{x_n\}$. kde $x_n$ jsou racionální čísla, přičemž počet čísel $x_n$ různých od nuly je pouze konečný a pro různé posloupnost obecně různý.
 \end{itemize}
 
 Příklad neseparabilního prostoru: Metrický prostor $M^\infty$ všech ohraničených posloupností není separabilní.
@@ -2181,7 +2181,7 @@ BPPB lze použít k důkazu vět o existenci a jednoznačnosti řešení pro rov
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Normované a unitární prostory} \label{cha:13}
 
-1. semestr, MAT, \texttt{Zaklady\_funkcionalni\_analyzy\_opr.pdf}, 7. -  ?. kapitola
+1. semestr, MAT, \texttt{Zaklady\_funkcionalni\_analyzy\_opr.pdf}, 7. -  11. kapitola
 
 (základní vlastnosti a příklady, normované prostory konečné dimenze, uzavřené ortonormální systémy a Fourierovy řady)
 
@@ -2343,8 +2343,142 @@ Je-li $\{x_\alpha\}$ ortogonální soustava, jsou vektory $x_\alpha$ lineárně 
 \end{veta}
 
 \begin{mydef}
-Množina $\{x_\alpha\} \in R$ se nazývá úplná systém vektorů, jestliže uzávěr podprostoru generovaného množinou $\{x_\alpha\}$ je celý prostor $R$. Je-li $\{x_\alpha\}$ navíc ortogonální (ortonormální) soustavou, nazýváme ji \emph{ortogonální (ortonormální) báze}.
+Množina $\{x_\alpha\} \in R$ se nazývá úplný systém vektorů, jestliže uzávěr podprostoru generovaného množinou $\{x_\alpha\}$ je celý prostor $R$. Je-li $\{x_\alpha\}$ navíc ortogonální (ortonormální) soustavou, nazýváme ji \emph{ortogonální (ortonormální) báze}.
 \end{mydef}
+
+Pokud má prostor $R$ konečnou dimenzi, pak je každá jeho ortogonální báze (lineární) bází. Ovšem toto neplatí pro prostory nekonečné dimenze, neboť báze vygeneruje pouze hustou podmnožinu v prostoru $R$, což nemusí být celý prostor $R$.
+
+Příklad: Konečně rozměrný prostor $\mathbb{R}^n$, jehož prvky jsou všechny n-tice reálných čísel
+$x = (x_1, x_2, \dots, x_n)$,
+s obvyklými operacemi sčítání n-tic a násobení konstantou a se skalárním součinem
+$(x, y) = \sum\limits_{i = 1}^n x_i y_i$
+je dobře známým příkladem unitárního prostoru (Takto zavedený skalární součin definuje v prostoru $\mathbb{R}^n$ normu $||x||_2 = \sqrt{\sum\limits_{k=1}^n x_k^2}$,
+a tedy tvoří euklidovskou metriku.). Ortonormální bázi tohoto prostoru (jednu z nekonečně mnoha možných) tvoří vektory
+$ e_1 = (1, 0, \dots, 0) $,
+$ e_2 = (0, 1, \dots, 0) $,
+\dots,
+$ e_n = (0, 0, \dots, 1) $.
+
+Prostor $l_2$ s prvky
+$x = (x_1, x_2, \dots, x_n, \dots)$, kde $\sum\limits_{i=1}^\infty x_i^2 < + \infty$
+a se skalárním součinem $(x, y) = \sum\limits_{i=1}^\infty x_i y_i$
+je unitární prostor. Nejjednodušší ortonormální bázi v prostoru $l_2$ tvoří vektory
+$ e_1 = (1, 0, 0, \dots) $,
+$ e_2 = (0, 1, 0, \dots) $,
+$ e_n = (0, 0, 1, \dots) $,
+\dots.
+Ortogonálnost a normovanost této soustavy jsou zřejmé; soustava je úplná. Nechť $x = (x_1, x_2, \dots, x_n, \dots)$ je libovolný vektor prostoru $l_2$ a $x^{(n)} = (x_1, x_2, \dots, x_n, 0, 0, \dots)$. Potom $x^{(n)}$ je lineární kombinace vektorů $e_1, \dots, ,e_n$ a $||x^{(n)} - x|| \to 0$ pro $n \to \infty$.
+Tedy každý prvek v $l_2$ leží v uzávěru vygenerovaného prostoru. Ovšem soustava vektorů $e_n$ netvoří bázi prostoru $l_2$, neboť prostor generovaný touto soustavou obsahuje pouze posloupnosti, které mají pouze konečný počet členů (jedná se o prostor polynomů $\mathbb{R}[X]$).
+
+Prostor $C_2^0 \left<a,b\right>$ všech spojitých reálných funkcí definovaných na intervalu $\left<a, b\right>$ se skalárním součinem definovaným vztahem $(f,g) = \int_a^b f(t)g(t) dt$ je také unitární prostor, ale neúplný. Mezi různými ortogonálními bázemi, které lze v něm uvést je nejdůležitější soustava trigonometrických funkcí
+$1$, $\cos\frac{2\pi nt}{b-a}$, $\sin\frac{2\pi nt}{b-a}$, $n=1, 2, \dots$.
+Má-li interval $\left<a,b\right>$ délku $2\pi$, např. je-li $a=-\pi, b = \pi$, potom příslušná trigonometrická soustava je 
+$1$, $\cos nt$, $\sin nt$, $n=1, 2, \dots$.
+
+\section{Existence ortogonálních bází, ortogonalizace}
+Každý z prostorů uvedených v předchozí kapitole je separabilní.
+\begin{veta}
+Nechť $R$ je separabilní unitární prostor. V takovém prostoru je každá ortogonální systém nejvýše spočetný.
+\end{veta}
+
+\begin{veta}
+(Schmidtova věta o ortogonalizaci). Nechť
+$f_1, f_2, \dots, f_n, \dots$
+je lineárně nezávislý systém prvku v unitárním prostoru $R$. Potom v prostoru $R$ existuje systém prvků
+$\varphi_1, \varphi_2, \dots, \varphi_n, \dots$,
+který splňuje tyto podmínky:
+\begin{enumerate}
+	\item Systém je ortonormální
+	\item Každý prvek $\varphi_n$ je lineární kombinace prvků $f_1, f_2, \dots, f_n$, že
+		$\varphi_n = a_{n1}f_1 + \dots + a_{nn} f_n$, přičemž $a_{nn} \not= 0$.
+	\item Každý prvek $f_n$ lze vyjádřit ve tvaru $f_n = n_{n1} \varphi_1 + \dots + b_{nn} \varphi_n$, přičemž $b_{nn} \not= 0$
+\end{enumerate}
+Každý prvek systému je určen podmínkami 1 - 3 až na znaménko jednoznačně.
+\end{veta}
+
+Přechod od systému $f_n$ k systému $\varphi_n$, který splňuje podmínky 1 - 3 se nazývá \emph{ortonormalizace}.
+Je zřejmé, že prostory vytvořené výše zmíněnými systémy jsou totožné, takže je-li jeden z těchto systémů úplný v prostoru $R$, je úplný v prostoru $R$ i druhý.
+
+Důsledek: V separabilním unitárním prostoru R existuje ortonormální báze.
+
+\section{Besselova nerovnost. Uzavřené ortogonální systémy}
+
+Je-li $e_1, e_2, \dots, e_n$ ortonormální báze n-rozměrného unitárního prostoru $\mathbb{R}^n$, potom vektor $x \in \mathbb{R}^n$ lze zapsat ve tvaru
+$x = \sum\limits_{k=1}^n c_k e_k$, kde $c_k = (x, e_k)$.
+
+Nechť $\varphi_1, \varphi_2, \dots, \varphi_n, \dots$
+je ortonormální systém v unitárním prostoru $R$ a $f$ je libovolný prvek v prostoru $R$. Přiřadíme prvku $f \in R$ posloupnost čísel
+$c_k = (f, \varphi_k), k = 1, 2, \dots$
+které budeme nazývat \emph{souřadnicemi} nebo \emph{Fourierovými koeficienty prvku $f$ vzhledem k systému $\{\varphi_k\}$},
+a funkční řadu $\sum\limits_{k=1}^n c_k \varphi_k$ kterou nazveme \emph{Fourierovou řadou prvku $f$ vzhledem k systému $\{\varphi_k\}$}.
+
+Dá se ukázat, že řada $\sum\limits_{k=1}^\infty c_k \varphi_k^2$  konverguje a platí
+$\sum\limits_{k=1}^\infty c_k^2 \leq ||f||^2$.
+
+Uvedenou nerovnost nazýváme \emph{Besselovou nerovností}.
+
+\begin{mydef}
+Ortonormální systém se nazývá \emph{uzavřený}, jestliže mezi každým vektorem $f \in R$ a jeho Fourierovými koeficienty $c_k$ platí tzv. \emph{Parsevalova nerovnost}:
+
+$$\sum\limits_{k=1}^\infty c_k^2 = ||f||^2$$
+\end{mydef}
+
+Uzavřenost systému je ekvivalentní s tím, že pro každý vektor $f \in R$ konverguje posloupnost částečných součtů Fourierovy řady $\sum{k=1}^n c_k \varphi_k$ k prvku $f$. Pojem uzavřenosti ortonormálního systému úzce souvisí s dříve zavedeným pojmem úplnosti systému:
+
+\begin{veta}
+V separabilním unitárním prostoru $R$ je každý úplný ortonormální systém uzavřený a naopak.
+\end{veta}
+
+Nechť $\{\varphi_n\}$ je libovolný ortogonální systém. Vzhledem k němu lze sestrojit normovaný systém, vytvořený z prvků $\psi_n = \varphi_n/||\varphi_n||$. Pro libovolný prvek $f \in R$ platí
+$c_n = (f, \psi_n) = \frac{1}{||\varphi_n||}(f, \varphi_n)$ a 
+$\sum_{n=1}^\infty c_n \psi_n = \sum_{n=1}^\infty \frac{c_n}{||\varphi_n||} = \sum_{n=1}^\infty a_n \varphi_n$, kde
+$$a_n = \frac{c_n}{||\varphi_n||} = \frac{(f,\varphi_n)}{||\varphi_n||^n}$$
+
+Koeficienty $a_n$ nazveme \emph{Fourierovými koeficienty v ortogonálním (nenormovaném) systému $\{\varphi_n\}$}. Dosadíme-li do Besselovy nerovnosti za $c_n$, dostaneme
+$$\sum\limits_{n=1}^\infty ||\varphi_n||^2a_n^2 \leq ||f||^2$$
+což je Besselova nerovnost pro libovolný ortogonální systém.
+
+Příklad: Uvažujme v unitárním prostoru $C_2^0\left<-\pi, \pi\right>$ všech spojitých funkcí na intervalu $\left<-\pi, \pi\right>$ se skalárním součinem daným vztahem $(f, g) = \int_{-\pi}^\pi f(t) g(t) dt$ úplný ortogonální systém goniometrických funkcí, tedy systém
+$1, \cos nt, \sin nt, n = 1, 2, \dots$
+
+Tento systém není ortonormální, k němu příslušný ortonormální systém tvoří funkce
+$\frac{1}{\sqrt{2\pi}}, \frqc{\cos nt}{\sqrt{\pi}}, \frqc{\sin nt}{\sqrt{\pi}}, n = 1, 2, \dots$
+
+Nechť $f$ je funkce z prostoru $C_2^0\left<-\pi, \pi\right>$. Fourierovy koeficienty této funkce vzhledem k systému $1, \cos nt, \sin nt$ se většinou značí $\frac{a_0}{2}, a_n$ a $b_n$.
+V souladu s obecnými vzorci pro Fourierovy koeficienty tedy máme
+$$\frac{a_0}{2} = \frac{1}{2 \pi} \int_{-\pi}^\pi f(t) dt \dots a_0 = \frac{1}{\pi} \int_{-\pi}^\pi f(t) dt$$
+$$a_n = \frac{1}{\pi} \int_{-\pi}^\pi f(t) \cos nt dt, b_n = \frac{1}{\pi} \int_{-\pi}^\pi f(t) \sin nt dt$$
+
+Fourierova řada funkce $f$ vzhledem k systému goniometrických funkcí má tvar
+
+$$\frac{a_0}{2} + \sum\limits_{n=1}^\infty (a_n \cos nt + b_n \sin nt)$$
+
+a konverguje k $f$.
+
+\begin{comment}
+\section{Úplné unitární prostoru. Rieszova-Fischerova věta}
+
+\begin{veta}
+(Riesz-Fischer). Nechť $\{\varphi_n\}$ je libovolný ortonormální systém v úplném unitárním prostoru R a nechť čísla $c_1, c_2, \dots, c_n, \dots$ jsou taková, že řada
+$$\sum\limits_{k=1}^\infty c_k^2$$
+konverguje. Potom existuje takový prvek $f \in R$, že $c_k = (f, \varphi_k)$ a
+$$\sum\limits_{k=1}^\infty (f, f) = ||f||^2$$
+\end{comment}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
