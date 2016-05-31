@@ -2291,7 +2291,7 @@ Průnik libovolného systému $\{\mathcal{L}_\gamma\}$ podprostorů lineárního
 Nechť  $\{x_\alpha\}$ je libovolná neprázdná množina prvků lineárního prostoru $\mathcal{L}$. Průnik všech podprostorů obsahující množinu $\{x_\alpha\}$ nazveme \emph{podprostorem vytvořeným (generovaným) množinou} $\{x_\alpha\}$ nebo \emph{lineárním obalme množiny} $\{x_\alpha\}$. Tento podprostor budeme označovat $L\{x_\alpha\}$. Je to nejmenší podprostor obsahující množinu $\{x_\alpha\}$.
 \end{mydef}
 
-\section{Normovaná prostory konečné dimenze}
+\section{Normované prostory konečné dimenze}
 
 Každý lineární prostor $X(n)$ konečné dimenze $n$ je izomorfní s euklidovským prostorem $\mathbb{R}^n$, a proto můžeme považovat prvky uvažovaného prostoru $X(n)$ za n-tice reálných čísel.
 
@@ -2486,8 +2486,226 @@ $$\sum\limits_{k=1}^\infty (f, f) = ||f||^2$$
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Obyčejné grafy (stupně uzlů, sledy, souvislost, izomorfismy, stromy, kostry, Kruskalův a Primův algoritmus pro hledání minimální kostry ohodnoceného grafu, eulerovské a hamiltonovské grafy, planarita a obarvitelnost).} \label{cha:14}
+\chapter{Obyčejné grafy} \label{cha:14}
+
+1. semestr, MAT, \texttt{Grafy\_1\_141212.pdf}, \texttt{Grafy\_2\_141220.pdf}
+
+(stupně uzlů, sledy, souvislost, izomorfismy, stromy, kostry, Kruskalův a Primův algoritmus pro hledání minimální kostry ohodnoceného grafu, eulerovské a hamiltonovské grafy, planarita a obarvitelnost)
+
+\begin{mydef}
+\textbf{Obyčejný graf} je dvojice $G=(U, H)$, kde $U$ je konečná množina uzlů (vrcholů) a $H \subseteq \left\{ \left\{u, v\right\}: u, v \in U \land u \not= v \right\}$ je (konečná) množina hran. O hraně $h = \{u, v\}$ říkáme, že je incidentní s uzly $u$ a $v$ nebo že je mezi uzly $u$ a $v$, spojuje uzly $u$ a $v$ a podobně.
+\end{mydef}
+
+\begin{mydef}
+Je-li $G=(U, H)$ obyčejný graf, definujeme \textbf{sled} mezi uzly $u, v$ o délce $n$ jako posloupnost $(u=w_0, h_1, w_1, h_2, \dots, w_{n-1}, h_n, w_n = v$ takovou, že  $w_0, w_1, \dots, w_n \in U, h_1, h_2, \dots, h_n \in H$ a $h_1 = \{w_{i-1}m w_i\}, 1 \leq i \leq n$.
+\end{mydef}
+(ve sledu se mohou opakovat jak uzly, tak hrany)
+
+\begin{mydef}
+Je-li $G=(U, H)$ obyčejný graf, potom \textbf{tahem} mezi uzly $u, v$ o délce $n$ rozumíme sled $(u=w_0, h_1, w_1, h_2, \dots, w_{n-1}, h_n, w_n = v$ takový, že platí $i \not= j \Rightarrow h \not= h_j, 1 \leq i, j \leq n$.
+
+Je-li navíc $w_0 = w_n$, pak se tento tah nazývá uzavřený.
+\end{mydef}
+
+(uzly se mohou opakovat, ale ne hrany)
+
+\begin{mydef}
+Je-li $G=(U, H)$ obyčejný graf, potom \textbf{cesta} mezi uzly  $u, v$ o délce $n$ je sled $(u=w_0, h_1, w_1, h_2, \dots, w_{n-1}, h_n, w_n = v$ mezi uzly $u, v$, takový, že platí $i \not= j \Rightarrow w_i \not= w_j, 0 \leq i, j \leq n$.
+\end{mydef}
+
+(v cestě jsou všechny uzly různé)
+
+\begin{mydef}
+Graf $G=(U, H)$ se nazývá \textbf{diskrétní}, resp. \textbf{úplný}, jestliže $H = \emptyset$, resp. $H=\{\{u, v\}, u, v \in U \land u \not= v\}$.
+\end{mydef}
+
+\begin{mydef}
+Je-li $G=(U, H)$ obyčejný graf, kružnice v grafu $G$ o délce $n$ je sled $(w_0, h_1, w_1, h_2, \dots, w_{n-1}, h_n, w_n$ takový, že platí
+$$ i \not= j \Rightarrow w_i \not=w_j, 0 \leq i,j \leq n -1 \land w_0 = w_n$$
+\end{mydef}
+
+\begin{veta}
+Nechť $G=(U, H)$ obsahuje dvě různé kružnice
+$C_1 = (u_0, g_1, u_1, g_2, \dots, u_{n-1}, g_n, u_n$ a
+$C_2 = (v_0, h_1, v_1, h_2, \dots, v_{n-1}, h_n, v_n$,
+kde $u_0 = v_0, u_1 = v_1, h_1 = g_1$. Potom tento podgraf obsahuje i kružnici $C_3$ neobsahující hranu $h_1 = g_1$.
+\end{veta}
+
+\begin{mydef}
+Je-li $G=(U, H)$ obyčejný graf, řekneme, že je \textbf{souvislý}, když pro libovolné uzly $u, v \in U$ existuje sled $(u=w_0, h_1, w_1, h_2, \dots, w_{n-1}, h_n, w_n = v$.
+\end{mydef}
+
+\begin{mydef}
+Jsou-li $G=(U, H)$ a $G'=(U', H')$ obyčejné grafy, řekneme, že $G'$ je \textbf{podgrafem grafu} $G$, když $U' \subseteq U \land H' \subseteq H$. Pokud navíc platí $(u, v \in U' \land \{u, v \} \in H) \Rightarrow \{u, v\} \in H'$, říkáme, že podgraf $G'$ je \textbf{indukovaný} (množinou uzlů $U'$). \textbf{Faktorem grafu} $G=(U, H)$ nazýváme takový jeho podgraf $G'=(U', H')$, pro který platí $U=U'$. 
+\end{mydef}
+
+\begin{mydef}
+Jsou-li $G=(U, H)$ a $G'=(U', H')$ obyčejné grafy, řekneme, že $G'$ je \textbf{komponentou} grafu $G$, když $G'$ je souvislým indukovaným podgrafem grafu $G$ a pro libovolný obyčejný graf $G''=(U'', H'')$ platí: ($U' \subset U''$ a $G''$ je podgraf G) $\Rightarrow G''$ není souvislý.
+\end{mydef}
+
+\begin{mydef}
+Je-li $G=(U, H)$ obyčejný graf a $h \in H$, pak řekneme, že hrana $h$ je \textbf{mostem}, když jejím odstraněním se zvýší počet komponent grafu.
+\end{mydef}
+(hrana je jedinou hranou mezi uzly $u, v$)
+
+\begin{mydef}
+Je-li $G = (u, H)$ obyčejný graf a $u \in U$, definujeme číslo $\text{deg}(u)$, tzv. \textbf{stupeň uzlu} $u$ jako počet hran incidentních s uzlem $u$.
+\end{mydef}
+Nechť $G=(U, H)$ je obyčejný graf, $|H|=m$. Snadno se dokáže, že platí $\sum\limits_{u \in U} \text{deg}(u) = 2 m$.
+
+\begin{mydef}
+Jsou-li $G_1=(U_1, H_1)$ a $G_2=(U_2, H_2)$ dva obyčejné grafy a $\varphi: U_1 \to U_2$ bijekce mezi množinami uzlů, řekneme, že $\varphi$ je \textbf{isomorfismus} $G_1$ na $G_2$, jestliže pro každé dva uzly $u, v \in H_1$ platí
+$$ \{u, v\} \in H_1 \Leftrightarrow \{\varphi(u), \varphi(v)\} \in H_2$$
+\end{mydef}
+
+Isomorfismus sama na sebe se nazývá \textbf{automorfismus}.
+
+\begin{mydef}
+Obyčejný graf, jehož žádný podgraf není kružnice se nazývá \textbf{les}.
+\end{mydef}
+
+\begin{mydef}
+Obyčejný \emph{souvislý} graf, jehož žádný podgraf není kružnicí, se nazývá \textbf{strom}.
+\end{mydef}
+
+\begin{veta}
+Nechť $S=(U, H)$ je les, který má alespoň jednu hranu. Pak existují dva uzly $u, v \in U$ takové, že $\text{deg}(u) = \text{deg}(v) = 1$.
+\end{veta}
+
+\begin{veta}
+Nechť $G=(U, H)$ obyčejný graf a $|U| = n, |H| = m$. Pak jsou následující podmínky ekvivalentní:
+\begin{enumerate}[(a)]
+	\item $G$ je strom
+	\item $G$ je souvislý a $m = n-1$
+	\item $G$ neobsahuje jako podgraf kružnici a $m=n -1$
+	\item $G$ je souvislý a každá hrana je mostem
+	\item mezi každou dvojicí různých uzlů v $G$ existuje jediná cesta
+	\item $G$ neobsahuje kružnici a vznikne-li graf $G'$ přidáním libovolné hrany ke grafu $G$, $G'$ kružnici obsahuje.
+	\item $G$ je souvislý, pro $n > 2$ je $G$ neúplný a vznikne-li graf $G'$ přidáním libovolné hrany ke grafu $G$, pak $G'$ obsahuje právě jednu kružnici.
+\end{enumerate}
+\end{veta}
+
+\begin{mydef}
+Je-li dán obyčejný graf $G=(U, H)$, pak jeho faktor $K = (U, H')$ nazveme \textbf{kostrou grafu} $G$, pokud je $K$ strom.
+\end{mydef}
+
+\begin{veta}
+Nechť $G$ je obyčejný graf. $G$ je souvislý, právě když má kostru.
+\end{veta}
+
+\begin{veta}
+Nechť $G=(U, H)$ je obyčejný graf a $|U|=n$. Pokud faktor $K=(U, H')$ grafu $G$ splňuje kterékoliv dvě z následujících podmínek, pak je \textbf{kostrou grafu}:
+\begin{enumerate}
+	\item $K$ je souvislý
+	\item $|H'| = n-1$
+	\item $K$ neobsahuje jako podgraf kružnici
+\end{enumerate}
+\end{veta}
+
+\section{Oceněný graf}
+\begin{mydef}
+Nechť $G=(U, H)$ je obyčejný graf. Je-li navíc dáno zobrazení $c: H\to R$, potom trojici $G=(U, H, c)$ nazýváme \textbf{oceněným grafem}. Každé hraně $h$ grafu $G$ je tak přiřazeno reálné číslo $c(h)$, které se nazývá cenou hrany $h$. Je-li $G'=(U', H')$ podgraf grafu $G$, potom $c(G') = \sum\limits_{u \in H'} c(u)$ se nazývá cennou podgrafu $G'$.
+\end{mydef}
+
+\begin{mydef}
+Nechť $G=(U, H, c)$ je obyčejný oceněný graf. Nechť $K=(U, H')$ je kostra grafu $G$. Řekneme, že $K$ je minimální kostra grafu $G$, jestliže platí $c(K) \leq c(L)$ pro každou kostru $L$ grafu $G$.
+\end{mydef}
+
+\begin{veta}
+Nechť $G=(U, H, c)$ je obyčejný souvislý oceněný graf a nechť
+$$C=(v, h_1, u_1, h_2, u_2, \dots, u_{p-1}, h_p, v), p \geq 3$$
+je kružnice v grafu $G$. Jestliže platí $c(h_1) > c(h_i), 2 \leq i \leq p$, potom hrana $h_1$ není obsažena v žádní minimální kostře grafu $G$.
+\end{veta}
+
+Důsledek: Nechť $G=(U, H, c)$ je obyčejný souvislý oceněný graf a nechť
+$$C=(v, h_1, u_1, h_2, u_2, \dots, u_{p-1}, h_p, v), p \geq 3$$
+je kružnice v grafu $G$. Jestliže platí $c(h_1) \geq c(h_i), 2 \leq i \leq p$, potom existuje aspoň jedna minimální kostra, ve které není hrana $h_1$ obsažena.
+
+(pokud hrany mohou mít stejné ceny. Pokud jsou všechny ceny hran rozdílné, existuje pouze jedna minimální kostra)
+
+\paragraph{Kruskalův algoritmus}
+Je dá oceněný obyčejný souvislý graf $G=(U, H, c)$, kde $|U| = n$ a $H = \{h_1, h_2, \dots, h_k\}$. Setřiďme hrany z $H$ do posloupnosti $S=(s_1, s_2, \dots, s_k)$ tak, že platí $c(s_i) \leq c(s_{j}$ pro $i<j$. Budeme nyní postupně vytvářet grafy $K_1=(U, Q_1), K_2=(U, Q_2), \dots K_{n-1} = (U, Q_{n-1})$ tak, aby platilo:
+\begin{enumerate}[(a)]
+	\item $Q_1 = \{s_1\}$
+	\item Jestliže $Q_i = \{s_{j_1}, s_{j_2}, \dots, s_{j_i}\}$, kde $1 < i < n-1, c(s_{j_1}) \leq c(s_{j_2}) \leq \dots \leq c(s_{j_i})$, potom $Q_{i+1} = \{s_{j_1}, s_{j_2}, \dots, s_{j_i}, s_q\}$, kde $s_q$ je hrana z posloupnosti $S$ s nejmenším indexem $q$ taková, že $s_q \not= s_{j_k}, 1 \leq k \leq i$ a $K_{i+1}$ neobsahuje kružnici.
+\end{enumerate}
+
+\paragraph{Primův algoritmus}
+Je-dán oceněný obyčejný souvislý graf $G=(U, H, c)$. Pro podgraf $K=(V, J)$ grafu $G$, který neobsahuje kružnici, označme $K^+ = (V^+, J^+)$ graf, který vznikne z grafu $K$ přidáním uzlu $u$ do $V$ a hrany $h$ do $J$ takové, že $h$ je incidentním uzlem $u$ a s nějakým uzlem ve $V$, nevytvoří v $K$ kružnici a přitom $h$ je hranou nejmenší ceny s takovouto vlastností. Sestrojíme postupně podgrafy $K_1, K_2, \dots, K_{n-1}$ následovně:
+\begin{enumerate}[(a)]
+	\item $K_1 = (\{u, v\}, \{\{u, v\}\})$ kde $c(\{u, v\}) \leq c(\{u, w\})$ pro všechna $w \in U$
+	\item $K_{i+1} \overset{def}{=} K^+_i$ pro každé $i = 1, 2, \dots, n-2$
+\end{enumerate}
+
+
+\begin{veta}
+Nechť $G = (U, H, c)$ je obyčejný oceněný souvislý graf a $\{u,v\} \in H$ hrana taková, že $c(\{u, v\}) < c(\{u, v\})$ pro každý uzel $w \in U$. Potom hrana $\{u, v\}$ leží v každé minimální kostře grafu $G$.
+\end{veta}
+
+\paragraph{Důsledek}: Nechť $G = (U, H, c)$ je obyčejný oceněný souvislý graf a $\{u, v \} \in H$ hrana taková, že $c(\{u, v\}) \leq c(\{u, w\})$ pro každý uzel $w \in U$. Potom existuje minimální kostra grafu $G$, ve které hrana $\{u, v\}$ leží.
+
+\paragraph{Důsledek}: Nechť $G = (U, H, c)$ je obyčejný oceněný souvislý graf, $V \subseteq U, S = (V, H')$ je strom a nechť tento strom je podgrafem minimální kostry grafu $G$. Pak existuje minimální kostra grafu $G$, která obsahuje $S$ jako podgraf a navíc hranu $h$ s nejmenší cenou takovou, že $h = \{u, v\}, u \in V, v \in (U-V)$.
+
+\paragraph{Maticová forma Primova algoritmu}
+Pokud jsou ceny hran grafu $G=(U, H)$, kde $U=\{u_1, u_2, \dots, u_n\}$, zadány ve formě matice
+$$
+ \begin{pmatrix}
+  c_{11} & c_{12} & \cdots & c_{1n} \\
+  c_{21} & c_{22} & \cdots & c_{2n} \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  c_{n1} & c_{n2} & \cdots & c_{nn} 
+ \end{pmatrix}
+$$
+
+kde prvek na $i$-tém řádku a v $j$-tém sloupci označuje cenu hrany incidentní s uzly $u_i, u_j$, je možno Primův algoritmus vyjádřit v následující formě:
+\begin{itemize}
+	\item Krok 1: Vyškrtnou se všechny prvky v 1. sloupci a 1. řádek se označí.
+	\item Krok 2: Pokud v označených řádcích neexistuje žádný nepodtržený prvek, algoritmus končí a podtržené prvky označují hrany v minimální kostře. Jinak se vybere minimální takový prvek.
+	\item Je-li vybraný prvek $c_{ij}$, podtrhne se a označí se j-tý řádek a vymažou se nepodtržené prvky j-tého sloupce. Přechod ke kroku 2.
+\end{itemize}
+
+\begin{mydef}
+Graf $G$ se nazývá \textbf{eulerovský}, existuje-li v něm uzavřený tah, který obsahuje každou hranu v $G$.
+\end{mydef}
+
+\begin{mydef}
+Graf $G$ se nazývá \textbf{poloeulerovský}, existuje-li v něm tah, který obsahuje každou hranu v $G$.
+\end{mydef}
+
+\begin{veta}
+Nechť $G$ je souvislý graf. potom je $G$ eulerovský, právě když každý jeho uzel má sudů stupeň.
+\end{veta}
+
+\paragraph{Důsledek}: Souvislý graf je poloeulerovský, právě když každý jeho uzel má sudý stupeň, nebo existují právě dva uzly lichého stupně.
+
+\begin{mydef}
+\textbf{Hamiltonovskou kružnicí grafu $G$} nazveme kružnici, která prochází každým uzlem grafu právě jednou. Graf nazveme hamiltonovským, má-li hamiltonovskou kružnici.
+\end{mydef}
+
+\begin{veta}
+(Ore) Nechť $G$ je graf s $n$ uzly $n \geq 3$ a nechť platí $\text{deg}(u) + \text{deg}(v) \leq n$ pro každé dva uzly $u$ a $v$ grafu $G$, které nejsou spojeny hranou. Potom je graf $G$ hamiltonovský.
+\end{veta}
+
+\begin{veta}
+(Dirac) Nechť $G$ je obyčejný graf s $n$ uzly a nechť platí $\text{deg}(u) \geq \frac{n}{2}$ pro každý uzel $u$. Potom je graf $G$ hamiltonovský.
+\end{veta}
+
+(poznámka: Domeček jedním tahem je hamiltonovský, ale nesplňuje Diracovu podmínku)
+
+\subsection{Barvení uzlů}
+Graf je \emph{obarvený}, když se každému uzlu přiřadí barva tak, že dvěma uzlům spojeným hranou jsou přiřazeny různé barvy.
+
+Pokud je možno graf obarvit pomocí $k$ barev, aniž bychom nutně užili všechny z nich, nazývá \emph{k-obarvitelným}.
+
+Nejmenší možná hodnata $k$ pro kterou je graf $G$ k-obarvitelným, se nazývá \emph{chromatické číslo} grafu $G$, formálně $\mathcal{X}(G)$.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Orientované grafy (orientované sledy, souvislost a silná souvislost, turnaje, eulerovské a hamiltonovské grafy, Dijkstrův a Floyd-Warshallův algoritmus pro hledání cesty minimální délky).} \label{cha:15}
+X. semestr, XXX, ??
+
 \chapter{Klasifikace gramatik, formálních jazyků a automatů přijímajících jazyky.} \label{cha:16}
 \chapter{Vlastnosti formálních jazyků (typické vlastnosti a jejich rozhodnutelnost).} \label{cha:17}
 \chapter{Konečné automaty (jazyky přijímané jazyky KA, varianty KA, minimalizace KA).} \label{cha:18}
