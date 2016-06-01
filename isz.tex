@@ -2899,9 +2899,199 @@ Existence kružnice se zápornou délkou je indikována pomocí záporného diag
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Klasifikace gramatik, formálních jazyků a automatů přijímajících jazyky.} \label{cha:16}
 
-X. semestr, XXX, ??
+1. semestr, TIN, \texttt{opora.pdf}, 2., 3. kapitola
 
+\subsection{Jazyky}
+\begin{mydef}
+Abecedou rozumíme neprázdnou množinu prvků, které nazýváme \emph{symboly abecedy}.
+\end{mydef}
+
+\begin{mydef}
+\emph{Řetězcem} (také slovem) nad danou abecedou rozumíme každou konečnou posloupnost symbolů abecedy. Prázdnou posloupnost symbolů, tj posloupnost, která neobsahuje žádný symbol, nazýváme \emph{prázdný řetězec}. Prázdný řetězec budeme označovat písmenem $\epsilon$.
+
+Formálně lze definovat řetězec nad abecedou $\Sigma$ takto:
+\begin{enumerate}[(1)]
+	\item prázdný řetězec $\epsilon$ je řetězec nad abecedou $\Sigma$
+	\item je-li $x$ řetězec nad $\Sigma$ a $a \in \Sigma$, pak $xa$ je řetězec nad $\Sigma$.
+	\item $y$ je řetězec nad $\Sigma$, když a jen když lze $y$ získat aplikací pravidel 1 a 2.
+\end{enumerate}
+\end{mydef}
+
+Velká řecká písmena pro abecedy, Malá latinská písmena ($a, b, c, \dots$) pro symboly, ($t, u, v, \dots$) pro řetězce.
+
+\begin{mydef}
+Nechť $x$ a $y$ jsou řetězce nad abecedou $\Sigma$. \emph{Konkatenací} (zřetězením) řetězce $x$ s řetězcem $y$ vznikne řetězec $xy$ přípojením řetězce $y$ za řetězec $x$. Operace konkatenace je zřejmě asociativní, tj. $x(yz) = (xy)z$, ne však komutativní $xy \not= yx$.
+\end{mydef}
+
+\begin{mydef}
+Nechť $x = a_1 a_2 \dots a_n$ je řetězec nad abecedou $\Sigma, a_i \in \Sigma$ pro $i = 1, \dots, n$. \emph{Reverzí} (zrcadlovým obrazem) řetězce $x$ rozumíme řetězec $x^R = a_n a_{n-1} \dots a_2 a_1$; tj. symboly řetězce $x^R$ jsou vzhledem k řetězci $x$ zapsány v opačném pořadí.
+\end{mydef}
+
+\begin{mydef}
+Nechť $w$ je řetězec nad abecedou $\Sigma$. Řetězec $z$ se nazývá \emph{řetězcem} řetězce $w$, jestliže existují řetězce $x$ a $y$ takové, že $w = xzy$.
+Řetězec $x_1$ se nazývá \emph{prefixem} (předponou) řetězce $w$, jestliže existuje řetězec $y_1$ takový, že $w = x_1 y_1$. Analogicky řetězec $y_2$ se nazývá \emph{sufixem} (příponou) řetězce $w$, jestliže existuje řetězec $x_2$ takový, že $w = x_2 y_2$. Je-li $y_1 \not= \epsilon$, resp. $x_2 \not= \epsilon$, pak $x_1$ je \emph{vlastní prefix}, resp. $y_2$ je vlastní sufix řetězce $w$.
+\end{mydef}
+
+\begin{mydef}
+\emph{Délka řetězce} je nezáporné celé číslo udávající počet symbolů řetězce. Délku řetězce $x$ značíme symbolicky $|x|$. Je-li $x = a_1 a_2 \dots a_n, a_i \in \Sigma$ pro $i = 1, \dots, n$, pak $|x| = n$. Délka prázdného řetězce je nulová, tj. $|\epsilon| = 0$.
+\end{mydef}
+
+$a^3 = aaa, \quad b^2 = bb, \quad a^0 = \epsilon$
+
+\begin{mydef}
+Nechť $\Sigma$ je abeceda. Označme symbolem $\Sigma^*$ množinu všech řetězců nad abecedou $\Sigma$ včetně řetězce prázdného, symbolem $\Sigma^+$ množinu všech řetězců nad $\Sigma$ vyjma řetězce prázdného, tj. $\Sigma^* = \Sigma^+ \cup \{\epsilon\}$. Množinu $L$, pro niž platí $L \subseteq \Sigma^*$ (případně $L \subseteq \Sigma^+$, pokud $\epsilon \not\in L$) nazýváme \emph{jazykem} $L$ nad abecedou $\Sigma$. Jazykem tedy může být libovolná podmnožina řetězců nad danou abecedou. Řetězec $x, x \in L$ nazýváme \emph{větou} (někdy také slovem) jazyka L.
+\end{mydef}
+
+\begin{mydef}
+Nechť $L_1$ je jazyk nad abecedou $\Sigma_1$, $L_2$ jazyk nad abecedou $\Sigma_2$. \emph{Součinem} (konkatenací) jazyků $L_1$ a $L_2$ je jazyk $L_1 \cdot L_2$ nad abecedou $\Sigma_1 \cup \Sigma_2$, jenž je definován takto: $L_1 \cdot L_2 = \{ xy | x \in L_1, y \in L_2\}$.
+\end{mydef}
+Operace je definovaná prostřednictvím operace konkatenace řetězců a má také stejné vlastnosti: je asociativní a nekomutativní.
+
+\begin{mydef}
+Nechť $L$ je jazyk nad abecedou $\Sigma$. \emph{Iteraci} $L^*$ jazyka $L$ a \emph{pozitivní iteraci} $L^+$ jazyka $L$ definujeme takto:
+$$L^0 = \{\epsilon\}$$
+$$L^n = L \cdot L^{n-1}, text{ pro } n \geq 1$$
+$$L^* = \bigcup\limits_{n \geq 0} L^n$$
+$$L^+ = \bigcup\limits_{n \geq 1} L^n$$
+\end{mydef}
+
+\begin{veta}
+Je-li $L$ jazyk, pak platí:
+$$L^* = L^+ \cup \{\epsilon\}$$
+$$L^+ = L \cdot L^* = L^* \cdot L$$
+\end{veta}
+
+\begin{mydef}
+Algebraická struktura $\left< A, +, \cdot, 0, 1 \right>$ se nazývá polokruh s aditivním jednotkovým prvkem 0 a multiplikativním jednotkovým prvkem 1, jestliže:
+\begin{enumerate}[(1)]
+	\item $\left< A, +, 0 \right>$ je komutativní monoid
+	\item $\left< A, \cdot, 1 \right>$ je monoid
+	\item pro operaci $\cdot$ platí distributivní zákon vzhledem k $+$:
+	$ a \cdot (b + c) = a \cdot b + a \cdot c$ pro $a, b, c \in A$.
+\end{enumerate}
+\end{mydef}
+
+\begin{veta}
+Algebra jazyků $\left< 2^{\Sigma^*}, \cup, \cdot, \emptyset, \{\epsilon\} \right>$, kde $\cup$ je sjednocení a $\cdot$ konkatenace jazyků tvoří polokruh.
+\end{veta}
+
+\subsection{Gramatika}
+Nejznámější prostředek pro reprezentaci jazyka (konečné, nekonečné). Používá dvou konečných disjunktních abeced: Množina $N$ nonterminálních symbolů a množina $\Sigma$ terminálních symbolů.
+
+\emph{Noterminální symboly}, krátce \emph{nonterminály}, mají roli pomocných proměnných označující určité syntaktické celky -- syntaktické kategorie.
+
+Množina \emph{terminálních symbolů}, krátce \emph{terminálů} je identická s abecedou, nad níž je definován jazyk. Sjednocení obou množin, tj $N \cup \Sigma$, nazýváme \emph{slovníkem gramatiky}.
+
+$a, b, c$ terminální symboly; $A, B, C, S$ nonterminální symboly; $U, V, Z$ terminální nebo nonterminální symboly; $\alpha, \beta$ řetězce terminálních a nonterminálních symbolů, $u,v,$ řetězce terminálních symbolů.
+
+Gramatika představuje generativní systém. Jádrem gramatiky je konečná množina $P$ \emph{přepisovacích pravidel} (nazývaných také produkce). Každé přepisovací pravidlo má tvar uspořádané dvojce $(\alpha, \beta)$ řetězců stanovuje množinu substitucí řetězce $\beta$ namísto řetězce $\alpha$, který se vyskytuje jako podřetězec generovaného řetězce. Řetězec $\alpha$ obsahuje alespoň jeden nonterminální symbol.
+$$P \subseteq (N \cup \Sigma)^* N (N \cup \Sigma)^* \times (N \cup \Sigma)^*$$
+
+\begin{mydef}
+Gramatika $G$ je čtveřice $G = (N, \Sigma, P, S)$, kde
+\begin{itemize}
+	\item $N$ je konečná množina nonterminálních symbolů
+	\item $\Sigma$ je konečná množina terminálních symbolů
+	\item $P$ je konečná podmnožina kartézského součinu $(N \cup \Sigma)^* N (N \cup \Sigma)^* \times (N \cup \Sigma)^*$
+	\item $S \in N$ je výchozí (také počáteční) symbol gramatiky
+\end{itemize}
+\end{mydef}
+
+Prvek $(\alpha, \beta)$ množiny $P$ nazýváme \emph{přepisovacím pravidlem} (krátce pravidlem) a budeme jej zapisovat ve tvaru $\alpha \to \beta$. Řetězec $\alpha$ reps. $\beta$ nazýváme levou resp. pravou stranou přepisovacího pravidla.
+
+Obsahuje-li gramatika pravidla se stejnou levou stranou, můžeme zjednodušeně zapsat $\alpha \to \beta_1 | \beta_2 | \dots | \beta_n$.
+
+\begin{mydef}
+Nechť $G = (N, \Sigma, P, S)$ je gramatika a nechť $\lambda$ a $\mu$ jsou řetězce z $(N \cup \Sigma)^*$. Mezi řetězci $\lambda$ a $\mu$ platí binární relace $\underset{G}{\Rightarrow}$, nazývaná \emph{přímá defivace}, jestliže můžeme řetězce $\lambda$ a $\mu$ vyjádřit ve tvaru:
+$$\lambda = \gamma \alpha \delta$$
+$$\mu = \gamma \beta \delta$$
+kde $\gamma$ a $\delta$ jsou libovolné řetězce z $(N \cup \Sigma)^*$ a $\alpha \to \beta$ je nějaké přepisovací pravidlo z $P$.
+
+Platí-li mezi řetězci $\lambda$ a $\mu$ relace přímé derivace, pak píšeme $\lambda \underset{G}{\Rightarrow} \mu$ a říkáme, že řetězec $\mu$ lze přímo generovat z řetězce $\lambda$ v gramatice $G$. Je-li z kontextu zřejmé, že jde o derivaci v gramatice $G$, pak nemusíme specifikaci gramatiky pod symbolem $\Rightarrow$ uvádět.
+\end{mydef}
+
+\begin{mydef}
+Nechť $G = (N, \Sigma, P, S)$ je gramatika a $\lambda$ a $\mu$ jsou řetězce z $(N \cup \Sigma)^*$. Mezi řetězci $\lambda$ a $\mu$ platí relace $\Rightarrow^+$ nazývaná \emph{derivace}, jestliže existuje taková posloupnost přímých derivací $\nu_{i-1} \Rightarrow \nu_i, i = 1, \dots, n, n \geq 1$ taková, že platí:
+$$\lambda = \nu_0 \Rightarrow \nu_1 \Rightarrow \dots \Rightarrow \nu_{n-1} \Rightarrow \nu_n = \mu$$
+
+Tuto posloupnost nazýváme \emph{derivací délky $n$}. Platí-li $\lambda \Rightarrow^+ \mu$, pak říkáme, že řetězec $\mu$ lze generovat z řetězce $\lambda$ v gramatice $G$. Relace $\Rightarrow^+$ je zřejmě tranzitivním uzávěrem relace přímé derivace $\Rightarrow$. Symbolem $\Rightarrow^n$ značíme $n$-tou mocninu relace $\Rightarrow$.
+\end{mydef}
+
+\begin{mydef}
+Jestliže v gramatice $G$ platí pro řetězce $\lambda$ a $\mu$ relace $\lambda \Rightarrow^+ \mu$ nebo identita $\lambda = \mu$, pak píšeme $\lambda \Rightarrow^* \mu$. Relace $\Rightarrow^*$ je tranzitivním a reflexivním uzávěrem relace přímé derivace $\Rightarrow$.
+\end{mydef}
+
+\begin{mydef}
+Nechť $G=(N, \Sigma, P, S)$ je gramatika. Řetězec $\alpha \in (N \cup \Sigma)^*$ nazýváme \emph{větnou formou}, jestliže platí $S \Rightarrow^* \alpha$, tj. řetězec $\alpha$ je generovaný z výchozího symbolu $S$.
+Větná forma, která obsahuje pouze terminální symboly se nazývá \emph{věta}. Jazyk $L(G)$, generovaný gramatikou $G$, je definován množinou všech vět $L(G) = \{ w | S \Rightarrow^* w \land w \in \Sigma^*\}$.
+\end{mydef}
+
+\subsection{Chomského klasifikace gramatik}
+\subsubsection{Typ 0: Neomezené}
+Gramatika typu 0 obsahuje pravidla v nejobecnějším tvaru
+
+$$\alpha \to \beta, \alpha \in (N \cup \Sigma)^* N (N \cup \Sigma)^*, \beta \in (N \cup \Sigma)^*$$
+
+\subsubsection{Typ 1: Kontextové}
+Gramatika typu 1 obsahuje pravidla ve tvaru
+
+$$ \alpha A \beta \to \alpha \gamma \beta, A \in N, \alpha, \beta in (N \cup \Sigma)^*, \gamma \in (N \cup \Sigma)^+$$
+nebo 
+$$S \to \epsilon$$
+pokud se $S$ neobjevuje na pravé straně žádného pravidla.
+
+\subsubsection{Typ 2: Bezkontextové}
+Gramatika typu 2 obsahuje pravidla tvaru
+
+$A \to \gamma, A \in N, \gamma \in (N \cup \Sigma)^*$
+
+\subsubsection{Typ 3: Lineární (pravé lineární)}
+Gramatika typu 3 obsahuje pravidla tvaru
+
+$A \to xB$ nebo $A \to x; A, B \in N, x \in \Sigma^*$
+
+Regulární (pravé regulární)
+
+$A \to aB$ nebo $A \to a; A, B \in N, a \in \Sigma$ nebo $S \to \epsilon$, pokud se $S$ neobjevuje na pravé straně žádného pravidla.
+
+
+\begin{mydef}
+Jazyk generovaný gramatikou typu $i$, $i = 0, 1, 2, 3$ nazýváme jazykem typu $i$. Podle názvu gramatik mluvíme také o jazycích \emph{rekurzivně vyčíslitelných $(i=0)$} a analogicky ke gramatikám jazycích \emph{kontextových $(i=1)$}, \emph{bezkontextových $(i=2)$} a \emph{regulárních $(i=3)$}.
+\end{mydef}
+
+\begin{veta}
+Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ značí třídu všech jazyků typu $i$. Pak platí $\mathcal{L}_0 \supseteq \mathcal{L}_1 \supseteq \mathcal{L}_2 \supseteq \mathcal{L}_3$.
+\end{veta}
+
+\begin{veta}
+Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ jsou třídy jazyků typu $i$. Pak platí $\mathcal{L}_0 \supset \mathcal{L}_1 \supset \mathcal{L}_2 \supset \mathcal{L}_3$.
+\end{veta}
+
+\begin{mydef}
+\end{mydef}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Vlastnosti formálních jazyků (typické vlastnosti a jejich rozhodnutelnost).} \label{cha:17}
+
+1. semestr, TIN, ??
+
 \chapter{Konečné automaty (jazyky přijímané jazyky KA, varianty KA, minimalizace KA).} \label{cha:18}
 \chapter{Regulární množiny, regulární výrazy a rovnice nad regulárními výrazy.} \label{cha:19}
 \chapter{Transformace a normální formy bezkontextových gramatik.} \label{cha:20}
