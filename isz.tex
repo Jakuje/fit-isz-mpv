@@ -13,6 +13,7 @@
 \newtheorem{mydef}{Definice}[chapter]
 \newtheorem{veta}{Věta}[chapter]
 \newtheorem{lemma}{Lemma}[chapter]
+\newtheorem{alg}{Algoritmus}[chapter]
 
 \usepackage{geometry}
 \usepackage{layout}
@@ -3066,7 +3067,40 @@ Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ značí třídu všech jazyků typu $i$. 
 Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ jsou třídy jazyků typu $i$. Pak platí $\mathcal{L}_0 \supset \mathcal{L}_1 \supset \mathcal{L}_2 \supset \mathcal{L}_3$.
 \end{veta}
 
-\section{Regulární jazyky}
+%TODO XXX
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Vlastnosti formálních jazyků} \label{cha:17}
+
+1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
+
+(typické vlastnosti a jejich rozhodnutelnost)
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Konečné automaty} \label{cha:18}
+
+1. semestr, TIN, \texttt{opora.pdf}, 3. kapitola
+
+(jazyky přijímané jazyky KA, varianty KA, minimalizace KA)
 
 \subsection{Jazyky přijímané konečnými automaty a deterministický konečný automat}
 
@@ -3108,8 +3142,8 @@ $L(M) = \{w | (q_0, w) \vdash^* (q, \epsilon) \land q \in F\}$
 Každý \emph{nedeterministický} konečný automat $M$ lze převést na \emph{deterministický} konečný automat $M'$ tak, že $L(M) = L(M')$.
 \end{veta}
 
-\textbf{Algoritmus} převodu nedeterministického KA na ekvivalentní DKA:
-
+\begin{alg}
+Převod nedeterministického KA na ekvivalentní DKA\\
 Vstup: NKA $M = (Q, \Sigma, \delta, q_0, F)$\\
 Výstup: NKA $M = (Q', \Sigma, \delta', q_0', F')$\\
 Metoda:
@@ -3123,6 +3157,7 @@ Metoda:
 		\item Jinak $\delta'(S, a)$ není definována.
 	\end{itemize}
 \end{enumerate}
+\end{alg}
 
 \subsection{Lineární a regulární gramatiky}
 
@@ -3189,8 +3224,8 @@ Nechť $L = L(M)$ pro nějaký konečný automat $M$. Pak existuje gramatika $G$
 Třída jazyků, jež jsou přijímány konečnými automaty je totožná s třídou jazyků typu 3, Chomského hierarchie.
 \end{veta}
 
-\textbf{Algoritmus} Konstrukce nedeterministického KA k pravé regulární gramatice:
-
+\begin{alg}
+Konstrukce nedeterministického KA k pravé regulární gramatice\\
 Vstup: Pravá regulární gramatika  $G = (N, \Sigma, P, S)$, jejíž pravidla mají tvar $A \to aB$ a $A \to a$, kde $A,B \in N$ a $a \in \Sigma$, případně $S \to \epsilon$ za předpokladu, že $S$ se nevyskytuje na pravé straně žádného pravidla.\\
 Výstup: NKA $M = (Q, \Sigma, \delta, q_0, F)$, pro který je $L(M) = L(G)$\\
 Metoda:
@@ -3205,13 +3240,14 @@ Metoda:
 	\item $q_0 = S$
 	\item Je-li $S \to \epsilon$ pravidlo z $P$, pak $F = \{S, q_F\}$ v opačném případě $F = \{q_F\}$.
 \end{enumerate}
+\end{alg}
 
 \begin{veta}
 Nechť $G$ je pravá regulární gramatika a $M$ je konečný automat z předchozího algoritmu. Pak $L(M) = L(G)$.
 \end{veta}
 
-\textbf{Algoritmus} Konstrukce nedeterministického KA k levé regulární gramatice:
-
+\begin{alg}
+Konstrukce nedeterministického KA k levé regulární gramatice \\
 Vstup: Levá regulární gramatika  $G = (N, \Sigma, P, S)$, jejíž pravidla mají tvar $A \to Ba$ a $A \to a$, kde $A,B \in N$ a $a \in \Sigma$, případně $S \to \epsilon$ za předpokladu, že $S$ se nevyskytuje na pravé straně žádného pravidla.\\
 Výstup: NKA $M = (Q, \Sigma, \delta, q_0, F)$, pro který je $L(M) = L(G)$\\
 Metoda:
@@ -3226,6 +3262,7 @@ Metoda:
 	\item $q_0$ je počáteční stav automatu $M$
 	\item Je-li $S \to \epsilon$ pravidlo z $P$, pak $F = \{S, q_0\}$ v opačném případě $F = \{S\}$.
 \end{enumerate}
+\end{alg}
 
 \begin{veta}
 Nechť $G$ je pravá regulární gramatika a $M$ je konečný automat z předchozího algoritmu. Pak $L(M) = L(G)$.
@@ -3233,14 +3270,68 @@ Nechť $G$ je pravá regulární gramatika a $M$ je konečný automat z předcho
 
 \section{Minimalizace deterministického konečného automatu}
 
+\begin{mydef}
+Deterministický konečný automat $M = (Q, \Sigma, \delta, q_0, F)$ nazýváme \emph{úplný deterministický konečný automat}, pokud pro všechna $q \in Q$ a všechna $a \in \Sigma$ platí, že $\delta(q, a) \in Q$, tj. $\delta$ je totální funkcí na $Q \times \Sigma$.
+\end{mydef}
+
+\begin{mydef}
+Nechť $M=(Q, \Sigma, \delta, q_0, F)$ je konečný automat. Stav $q \in Q$ nazveme \emph{dosažitelný}, pokud existuje $w \in \Sigma^*$ takové, že $(q_0, w) \underset{M}{\overset{*}{\vdash}} (q, \epsilon)$.
+Stav je nedosažitelný, pokud není dosažitelný.
+\end{mydef}
+
+\begin{alg}
+Eliminace nedosažitelných stavů \\
+Vstup: Deterministická KA $M = (Q, \Sigma, \delta, q_0, F)$\\
+Výstup: Deterministický KA $M'$ bez nedosažitelných stavů, $L(M) = L(M')$\\
+Metoda:
+\begin{enumerate}
+	\item $i := 0$
+	\item $S_I := \{q_0\}$
+	\item \texttt{repeat}
+	\begin{enumerate}
+		\item $S_{i+1} := S_i \cup \{q | \exists p \in S_i \exists a \in \Sigma: \delta(p, a) = q \}$
+		\item $i := i + 1$
+	\end{enumerate}
+	\item \texttt{until} $S_i = S_{i-1}$
+	\item $M' := (S_i, \Sigma, \delta_{S_i}, q_0, F \cap S_i)$.
+\end{enumerate}
+\end{alg}
+
+\begin{mydef}
+Nechť $M = (Q, \Sigma, \delta, q_0, F)$ je úplný DKA. Říkáme, že řetězec $w \in \Sigma^*$ rozlišuje stavy z $Q$, jestliže
+$(q_1, w) \underset{M}{\overset{*}{\vdash}} (q_3, \epsilon) \land (q_2, w) \underset{M}{\overset{*}{\vdash}} (q_4, \epsilon)$ pro nějaké $q_3, q_4$  a právě jeden ze stavů $q_3, q_4$ je v $F$. Říkáme, že stavy $q_1, q_2 \in Q$ jsou k-nerozlišitelné a píšeme $q_1 \overset{k}{\equiv} q_2$, právě když neexistuje $w \in \Sigma^*, |w| \leq k$, který rozlišuje $q_1$ a $q_2$. Stavy jsou nerozlišitelné, značíme $q_1 \equiv q_2$, jsou-li pro každé $k \geq 0$, $k$-nerozlišitelné.
+\end{mydef}
+
+\begin{mydef}
+Úplně definovaný DKA nazýváme \emph{redukovaný}, jestliže žádný stav $Q$ není nedostupný a žádné dva stavy nejsou nerozlišitelné.
+\end{mydef}
+
 \begin{veta}
+Nechť $M=(Q,\Sigma,\delta,q_0,F)$ je úplný DKA a $|Q| = n, n \geq 2$. Platí $\forall q_1, q_2 \in Q: q_1 \equiv q_2 \Leftrightarrow q_1 \overset{n-2}{\equiv} q_2$.
 \end{veta}
 
-
-
-
-
-
+\begin{alg}
+Převod na redukovaná deterministický konečný automat\\
+Vstup: Úplně definovaný DKA $M = (Q, \Sigma, \delta, q_0, F)$\\
+Výstup: Redukovaný DKA $M'$ bez nedosažitelných stavů, $L(M) = L(M')$\\
+Metoda:
+\begin{enumerate}
+	\item Odstraň nedosažitelné stavy využitím předchozího algoritmu
+	\item $i := 0$
+	\item $\overset{0}{\equiv} := \{(p, q)|p \in F \Leftrightarrow q \in F\}$
+	\item \texttt{repeat}
+	\begin{enumerate}
+		\item $\overset{i+1}{\equiv} := \{(p, q)|p \overset{i}{\equiv} q \land \forall a \in \Sigma: \delta(p,a) \overset{i}{\equiv} \delta(q, a)\}$
+		\item $i := i + 1$
+	\end{enumerate}
+	\item \texttt{until} $\overset{i+1}{\equiv} = \overset{i}{\equiv}$
+	\item $Q' := Q/\overset{i}{\equiv}$
+	\item $\forall p,q \in Q \forall a \in \Sigma: \delta'([p], a) = [q] \Leftrightarrow \delta(p,a) = q$
+	\item $q_0' = [q_0]$
+	\item $F' = \{[q] | q \in F\}$
+\end{enumerate}
+(výraz $[x]$ značí ekvivalenční třídu určenou prvkem $x$)
+\end{alg}
 
 
 
@@ -3250,12 +3341,10 @@ Nechť $G$ je pravá regulární gramatika a $M$ je konečný automat z předcho
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Vlastnosti formálních jazyků (typické vlastnosti a jejich rozhodnutelnost).} \label{cha:17}
-
-1. semestr, TIN, ??
-
-\chapter{Konečné automaty (jazyky přijímané jazyky KA, varianty KA, minimalizace KA).} \label{cha:18}
 \chapter{Regulární množiny, regulární výrazy a rovnice nad regulárními výrazy.} \label{cha:19}
+
+1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
+
 \chapter{Transformace a normální formy bezkontextových gramatik.} \label{cha:20}
 \chapter{Zásobníkové automaty (jazyky přijímané ZA, varianty ZA).} \label{cha:21}
 \chapter{Turingovy stroje (jazyky přijímané TS, varianty TS, lineárně omezené automaty, univerzální TS).} \label{cha:22}
