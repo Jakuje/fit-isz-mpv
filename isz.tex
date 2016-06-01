@@ -2749,10 +2749,158 @@ Každý planární graf je 4-obarvitelný.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Orientované grafy (orientované sledy, souvislost a silná souvislost, turnaje, eulerovské a hamiltonovské grafy, Dijkstrův a Floyd-Warshallův algoritmus pro hledání cesty minimální délky).} \label{cha:15}
+\chapter{Orientované grafy} \label{cha:15}
+
+1. semestr, MAT, \texttt{Grafy\_3\_141220.pdf}
+
+(orientované sledy, souvislost a silná souvislost, turnaje, eulerovské a hamiltonovské grafy, Dijkstrův a Floyd-Warshallův algoritmus pro hledání cesty minimální délky)
+
+\begin{mydef}
+\textbf{Orientovaný graf} je dvojice $G=(U, H)$, kde $U$ je neprázdná konečná množina vrcholů nebo uzlů a $H=\{(u, v)|u, v \in U\}$ je konečná množina orientovaných hran.
+\end{mydef}
+(nebo také neprázdná konečná množina s binární relací)
+
+\begin{mydef}
+Nechť $G=(U, U)$ je orientovaný graf. Pro uzel $u \in U$ grafu $G$ definujeme čísla $\text{deg}_+(u) = |M|, \text{deg}_-(u) = |N|$, kde
+$M = \{h \in H| \exists v \in U: h=(v, u)\}$ a
+$N = \{h \in H| \exists v \in U: h=(u, v)\}$.
+
+Číslo $\text{deg}_+(u)$ se rovná počtu hran, kteér vedou z nějakého uzlu do uzlu $u$, a nazývá se \textbf{vstupním stupněm uzlu $u$}. Číslo $\text{deg}_-(u)$ se rovná počtu hran, které vedou z uzlu $u$ do nějakého uzlu, a nazývá se \textbf{výstupním stupněm uzlu $u$}. Pokud platí $\text{deg}_-(u) = 0$, $u$ se nazývá koncový uzel, a pokud $\text{deg}_+(u) = 0$, $u$ se nazývá počáteční uzel grafu $G$.
+\end{mydef}
+
+Analogicky k obyčejným grafům definujeme (uzavřený) orientovaný sled, orientovaný tah, orientovanou cestu a orientovanou kružnici. Hrany v příslušných posloupnostech jsou přitom nahrazeny orientovanými hranami tak, aby směřovaly od předchozího k následujícímu uzlu.
+
+\begin{mydef}
+Máme-li zadán obyčejný graf $G=(U, H)$, je k němu možno definovat orientovaný graf $G'=(U', H')$ tak, že pro každou hranu $\{u, v\} \in H$ existují v $H'$ právě dvě hrany $h, h'$ takové, že $h=(u,v) \land h' = (v,u)$. Přitom v $H'$ žádné jiné hrany nejsou. Takovýto graf se nazývá \textbf{symetrickou orientací grafu $G$}. jinými slovy, hrana v obyčejném grafu mezi uzly $u$ a $v$ se nahradí oběma orientovanými hranami mezi těmito uzly v novém grafu.
+\end{mydef}
+
+\begin{mydef}
+Máme-li zadán obyčejný graf $G=(U, H)$, je k němu možno definovat orientovaný graf $G'=(U', H')$ tak, že pro každou hranu $\{u, v\} \in H$ existuje v $H'$ jediná orientovaná hrana $h$ takové, že $h=(u, v)$ nebo $h = (v, u)$ a přitom $H'$ žádné jiné hrany neobsahuje. Tento graf se nazývá \textbf{orientací grafu $G$}.
+\end{mydef}
+
+\begin{mydef}
+Máme-li zadán orientovaný graf $G=(U, H)$, potom k němu můžeme sestrojit jednoznačně obyčejný graf $G'=(U', H')$, který se nazývá \textbf{symetrizací grafu $G$}. Položíme
+$H' = \{\{u, v\} | u, v \in U, u \not= v, \exists h \in H: h=(u, v) \lor h = (v, u)\}$
+\end{mydef}
+Jinými slovy, symetrizace vznikne zanedbáním šipek a smyček v původním grafu.
+
+\begin{mydef}
+Řekneme, že orientovaný graf $G=(U,H)$ je \textbf{souvislý}, jestliže jeho symetrizace $G=(U, H')$ je souvislý graf.
+\end{mydef}
+
+\begin{mydef}
+Řekneme, že orientovaný graf $G=(U,H)$ je \textbf{silně souvislý}, jestliže pro libovolné dva uzly $u, v \in U$ existuje orientovaná cesta z uzlu $u$ do uzlu $v$.
+\end{mydef}
+
+\begin{mydef}
+Orientovaný graf $T = (U, H)$ bez smyček se nazývá \textbf{turnajem}, když pro každou množinu uzlů $\{u,v\}, u, v \in U, u \not= v$ existuje právě jedna hrana $h \in H$ taková, že platí $h = (u, v) \lor h = (v,u)$.
+\end{mydef}
+V turnaji tedy existuje pro každou dvojici různých uzlů jediná orientovaná hrana jdoucí z jednoho uzlu do druhého.
+
+\begin{veta}
+Buď $T = (U, H)$ turnaj a $v \in U$ uzel s maximálním výstupním stupněm. Pak pro každý uzel $w \in U$ existuje orientovaná cesta z uzlu $v$ do uzlu $w$ délky nejvýše 2.
+\end{veta}
+
+\begin{mydef}
+Orientovaný graf $G=(U, H)$ se nazývá eulerovský, jestliže v něm existuje uzavřený orientovaný tah obsahující všechny jeho hrany.
+\end{mydef}
+
+\begin{veta}
+Souvislý orientovaný graf $G=(U, H)$ je eulerovský, právě tehdy když platí $\text{deg}_+(u) = \text{deg}_-(u)$ pro každý uzel $u \in U$.
+\end{veta}
+
+\begin{mydef}
+\textbf{Orientovanou hamiltonovskou cestou v grafu $G$} nazveme orientovanou cestu, která prochází každým uzlem grafu $G$.
+
+\textbf{Orientovanou hamiltonovskou kružnicí grafu $G$} nazveme orientovanou kružnici, která prochází každým uzlem grafu $G$.
+
+\textbf{Orientovaný graf nazveme hamiltonovským}, má-li orientovanou hamiltonovskou kružnici.
+\end{mydef}
+
+\begin{veta}
+V každém turnaji $T=(U, H)$ existuje orientovaná hamiltonovská cesta.
+\end{veta}
+
+\begin{veta}
+Je-li $T_n$ silně souvislý turnaj s $n$ uzly, $n \geq 3$, potom $T_n$ obsahuje orientované kružnice o délkách $3, 4, \dots, n$.
+\end{veta}
+
+Důsledek: Turnaj $T$ s alespoň třemi uzly je hamiltonovský, právě když je silně souvislý.
+
+Graf bude dále vždy znamenat orientovaný graf bez smyček, hrana orientovanou hranu a cesta bude vždy znamenat orientovanou cestu.
+\begin{mydef}
+Nechť $G=(U, H)$ je graf a každé hraně $h \in H$ nechť je přiřazeno reálné číslo $l(h)$. Potom tomuto číslu budeme říkat \textbf{délka hrany $h$}.
+
+\textbf{Délka $l(p)$ sledu $p$ v grafu $G$} se definuje jako součet délek všech hran obsažených v sledu $p$. Je-li $p$ tvořena jediným uzlem, klademe $l(p) = 0$.
+\end{mydef}
+
+\begin{mydef}
+Nechť je dán graf $G=(U, H)$ a $u, v \in U$. Pokud existuje mezi uzly $u$ a $v$ \textbf{cesta minimální délky}, definujeme číslo $d(u, v)$ jako délku této cestu. Pokud z uzlu $u$ do uzlu $v$ vůbec žádná cesta neexistuje, klademe $d(u, v) = \infty$.
+\end{mydef}
+Poznámka: Pro kružnice se zápornou délkou nemá pojem cesta minimální délky žádný význam.
+
+\subsection{Dijkstrův algoritmus pro stanovení minimální cesty}
+\begin{mydef}
+\textbf{Horní odhad vzdálenosti uzlu $s$ a uzlu $v$} je číslo $D(v)$ takové, že platí $D(v) \geq d(s,v)$.
+
+Pro každý uzel $v \in U$ bude symbol $\pi(v)$ označovat uzel, který \textbf{bezprostředně předchází uzlu $v$ v cestě minimální délky z uzlu $s$ do uzlu $v$} zkonstruované Dijkstrovým algoritmem. Pokud $v=s$ nebo pokud taková cesta dosud nebyla zkonstruována, položíme $\pi(v) = \emptyset$.
+\end{mydef}
+
+V grafu $G = (U, H)$, kde každé hraně $h$ je přiřazeno kladné reálné číslo $l(h)$ a kde je vyznačen výchozí uzel $s$, najděte ke každému uzlu $v \not= s$ cestu $p(s,v)$ minimální délky a tuto minimální délku $d(s, v)$.
+
+\begin{enumerate}
+	\item \textbf{Inicializace}: Pro každý uzel $u \in U$ položíme $\pi(u) = \emptyset, D(s) = 0, D(u) = \infty$, jestliže $u \not= s, S= \emptyset, Q = U$.
+	\item \textbf{Test na ukončení algoritmu}: Pokud $S = U$, přechod na bod 5.
+	\item \textbf{Nalezení uzlu s definitivní cestou}: Z množiny $Q$ přesuneme do množiny $S$ uzel $v$ s minimální hodnotou $D(v)$. Jestliže pro všechny $u \in Q$ platí $D(u) = \infty$, přechod na bod 5.
+	\item \textbf{Zlepšení horních odhadů}: Pro každý uzel $w \in N(v) \cap Q$ takový, že $D(w) \geq D(v) + l((v, w))$ položíme $D(w) = D(v) + l((v, w))$ a $\pi(w) = v$. Přechod na bod 2.
+	\item \textbf{Konstrukce výstupu}: Do uzlů, které zůstaly v množině $Q$ žádná cesta z uzlu $s$ neexistuje. Pro všechny ostatní uzly $v$ položíme $d(s, v) = D(v)$ a cestu minimální délky sestrojíme obrácením cesty $v \to \pi(v) \to \pi(\pi(v)) \to \dots \to s$.
+\end{enumerate}
+
+\begin{veta}
+Dijkstrův algoritmus nalezne cestu minimální délky a vzdálenost z výchozího uzlu $s$ do každého jiného uzlu $v \in V$.
+\end{veta}
+
+\subsection{Floyd-Warshallův algoritmus}
+Dijkstrův algoritmus nelze použít, pokud se v grafu vyskytují hrany se zápornou délkou. Floyd-Warshallův algoritmus při každém zadání délek hran nalezne cestu minimální délky z každého uzlu do každého jiného uzlu a pokud taková cesta, která by byla současně minimálním sledem, neexistuje kvůli kružnici se zápornou délkou, tuto kružnici odhalí.
+
+Uvažujeme graf $G = (U, H), U = \{1, 2, \dots, n\}$ v němž jsou délky hran zadány maticí
+A = $$
+ \begin{pmatrix}
+  a_{11} & a_{12} & \cdots & a_{1n} \\
+  a_{21} & a_{22} & \cdots & a_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  a_{n1} & a_{n2} & \cdots & a_{nn}
+ \end{pmatrix}
+$$
+kde $a_{ij}$ značí délku hrany $(i, j)$ pro libovolné $i, j \in \{1, 2, \dots, n\}$. Dále budeme používat matici
+P = $$
+ \begin{pmatrix}
+  p_{11} & p_{12} & \cdots & p_{1n} \\
+  p_{21} & p_{22} & \cdots & p_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  p_{n1} & p_{n2} & \cdots & p_{nn}
+ \end{pmatrix}
+$$
+kde na začátku platí $p_{ij} = j$. Algoritmus má vždy $n$ iterací.
+
+Začneme s maticí $A^0 = A, P^0 = P$ a v $i$-té iteraci vytvoříme matice $A^i, P^i$ pomocí $A^{i-1}, P^{i-1}$. Nakonec tedy dostaneme matice $A^n, P^n$. Prvky matic $A^j, P^j, j = 1, 2, \dots, n$ se vypočítají následujícím způsobem:
+$$a_{ik}^j = a_{ik}^{j-1}, p_{ik}^j = p_{ik}^{j-1} \text{ jestliže } a_{ik}^{j-1} \leq a_{ij}^{j-1} + a_{ij}^{j-1}$$
+$$a_{ik}^j = a_{ij}^{j-1} + a_{jk}^{j-1}, p_{ik}^j = p_{ij}^{j-1} \text{ jestliže } a_{ik}^{j-1} > a_{ij}^{j-1} + a_{ij}^{j-1}$$
+
+Indukcí lze dokázat, že po skončení algoritmu má prvek $a_{ij}^n$ hodnotu minimální vzdálenosti z uzlu $i$ do uzlu $j$. Dá se též ověřit, že pokud $p_{ij}^n = k$, potom $(i,k)$ je první hrana v minimální cestě z uzlu $i$ do uzlu $j$, což se dá využít při konstrukci této trasy.
+
+Existence kružnice se zápornou délkou je indikována pomocí záporného diagonálního prvku.
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Klasifikace gramatik, formálních jazyků a automatů přijímajících jazyky.} \label{cha:16}
+
 X. semestr, XXX, ??
 
-\chapter{Klasifikace gramatik, formálních jazyků a automatů přijímajících jazyky.} \label{cha:16}
 \chapter{Vlastnosti formálních jazyků (typické vlastnosti a jejich rozhodnutelnost).} \label{cha:17}
 \chapter{Konečné automaty (jazyky přijímané jazyky KA, varianty KA, minimalizace KA).} \label{cha:18}
 \chapter{Regulární množiny, regulární výrazy a rovnice nad regulárními výrazy.} \label{cha:19}

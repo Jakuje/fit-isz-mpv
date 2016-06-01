@@ -5,7 +5,7 @@ Vypracované otázky ke státní závěrečné zkoušce magisterského oboru MPV
 
 Pouze textově zpracovaný obsah, bez obrázku a diagramů, které jsou součástí některých otázek!
 
-		Progress: 9/63
+		Progress: 10/63
 
 Zdroj otázek:
 
