@@ -3098,7 +3098,7 @@ Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ jsou třídy jazyků typu $i$. Pak platí
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Konečné automaty} \label{cha:18}
 
-1. semestr, TIN, \texttt{opora.pdf}, 3. kapitola
+1. semestr, TIN, \texttt{opora.pdf}, 3. kapitola 1. a 2. sekce
 
 (jazyky přijímané jazyky KA, varianty KA, minimalizace KA)
 
@@ -3342,10 +3342,123 @@ Metoda:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Regulární množiny, regulární výrazy a rovnice nad regulárními výrazy.} \label{cha:19}
+1. semestr, TIN, \texttt{opora.pdf}, 3. kapitola 3. sekce
 
+\section{Regulární množiny}
+
+\begin{mydef}
+Nechť $\Sigma$ je konečná abeceda. \emph{Regulární množinu} nad abecedou $\Sigma$ definujeme rekurzivně takto:
+\begin{enumerate}
+	\item $\emptyset$ (prázdná množina) je regulární množina nad $\Sigma$
+	\item $\{ \epsilon \}$ (množina obsahující pouze prázdný řetězec) je regulární množina nad $\Sigma$
+	\item $\{ a \}$ pro všechna $a \in \Sigma$ je regulární množina nad $\Sigma$
+	\item Jsou-li $P$ a $Q$ regulární množiny nad $\Sigma$, pak také $P \cup Q, P \cdot Q$ a $P^*$ jsou regulární množiny nad $\Sigma$.
+	\item regulárními množinami jsou právě ty množiny, které lze získat aplikací 1 -- 4.
+\end{enumerate}
+\end{mydef}
+Nejmenší třída jazyků, uzavřená vzhledem k operacím sjednocení, součinu a iterace.
+
+\begin{veta}
+Nechť $\Sigma$ je konečná abeceda. Pak $\emptyset, \{\epsilon\}, \{a\}$ (pro všechna $a \in \Sigma$ jsou jazyky typu 3 nad abecedou $\Sigma$.
+\end{veta}
+
+\begin{veta}
+Nechť $L_1$ a $L_2$ jsou jazyky typu 3 nad abecedou $\Sigma$. Pak $L_1 \cup L_2$, $L_1 \cdot L_2$, $L_1^*$ jsou jazyky typu 3 nad abecedou $\Sigma$.
+\end{veta}
+
+\section{Regulární výrazy}
+
+Notace pro reprezentaci regulárních množin.
+
+\begin{mydef}
+Regulární výrazy nad $\Sigma$ a regulární množiny, které označují, jsou rekurzivně definovány takto:
+\begin{enumerate}
+	\item $\emptyset$ je regulární výraz označující regulární množinu $\emptyset$
+	\item $\epsilon$ je regulární výraz označující regulární množinu $\{ \epsilon \}$
+	\item $a$ je regulární výraz označující regulární množinu $\{ a \}$ pro všechna $a \in \Sigma$
+	\item Jsou-li $p$ a $q$ regulární výrazy označující regulární množiny $P$ a $Q$, pak
+	\begin{enumerate}
+		\item $(p+q)$ je regulární výraz označující regulární množinu $P \cup Q$
+		\item $(pq)$ je regulární výraz označující regulární množinu $P \cdot Q$
+		\item $(p*)$ je regulární výraz označující regulární množinu $P^*$
+	\end{enumerate}
+	\item Žádní jiné regulární výrazy na $\Sigma$ neexistují
+\end{enumerate}
+\end{mydef}
+
+Regulární výraz $p^+$ značí regulární výraz $pp^*$; Abychom minimalizovali počet závorek, stanovujeme priority operátorů $^*$ a $^+$ (iterace -- nejvyšší priorita), $\cdot$ (konkatenace), $+$ (alternativa).
+
+\begin{mydef}
+Kleeneho algebra sestává z neprázdné množiny se dvěma význačnými konstantami $0$ a $1$, dvěma binárními operacemi $+$ a $\cdot$ a unární operací $^*$, které splňují následující axiomy:
+
+\begin{subequations}
+\begin{align*}
+	& a + (b + c) = (a + b) + c		& \text{ asociativita } + 				\quad & [A.1] \\
+	& a + b = b + a					& \text{ komutativita } +				\quad & [A.2] \\
+	& a + a = a						& \text{ idempotence } + 				\quad & [A.3] \\
+	& a + 0 = a						& 0 \text{ je identitou pro } + 		\quad & [A.4] \\
+	& a(bc) = (ab)c					& \text{ asociativita } \cdot 			\quad & [A.5] \\
+	& a1 = 1a = a					& 1 \text{ je identitou pro } \cdot		\quad & [A.6] \\
+	& a0 = 0a = 0					& 0 \text{ je anihilátorem pro } \cdot	\quad & [A.7] \\
+	& a(b + c) = ab + ac			& \text{ distributivita zleva }			\quad & [A.8] \\
+	& (a + b)c = ac + bc			& \text{ distributivita zprava }		\quad & [A.9] \\
+	& 1 + aa^* = a^*				&										\quad & [A.10] \\
+	& 1 + a^*a = a^*				&										\quad & [A.11] \\
+	& b + ac \leq c \Rightarrow a^*b \leq c &								\quad & [A.12] \\
+	& b + ca \leq c \Rightarrow ba^* \leq c &								\quad & [A.13] \\
+\end{align*}
+\end{subequations}
+(poslední dva axiomy reprezentují $\leq$ uspořádání definované takto: $a \leq b \xLeftrightarrow{def} a+b=b$.
+\end{mydef}
+
+Některé teorémy Kleeneho algebry:
+\begin{subequations}
+\begin{align*}
+	& 0^* = 1						& \\
+	& 1 + a^* = a^*					& \\
+	& a^* = a + a^*					& \\
+	& a^* a^* = a^*					& \\
+	& a^{*^*} = a^*					& \\
+	& (a^*b)^*a* = (a + b)^*		& \text{ pravidlo \uv{vynořování} }		\quad & [R.16] \\
+	& a (ba)^* = (ab)^* a			& \text{ pravidlo posuvu }				\quad & [R.14] \\
+	& a^* = (aa)^* + a (aa)^*		& \\
+\end{align*}
+\end{subequations}
+
+\section{Rovnice nad regulárními výrazy}
+
+\begin{mydef}
+Rovnice, jejímiž složkami jsou koeficienty a neznámí, které reprezentují (dané a hledaní) regulární výrazy, nazýváme \emph{rovnicemi nad regulárními výrazy}.
+\end{mydef}
+
+Nemusí existovat jediné řešení, obvykle hledáme nejmenší řešení, nejmenší pevný bod.
+
+\begin{veta}
+Nejmenším pevným bodem rovnice $X = pX + q$ je $X = p^*q$
+\end{veta}
+
+\section{Soustavy rovnic nad regulárními výrazy}
+
+\begin{mydef}
+Soustava rovnic nad regulárními výrazy je ve \emph{standardním tvaru} vzhledem k neznámým $\Delta = \{X_1, X_2, \dots, X_n\}$, má-li soustava tvar
+
+$$\bigwedge_{i \in \{1, \dots, n} X_i = \alpha_{i0} + \alpha_{i1}X_1 + \alpha_{i2}X_2 + \dots + \alpha_{in}X_n$$
+
+kde $\alpha_{ij}$ jsou regulární výrazy nad nějakou abecedou $\Sigma, \Sigma \cap \Delta = \emptyset$.
+\end{mydef}
+
+% TODO XXX
+\begin{mydef}
+\end{mydef}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Transformace a normální formy bezkontextových gramatik.} \label{cha:20}
 1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
 
-\chapter{Transformace a normální formy bezkontextových gramatik.} \label{cha:20}
 \chapter{Zásobníkové automaty (jazyky přijímané ZA, varianty ZA).} \label{cha:21}
 \chapter{Turingovy stroje (jazyky přijímané TS, varianty TS, lineárně omezené automaty, univerzální TS).} \label{cha:22}
 \chapter{Nerozhodnutelnost (problém zastavení TS, princip diagonalizace a redukce, Postův korespondenční problém).} \label{cha:23}
