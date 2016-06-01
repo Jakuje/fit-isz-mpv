@@ -2950,9 +2950,8 @@ Operace je definovaná prostřednictvím operace konkatenace řetězců a má ta
 \begin{mydef}
 Nechť $L$ je jazyk nad abecedou $\Sigma$. \emph{Iteraci} $L^*$ jazyka $L$ a \emph{pozitivní iteraci} $L^+$ jazyka $L$ definujeme takto:
 $$L^0 = \{\epsilon\}$$
-$$L^n = L \cdot L^{n-1}, text{ pro } n \geq 1$$
-$$L^* = \bigcup\limits_{n \geq 0} L^n$$
-$$L^+ = \bigcup\limits_{n \geq 1} L^n$$
+$$L^n = L \cdot L^{n-1}, \text{ pro } n \geq 1$$
+$$L^* = \bigcup\limits_{n \geq 0} L^n, \quad L^+ = \bigcup\limits_{n \geq 1} L^n$$
 \end{mydef}
 
 \begin{veta}
@@ -3067,12 +3066,175 @@ Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ značí třídu všech jazyků typu $i$. 
 Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ jsou třídy jazyků typu $i$. Pak platí $\mathcal{L}_0 \supset \mathcal{L}_1 \supset \mathcal{L}_2 \supset \mathcal{L}_3$.
 \end{veta}
 
+\section{Regulární jazyky}
+
+\subsection{Jazyky přijímané konečnými automaty a deterministický konečný automat}
+
+\subsubsection{Konečný automat}
 \begin{mydef}
+Konečný automat (KA) je 5-tice $M = (Q, \Sigma, \delta, q_0, F)$, kde
+\begin{enumerate}[(1)]
+	\item $Q$ je konečná množina stavů
+	\item $\Sigma$ je konečná vstupní abeceda
+	\item $\delta$ je zobrazení $Q \times \Sigma \to 2^Q$, které nazýváme \emph{funkcí přechodu} ($2^Q$ je množina podmnožin množiny $Q$).
+	\item $q_0 \in Q$ je počáteční stav
+	\item $F \subseteq Q$ je množina koncových stavů
+\end{enumerate}
+
+Je-li $\forall q \in Q \forall a \in \Sigma: |\delta(q, a)| \leq 1$, pak $M$ nazýváme \emph{deterministickým konečným automatem} (zkráceně DKA), v případě, že $\exists q \in Q \exists a \in \Sigma : | \delta(q, a)| > 1$ pak \emph{nedeterministickým konečným automatem (NKA)}.
+
+\emph{Deterministický konečný automat} často také definujeme jako 5-tici $M = (Q, \Sigma, \delta, q_0, F)$, kde $\delta$ je \emph{parciální} přechodová funkce tvaru $\delta: Q \times \Sigma \to Q$. Je-li přechodová funkce $\delta$ totální, pak $M$ nazýváme \emph{úplně definovaným deterministickým konečným automatem}.
 \end{mydef}
 
+\begin{lemma}
+Ke každému DKA $M$ existuje \uv{ekvivalentní} úplně definovaný DKA $M'$.
+\end{lemma}
+(nový nekoncový SINK stav, do kterého povedou všechny chybějící přechody.)
 
+\begin{mydef}
+Je-li $M = (Q, \Sigma, \delta, q_0, F)$ konečný automat, pak dvojici $C = (q, w)$ z $Q \times \Sigma^*$ nazýváme konfigurací automatu $M$. Konfigurace tvaru $(q_0, w)$ je počáteční konfigurace, konfigurace tvaru $(q, \epsilon), q \in F$ je koncová konfigurace.
+Přechod automatu $M$ je reprezentován binární relací $\vdash_M$ na množině konfigurací $C$.
+Pro všechna $q, q' \in Q$ a $w, w' \in \Sigma^*$ definujeme, že platí $(q, w) \vdash_M (q', w')$ tehdy a jen tehdy když $w = aw'$ pro nějaké $a \in \Sigma$ a $q' \in \delta(q, a)$ (tj. $\delta(q, a) = Q_j, Q_j \in 2^Q, q' \in Q_j$).
+Označíme symbolem $\vdash_M^k$, $k \geq 0$ k-tou mocninu ($C \vdash^0 C'$ právě když $C = C'$), symbolem $\vdash_M^+$ tranzitivní uzávěr a symbolem $\vdash_M^*$ tranzitivní a reflexivní uzávěr relace $\vdash_M$.
+Bude-li zřejmé, že jde o automat $M$, pak uvedené relace zapíšeme pouze jako $\vdash, \vdash^k, \vdash^+, \vdash^*$.
+\end{mydef}
 
+\begin{mydef}
+Říkáme, že vstupní řetězec $w$ je \emph{přijímán} konečným automatem $M$, jestliže $(q_0, w) \vdash^* (q, \epsilon), q \in F$. Jazyk přijímaný konečným automatem $M$ označujeme symbolem $L(M)$ a definujeme ho jako množinu všech řetězců přijímaných automatem $M$:
+$L(M) = \{w | (q_0, w) \vdash^* (q, \epsilon) \land q \in F\}$
+\end{mydef}
 
+\begin{veta}
+Každý \emph{nedeterministický} konečný automat $M$ lze převést na \emph{deterministický} konečný automat $M'$ tak, že $L(M) = L(M')$.
+\end{veta}
+
+\textbf{Algoritmus} převodu nedeterministického KA na ekvivalentní DKA:
+
+Vstup: NKA $M = (Q, \Sigma, \delta, q_0, F)$\\
+Výstup: NKA $M = (Q', \Sigma, \delta', q_0', F')$\\
+Metoda:
+\begin{enumerate}
+	\item Polož $Q' = 2^Q \backslash \{0\}$
+	\item Polož $q_0' = \{q_0\}$
+	\item Polož $F' = \{S | S \in 2^Q \land S \cap F \not= \emptyset\}$
+	\item Pro všechna $S \in 2^Q \backslash \{\emptyset\}$ a pro všechna $a \in \Sigma$ polož:
+	\begin{itemize}
+		\item $\delta'(S, a) = \bigcup_{q \in S} \delta(q, a)$, je-li $\bigcup_{q \in S} \delta(q, a) \not= \emptyset$
+		\item Jinak $\delta'(S, a)$ není definována.
+	\end{itemize}
+\end{enumerate}
+
+\subsection{Lineární a regulární gramatiky}
+
+\begin{mydef}
+\begin{itemize}
+	\item Gramatika $G = (N, \Sigma, P, S)$ s pravidly tvaru:
+	$A \to xB, \quad A, B \in N, x \in \Sigma^*$ nebo
+	$A \to x, \quad x \in \Sigma^*$
+
+	respektive tvaru
+	$A \to Bx, \quad A, B \in N, x \in \Sigma^*$ nebo
+	$A \to x, \quad x \in \Sigma^*$
+	se nazývá \emph{pravá lineární}, resp. \emph{levá lineární} gramatika.
+	\item Gramatika $G = (N, \Sigma, P, S)$ s pravidly tvaru:
+	$A \to xB, \quad A, B \in N, x \in \Sigma^*$,
+	$A \to x, \quad x \in \Sigma^*$, případně
+	$S \to \epsilon, \quad a \in \Sigma$
+
+	respektive tvaru
+	$A \to Bx, \quad A, B \in N, x \in \Sigma^*$,
+	$A \to x, \quad x \in \Sigma^*$, případně
+	$S \to \epsilon, \quad a \in \Sigma$
+	se nazývá \emph{pravá regulární}, resp. \emph{levá regulární} gramatika. Souhrnně \emph{regulární}.
+\end{itemize}
+\end{mydef}
+
+\emph{Lineární gramatika} je gramatika s pravidly tvaru $A \to xBy$.
+\begin{itemize}
+	\item $\mathcal{L}_{PL}$ všechny jazyky generované pravými lineárními gramatikami
+	\item $\mathcal{L}_{LL}$ všechny jazyky generované levými lineárními gramatikami
+	\item $\mathcal{L}_{L}$ všechny jazyky generované lineárními gramatikami
+\end{itemize}
+$\mathcal{L}_{PL} = \mathcal{L}_{LL}$ a $\mathcal{L}_{PL} \subset \mathcal{L}_{L}$.
+
+\begin{veta}
+Každá pravá lineární gramatika $G = (N, \Sigma, P, S)$ (pravidla typu $A \to xB$ nebo $A \to x$, kde $A, B \in N, x \in \Sigma^*$), může být transformována na (pravou regulární) gramatiku $G' = (N', \Sigma, P', S')$, která obsahuje pravidla $A \to aB$ nebo $A \to \epsilon$, přičemž $L(G) = L(G')$.
+\end{veta}
+
+\begin{veta}
+Každý jazyk typu 3 lze generovat pravou regulární gramatikou.
+\end{veta}
+
+\begin{veta}
+Každý jazyk typu 3 může být generován levou lineární gramatikou.
+\end{veta}
+
+\begin{veta}
+Každý jazyk typu 3 lze generovat levou regulární gramatikou.
+\end{veta}
+
+\subsection{Ekvivalence třídy $\mathcal{L}_3$ a třídy jazyků přijímaných konečnými automaty}
+
+$\mathcal{L}_M$ třída jazyků přijímaných konečnými automaty.
+
+\begin{veta}
+Nechť $L$ je jazyk typu 3. Pak existuje konečný automat $M$ takový, že $L = L(M)$, tj. $\mathcal{L}_3 \subseteq \mathcal{L}_M$.
+\end{veta}
+
+\begin{veta}
+Nechť $L = L(M)$ pro nějaký konečný automat $M$. Pak existuje gramatika $G$ typu 3 taková, že $L = L(G)$, tj. $\mathcal{L}_M \subseteq \mathcal{L}_3$.
+\end{veta}
+
+\begin{veta}
+Třída jazyků, jež jsou přijímány konečnými automaty je totožná s třídou jazyků typu 3, Chomského hierarchie.
+\end{veta}
+
+\textbf{Algoritmus} Konstrukce nedeterministického KA k pravé regulární gramatice:
+
+Vstup: Pravá regulární gramatika  $G = (N, \Sigma, P, S)$, jejíž pravidla mají tvar $A \to aB$ a $A \to a$, kde $A,B \in N$ a $a \in \Sigma$, případně $S \to \epsilon$ za předpokladu, že $S$ se nevyskytuje na pravé straně žádného pravidla.\\
+Výstup: NKA $M = (Q, \Sigma, \delta, q_0, F)$, pro který je $L(M) = L(G)$\\
+Metoda:
+\begin{enumerate}
+	\item Polož $Q = N \cup \{q_F\}$
+	\item Množina vstupních symbolů automatu $M$ je identická s množinou terminálů gramatiky $G$
+	\item Funkci přechodů $\delta$ definujeme takto:
+	\begin{enumerate}
+		\item Je-li $A \to aB$ pravidlo z $P$, pak $\delta(A, a)$ obsahuje stav $B$.
+		\item Je-li $A \to a$ pravidlo z $P$, pak $\delta(A, a)$ obsahuje stav $q_F$.
+	\end{enumerate}
+	\item $q_0 = S$
+	\item Je-li $S \to \epsilon$ pravidlo z $P$, pak $F = \{S, q_F\}$ v opačném případě $F = \{q_F\}$.
+\end{enumerate}
+
+\begin{veta}
+Nechť $G$ je pravá regulární gramatika a $M$ je konečný automat z předchozího algoritmu. Pak $L(M) = L(G)$.
+\end{veta}
+
+\textbf{Algoritmus} Konstrukce nedeterministického KA k levé regulární gramatice:
+
+Vstup: Levá regulární gramatika  $G = (N, \Sigma, P, S)$, jejíž pravidla mají tvar $A \to Ba$ a $A \to a$, kde $A,B \in N$ a $a \in \Sigma$, případně $S \to \epsilon$ za předpokladu, že $S$ se nevyskytuje na pravé straně žádného pravidla.\\
+Výstup: NKA $M = (Q, \Sigma, \delta, q_0, F)$, pro který je $L(M) = L(G)$\\
+Metoda:
+\begin{enumerate}
+	\item Polož $Q = N \cup \{q_0\}$
+	\item Množina vstupních symbolů automatu $M$ je identická s množinou terminálů gramatiky $G$
+	\item Funkci přechodů $\delta$ definujeme takto:
+	\begin{enumerate}
+		\item Je-li $A \to Ba$ pravidlo z $P$, pak $\delta(B, a)$ obsahuje stav $A$.
+		\item Je-li $A \to a$ pravidlo z $P$, pak $\delta(q_0, a)$ obsahuje stav $A$.
+	\end{enumerate}
+	\item $q_0$ je počáteční stav automatu $M$
+	\item Je-li $S \to \epsilon$ pravidlo z $P$, pak $F = \{S, q_0\}$ v opačném případě $F = \{S\}$.
+\end{enumerate}
+
+\begin{veta}
+Nechť $G$ je pravá regulární gramatika a $M$ je konečný automat z předchozího algoritmu. Pak $L(M) = L(G)$.
+\end{veta}
+
+\section{Minimalizace deterministického konečného automatu}
+
+\begin{veta}
+\end{veta}
 
 
 
