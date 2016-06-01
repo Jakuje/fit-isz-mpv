@@ -2699,6 +2699,52 @@ Pokud je možno graf obarvit pomocí $k$ barev, aniž bychom nutně užili všec
 
 Nejmenší možná hodnata $k$ pro kterou je graf $G$ k-obarvitelným, se nazývá \emph{chromatické číslo} grafu $G$, formálně $\mathcal{X}(G)$.
 
+\section{Typy grafů}
+\begin{description}
+	\item[$K_n$] úplný graf s $n$ uzly
+	\item[$D_n$] diskrétní graf s $n$ uzly
+	\item[$K$] bipartitní graf, tj graf, jehož množinu uzlů lze rozdělit na dvě disjunktní množiny $V_1, V_2$ tak, že každá jeho hrana spojuje některý uzel z množiny $V_1$ s některým uzlem množiny $V_2$. Jestliže je navíc každý uzel z množiny $V_1$ spojen hranou s každým uzlem z množiny $V_2$, pak se tento graf nazývá úplný bipartitní graf a značí se $K_{m,n}$, kde $m = |V_1|, n=|V_2|$.
+\end{description}
+Bipratitní graf neobsahuje kružnici liché délky.
+
+Platí:
+$$\mathcal{X}(G) = 1 \leftrightarrow G = D_n$$
+$$\mathcal{X}(K_n) = n$$
+$$\mathcal{X}(K) = 2$$
+
+Kružnice je 2-obarvitelná, právě když má sudý počet uzlů.
+
+Graf je 2-obarvitelný, když neobsahuje kružnici s lichým počtem uzlů.  Strom, který žádné kružnice nemá, je 2-obarvitelný.
+
+\begin{mydef}
+Graf $G$ se nazývá \textbf{planární (rovinný)}, když je možno jej nakreslit v rovině tak, aby se jeho hrany nekřížily. Části roviny vymezené hranami planárního grafu nakresleného v rovině bez křížení hran se nazývají \textbf{buňky} a hrany kolem nich jsou jejich \textbf{hranice}.
+\end{mydef}
+
+\begin{veta}
+Má-li souvislý planární graf $n$ uzlů a $m$ hran a tvoří $p$ buněk, platí $n-m+p = 2$.
+\end{veta}
+
+\begin{veta}
+Nechť $G$ je souvislý planární graf s $n \geq 3$ uzly a $m$ hranami. Potom $m \leq 3n - 6$.
+\end{veta}
+
+\begin{mydef}
+Dva grafy $G_1$ a $G_2$ se nazývají \textbf{homeomorfní} (nebo shodné až na uzly stupně 2), je-li možno $G_1$ i $G_2$ získat z nějakého grafu $G_3$ postupným rozpůlením některých hran vložením nového uzlu.
+\end{mydef}
+
+\begin{veta}
+Graf je planární, právě když neobsahuje podgraf homeomorfní s grafem $K_5$ ani podgraf homeomorfní s $K_{3,3}$.
+\end{veta}
+
+\begin{veta}
+Každý planární graf je 5-obarvitelný.
+\end{veta}
+
+\begin{veta}
+Každý planární graf je 4-obarvitelný.
+\end{veta}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
