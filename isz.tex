@@ -7,6 +7,8 @@
 \usepackage{enumerate}
 \usepackage{verbatim}
 \usepackage{tikz-qtree}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning,fit}
 \usepackage{mathtools}
 
 \usepackage{amsthm}
@@ -3447,9 +3449,164 @@ $$\bigwedge_{i \in \{1, \dots, n} X_i = \alpha_{i0} + \alpha_{i1}X_1 + \alpha_{i
 kde $\alpha_{ij}$ jsou regulární výrazy nad nějakou abecedou $\Sigma, \Sigma \cap \Delta = \emptyset$.
 \end{mydef}
 
-% TODO XXX
+\begin{veta}
+Je-li soustava rovnic nad regulárními výrazy ve standardním tvaru, pak existuje její minimální pevný bod a algoritmus k jeho nalezení.
+\end{veta}
+Algoritmus: Vyjadřujeme hodnotu jednotlivých proměnných pomocí řešení rovnice $X=pX + q$ jako regulární výraz s proměnnými, jejichž počet se postupně snižuje:
+Z rovnice pro $X_n$ vyjádříme např. $X_n$ jako regulární výraz nad $\Sigma$ a $X_1, \dots, X_{n-1}$.
+Dosadíme za $X_n$ do rovnice $X_{n-1}$ a postup opakujeme.
+Jsou přitom možné (ale ne nutné) různé optimalizace tohoto pořadí.
+
+\begin{veta}
+Každý jazyk generovaný gramatikou typu 3 je regulární množinou $\mathcal{L}_3 \subseteq \mathcal{L}_R$.
+\end{veta}
+Vytvoříme soustavu rovnic nad regulárními výrazy s proměnnými $X_1, \dots, X_n$ ve standardním tvaru popisující množinu řetězců přijímaných ze stavu $Q_i$. Koncové stavy přijímají $\epsilon$.
+
+Regulární přechodový graf je zobecněním konečného automatu s regulárními výrazy na hranách.
+
+\section{Převod regulárních výrazů na konečné automaty}
+
+\begin{mydef}
+\emph{Rozšířený konečný automat} (RKA) je pětice $M=(Q, \Sigma, \delta, q_0, F)$, kde:
+\begin{enumerate}
+	\item $Q$ je konečná množina stavů
+	\item $\Sigma$ konečná vstupní abeceda
+	\item $\delta$ je zobrazení $Q \times (\Sigma \cup \{\epsilon\}) \to 2^Q$
+	\item $q_0 \in Q$ je počáteční stav
+	\item $F \subseteq Q$ je množina koncových stavů
+\end{enumerate}
+\end{mydef}
+
+\begin{mydef}
+Klíčovou funkci v algoritmu převodu RKA na DKA má výpočet funkce, která k danému stavu určí množinu všech stavů, jež jsou dostupné po $\epsilon$ hranách diagramu přechodů funkce $\delta$. Označme tuto funkci $\epsilon$-uzávěr:
+$$\epsilon\text{-uzávěr}(q) = \{p | \exists w \in \Sigma^*: (q, w) \overset{*}{\vdash} (p, w)\}$$
+Funkci $\epsilon$-uzávěr zobecníme tak, aby argumentem mohla být množina $T \in Q$:
+$$\epsilon\text{-uzávěr}(q) = \bigcup\limits_{s \in T} \epsilon\text{-uzávěr}(s)$$
+\end{mydef}
+
+\begin{alg}
+Převod rozšířeného konečného automatu na deterministický konečný automat\\
+Vstup: Rozšířený konečný automat $M = (Q, \Sigma, \delta, q_0, F)$\\
+Výstup: Deterministický konečný automat $M = (Q', \Sigma, \delta', q_0', F')$, $L(M) = L(M')$\\
+Metoda:
+\begin{enumerate}
+	\item $Q := 2^Q \backslash \{\emptyset\}$
+	\item $q' := \epsilon\text{-uzávěr}(q_0)$
+	\item $\delta': Q' \times \Sigma \to Q'$ je vypočtena takto:
+	\begin{enumerate}
+		\item Nechť $\forall T \in Q', a \in \Sigma: \overline{\delta}(T, a) = \bigcup_{q \in T}(q, a)$
+		\item Pak pro každé $T \in Q', a \in \Sigma$:
+		\begin{enumerate}
+			\item pokud $\overline{\delta}(T, a) \not= \emptyset$, pak $\delta'(T, a) = \epsilon\text{-uzávěr}(\overline{\delta}(T, a))$
+			\item jinak $\delta'(T, a)$ není definována
+		\end{enumerate}
+	\end{enumerate}
+	\item $F' := \{S | S \ in Q' \land S \cap F \not= \emptyset\}$
+\end{enumerate}
+\end{alg}
+
+\begin{alg}
+Převod regulárního výrazu na rozšířený konečný automat\\
+Vstup: Regulární výraz $r$ popisující regulární množinu $R$ nad $\Sigma$\\
+Výstup: Rozšířený konečný automat $M$, takový, že $L(M) = R$\\
+Metoda:
+\begin{enumerate}
+	\item Rozložíme $r$ na jeho primitivní složky podle rekurzivní definice regulární množiny/výrazu
+	\begin{enumerate}
+		\item Pro výraz $\epsilon$ zkonstruujeme automat 
+\begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,on grid,auto]
+   \node[state,initial] (s)   {$s$};
+   \node[state,accepting](f) [right=of s] {$f$};
+   \path[->] (s) edge  node {$\epsilon$} (f);
+\end{tikzpicture}
+		\item Pro výraz $a$, $a \in \Sigma$ zkonstruujeme automat
+\begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,on grid,auto]
+   \node[state,initial] (s)   {$s$};
+   \node[state,accepting](f) [right=of s] {$f$};
+   \path[->] (s) edge  node {$a$} (f);
+\end{tikzpicture}
+		\item Pro výraz $\emptyset$ zkonstruujeme automat
+\begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,on grid,auto]
+   \node[state,initial] (s)   {$s$};
+   \node[state,accepting](f) [right=of s] {$f$};
+\end{tikzpicture}
+		\item Nechť $N_1$ je automat přijímající jazyk specifikovaný výrazem $r_1$ a $N_2$ je automat přijímající jazyk specifikovaný výrazem $r_2$.
+		\begin{enumerate}
+			\item Pro výraz $r_1 + r_2$ zkonstruujeme automat
+\begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,on grid,auto]
+	\node[state,initial] (s)   {$s$};
+	\node[state] (n1) [above right=of s]  {};
+	\node[state] (n2) [right=of s]  {};
+	\node[state] (n3) [right=of n1]  {};
+	\node[state] (n4) [right=of n2]  {};
+	\node[state,accepting](f) [right=of n4] {$f$};
+	\path[->]
+		(s) edge  node {$\epsilon$} (n1)
+		(s) edge  node {$\epsilon$} (n2)
+		(n3) edge  node {$\epsilon$} (f)
+		(n4) edge  node {$\epsilon$} (f)
+		;
+	\node [draw=red, fit= (n1) (n3)] {$N_1$};
+	\node [draw=blue, fit= (n2) (n4)] {$N_2$};
+\end{tikzpicture}
+			\item Pro výraz $r_1 r_2$ zkonstruujeme automat
+\begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,on grid,auto]
+	\node[state,initial] (n1) {};
+	\node[state] (n2) [right=of n1]  {};
+	\node[state,accepting] (n3) [right=of n2]  {};
+	\node [draw=red, fit= (n1) (n2)] {$N_1$};
+	\node [draw=blue, fit= (n2) (n3)] {$N_2$};
+\end{tikzpicture}
+			\item Pro výraz $r_1^*$ zkonstruujeme automat
+\begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,on grid,auto]
+	\node[state,initial] (s)   {$s$};
+	\node[state] (n1) [right=of s]  {};
+	\node[state] (n2) [right=of n1]  {};
+	\node[state,accepting](f) [right=of n2] {$f$};
+	\path[->]
+		(s) edge  node {$\epsilon$} (n1)
+		(s) edge [bend right,above] node {$\epsilon$} (f)
+		(n2) edge [bend right,below] node {$\epsilon$} (n1)
+		(n2) edge  node {$\epsilon$} (f)
+		;
+	\node (N) [draw=red, fit= (n1) (n2)] {};
+	\node [yshift=2.0ex] at (N.south) {$N_1$};
+\end{tikzpicture}
+		\end{enumerate}
+	\end{enumerate}
+\end{enumerate}
+\end{alg}
+
+Konečné automaty, gramatiky typu 3 a regulární výrazy mají ekvivalentní vyjadřovací sílu.
+
+
 \begin{mydef}
 \end{mydef}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
