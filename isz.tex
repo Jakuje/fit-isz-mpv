@@ -3069,7 +3069,7 @@ Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ značí třídu všech jazyků typu $i$. 
 Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ jsou třídy jazyků typu $i$. Pak platí $\mathcal{L}_0 \supset \mathcal{L}_1 \supset \mathcal{L}_2 \supset \mathcal{L}_3$.
 \end{veta}
 
-%TODO XXX
+%TODO XXX??
 
 
 
@@ -3086,9 +3086,97 @@ Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ jsou třídy jazyků typu $i$. Pak platí
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Vlastnosti formálních jazyků} \label{cha:17}
 
-1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
+1. semestr, TIN, \texttt{opora.pdf}, kapitola 3.5, TODO
 
 (typické vlastnosti a jejich rozhodnutelnost)
+
+\section{Vlastnosti regulárních jazyků}
+
+Vlastnosti strukturální, uzávěrové, rozhodnutelné problémy.
+
+\subsection{Strukturální vlastnosti regulárních jazyků}
+\begin{veta}
+Každý konečný jazyk je regulární.
+\end{veta}
+
+\subsubsection{Pumping lemma}
+V každé dostatečně dlouhé větě každého regulárního jazyka jsme schopni najít poměrně krátkou sekvenci, kterou je možné vypustit, resp. zopakovat libovolný počet krát, přičemž stále dostáváme věty daného jazyka.
+
+\begin{veta}
+Nechť $L$ je nekonečný regulární jazyk. Pak existuje celočíselná konstanta $p > 0$ taková, že platí:
+
+$$w \in L \land |w| \geq p \Rightarrow w = xyz \land 0 < |y| \leq p \land x y^i z \in L \text{ pro } i \geq 0$$
+\end{veta}
+
+Většinou k důkazu, že daný jazyk není regulární. Vyhodnocujeme všechny možnosti.
+
+\subsubsection{Myhill-Nerodova věta}
+
+ekvivalence je binární relace, která je reflexivní, symetrická a tranzitivní.
+
+\begin{mydef}
+Nechť $\Sigma$ je abeceda a $\sim$ je ekvivalence na $\Sigma^*$.
+Ekvivalence $\sim$ je \emph{pravou kongruencí} (je zprava invariantní), pokud pro každé $u,v,w \in \Sigma^*$ platí
+
+$$u \sim v \Rightarrow uw \sim vw$$
+\end{mydef}
+
+\begin{veta}
+Ekvivalence $\sim$ na $\Sigma^*$ je pravá kongruence právě tehdy, když pro každé $u,v \in \Sigma^*, a \in \Sigma$ platí $u \sim v \Rightarrow ua \sim va$.
+\end{veta}
+
+\begin{mydef}
+Nechť $L$ je libovolný jazyk (ne nutně regulární) jazyk nad abecedou $\Sigma$. Na množině $\Sigma^*$ definujeme relaci $\sim_L$ zvanou prefixová ekvivalence pro $L$ takto:
+$$u \sim_L v \xLeftrightarrow{def} \forall w \in \Sigma^*: uw \in L \Leftrightarrow vw \in L$$
+\end{mydef}
+
+\begin{veta}
+Nechť $L$ je jazyk nad $\Sigma$. Pak následující tvrzení jsou ekvivalentní:
+\begin{enumerate}
+	\item $L$ je jazyk přijímaný deterministickým konečným automatem
+	\item $L$ je sjednocení některých tříd rozkladu určeného pravou kongruencí na $\Sigma^*$ s konečným indexem
+	\item Relace $\sim_L$ má konečný index
+\end{enumerate}
+\end{veta}
+
+Slouží opět pro dokazování, zda je jazyk regulární (resp. není).
+
+\subsection{Uzávěrové vlastnosti regulárních jazyků}
+
+\begin{veta}
+Třída regulárních jazyků \emph{je uzavřena} (mino jiné) vzhledem k operacím $\cup$ sjednocení, $\cdot$ (konkatenace) a $^*$ (iterace).
+\end{veta}
+Důkaz z definice regulárních množina a ekvivalence regulárních množina a regulárních jazyků.
+
+\begin{veta}
+Třída regulárních jazyků tvoří množinovou \emph{Booleovu algebru}.
+\end{veta}
+
+\begin{veta}
+Nechť $L \in \mathcal{L}_3$ a nechť $L^R = \{w^R | w \in L\}$. Pak $L^R \in \mathcal{L}_3$
+\end{veta}
+
+\subsection{Rozhodnutelné problémy regulárních jazyků}
+
+neprázdnost $L \not= \emptyset$, náležitost $w \in L$ a ekvivalence $L(G_1) = L(G_2)$
+
+\begin{veta}
+Ve třídě $\mathcal{L}_3$ je rozhodnutelný problém \emph{neprázdnosti} jazyka i problém \emph{náležitosti} řetězce (do jazyka).
+\end{veta}
+
+\begin{veta}
+Nechť $L_1 = L(G)$ a $L_2 = L(G_2)$ jsou dva jazyky generované regulárními gramatikami $G_1$ a $G_2$.
+Pak je rozhodnutelný problém \emph{ekvivalence}, tj. $L(G_1) = L(G_2)$ nebo $L(G_1) \not= L(G_2)$.
+\end{veta}
+Podle relace nerozlišitelnosti stavů $\equiv$\$
+
+
+
+
+
+
+
+
 
 
 
