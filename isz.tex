@@ -3668,10 +3668,6 @@ Metoda:
 Konečné automaty, gramatiky typu 3 a regulární výrazy mají ekvivalentní vyjadřovací sílu.
 
 
-\begin{mydef}
-\end{mydef}
-
-
 
 
 
@@ -3702,10 +3698,235 @@ Konečné automaty, gramatiky typu 3 a regulární výrazy mají ekvivalentní v
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Transformace a normální formy bezkontextových gramatik.} \label{cha:20}
+1. semestr, TIN, \texttt{opora.pdf}, 4. kapitola
+
+\begin{mydef}
+Bezkontextová gramatika $G$ je čtveříce $G = (N, \Sigma, P, S)$
+\begin{enumerate}
+	\item $N$ je konečná množina nonterminálních symbolů
+	\item $\Sigma$ je konečná množina terminálních symbolů
+	\item $P$ je konečná množina přepisovacích pravidel tvaru $A \to \alpha, A \in N$ a $\alpha \in (N \cup \Sigma)$.
+	\item $S$ je výchozí symbol gramatiky.
+\end{enumerate}
+\end{mydef}
+
+\section{Derivační strom}
+Strom je orientovaný acyklický graf s těmito vlastnostmi:
+\begin{enumerate}
+	\item Existuje jediný uzel, tzv. \emph{kořen stromu}, do něhož nevstupuje žádná hrana
+	\item Do všech ostatních uzlů vstupuje právě jedna hrana.
+\end{enumerate}
+Uzly z nichž žádná hrana nevystupuje, se nazývají \emph{koncové uzly stromu} (listy).
+
+\begin{mydef}
+Nechť $\delta$ je věta nebo větná forma generovaná v gramatice $G=(N,\Sigma,P,S)$ a nechť $S=\nu_0 \Rightarrow \nu_1 \Rightarrow \dots \Rightarrow \nu_k = \delta$ její derivace v $G$. Derivační strom příslušející této derivaci je strom s těmito vlastnostmi:
+\begin{enumerate}
+	\item Uzly derivačního stromu jsou (ohodnoceny) symboly z množiny $N \cup \Sigma$; kořen stromu je označen výchozím symbolem $S$.
+	\item Přímé derivací $\nu_{i-1} \Rightarrow \nu_i, i \in 1,2 \dots, k$, kde
+	
+	$\nu_{i-1} = \mu A \lambda, \mu, \lambda \in (N \cup \Sigma)^*, A \in N\\
+	\nu_i = \mu \alpha \lambda \\
+	A \to \alpha, \alpha = X_1, \dots X_n \text{ je pravidlo z } P$
+	
+	odpovídá právě $n$ hran $(A, X_j), j =  1, \dots, n$ vycházejících z uzlu $A$ jež jsou uspořádány zleva doprava v pořadí $(A, X_1), (A, X_2), \dots, (A, X_n)$.
+	
+	\item Označení koncových uzlů derivačního stromu vytváří zleva doprava větnou formu nebo větu $\delta$.
+\end{enumerate}
+\end{mydef}
+
+\begin{mydef}
+Nechť $S = \alpha_1 \Rightarrow \alpha_2 \Rightarrow \dots \Rightarrow \alpha_n = \alpha$ je derivace větné formy $\alpha$. Jestliže byl v každém řetězci $\alpha_i, i = 1, \dots, n-1$ přepsán nelevější (nejpravější) nonterminál, pak tuto derivaci nazýváme levou (pravou) derivací větné formy $\alpha$.
+\end{mydef}
+
+\section{Fráze větné formy}
+\begin{mydef}
+Nechť $G = (N, \Sigma, P, S)$ je gramatika a nechť řetězec $\lambda = \alpha \beta \gamma$ je větná forma. Podřetězec $\beta$ se nazývá \emph{frází větné formy} $\lambda$, vzhledem k nonterminálu $A$ z $N$, jestliže platí:
+$$S \Rightarrow^* \alpha A \gamma$$
+$$A \Rightarrow^+ \alpha \beta$$
+Podřetězec $\beta$ je \emph{jednoduchou frází větné formy} $\lambda$, jestliže platí
+$$S \Rightarrow^* \alpha A \gamma$$
+$$A \Rightarrow \alpha \beta$$
+\end{mydef}
+
+Nejlevější jednoduchá fráze se nazývá \emph{l-fráze}.
+
+\section{Víceznačnost gramatik}
+
+\begin{mydef}
+Nechť $G$ je gramatika. Říkáme, že věta $w$ generovaná gramatikou $G$ je víceznačná, existují-li aspoň dvě různé derivační stromy s koncovými uzly tvořící větu $w$.
+\emph{Gramatika $G$ je víceznačná}, jestliže generuje alespoň jednu víceznačnou větu. V opačném případě mluvíme o jednoznačné gramatice.
+\end{mydef}
+
+Jazyky, které nelze generovat jednoznačnou gramatikou se nazývají jazyky s \emph{inherentní víceznačností}.
+
+Pro bezkontextové gramatiky je dokázáno, že problém, zda daná gramatika je nebo není víceznačná, je nerozhodnutelný, tj. neexistuje algoritmus, který by v konečném čase odhalil víceznačnost každé bezkontextové gramatiky.
+
+Gramatika s pravidlem $A \to A$ je zřejmě víceznačná. Tot pravidlo můžeme vypustit, aniž bychom změnili jazyk generovaný takto zredukovanou gramatikou.
+
+Nejednoznačná gramatika podmíněných příkazů: \texttt{if (x) if (y) S else S}. Nežádoucí interpretace bývá zajištěna dodatečným sémantickým pravidlem.
+
+\section{Rozklad věty}
+Konstrukci derivace či derivačního stromu pro danou větu nebo větnou formu nazýváme \emph{rozkladem} nebo \emph{syntaktickou analýzou} této věty nebo větné formy. Pro gram, který provádí rozklad vět určitého jazyka se nazývá \emph{syntaktický analyzátor} (parser).
+
+\begin{itemize}
+	\item Syntaktická analýza shora dolů (od výchozího symbolu gramatiky)
+	\item Syntaktická analýza zdola nahoru (od koncových uzlů)
+\end{itemize}
+
+Hledání prvního podřetězce věty (v dalších krocích větných forem), nazývaného \emph{l-fráze}. Problém: Které pravidlo použít? Jak určit začátek a konec l-fráze? Možnosti:
+\begin{itemize}
+	\item Syntaktická analýza s návratem: Náhodný výběr některého z pravidel a návrat, pokud alternativa nebyla správná. 
+	\item Syntaktická analýza bez návratu (Deterministické gramatiky): které dokáží na základě kontextu zpracovávaného řetězce určit správnou alternativu v každém kroku analýzy.
+\end{itemize}
+
+\section{Transformace bezkontextových gramatik}
+
+\begin{mydef}
+Říkáme, že gramatiky $G_1$ a $G_2$ jsou ekvivalentní, jestliže platí $L(G_1) = L(G_2)$, tj. jestliže jimi generované jazyky jsou totožné.
+\end{mydef}
+
+\begin{mydef}
+Nechť $G=(N,\Sigma,P,S)$ je gramatika. Říkáme, že symbol $X \in (N \cup \Sigma)$ je v gramatice $G$ zbytečný, jestliže neexistuje derivace tvaru $S \Rightarrow^* w X y \Rightarrow^* wxy$, kde řetězce $w, x, y \in \Sigma^*$.
+\end{mydef}
+
+\begin{alg}
+Je $L(G)$ neprázdný?\\
+Vstup: Gramatika $G = (N, \Sigma, P, S)$\\
+Výstup: ANO je-li $L(G) \not= \emptyset$, NE v opačném případě.\\
+Metoda:
+\begin{enumerate}
+	\item $N_0 = \emptyset, i = 1$
+	\item $N_1 = \{A | A \to \alpha \in P \land \alpha \in (N_{i-1} \cup \Sigma)^*\}$
+	\item Je-li $N_i \not= N_{i-1}$, polož $i = i + 1$ a vrať se ke kroku 2.
+	\item Je-li $N_i = N_{n-1}$ polož $N_t = N_i$
+	\item Jestliže výchozí symbol $S$ je v $N_t$, pak je výstup ANO, jinak NE
+\end{enumerate}
+\end{alg}
+Algoritmus skončí po max. $n+1$ krocích, kde $n$ je počet nonterminálů.
+
+\begin{veta}
+Předchozí algoritmus má výstup ANO, právě když $S \Rightarrow^* w$ pro nějaké $w \in \Sigma^*$.
+\end{veta}
+
+\begin{mydef}
+Říkáme, že symbol $X \in (N \cup \Sigma)$ je \emph{nedostupný} v gramatice $G = (N, \Sigma, T, S)$, jestliže $X$ se nemůže objevit v žádné větné formě.
+\end{mydef}
+
+\begin{alg}
+Odstranění nedostupných symbolů\\
+Vstup: Gramatika $G = (N, \Sigma, P, S)$\\
+Výstup: Gramatika $G' = (N', \Sigma', P', S')$, pro kterou platí:
+\begin{itemize}
+	\item $L(G) = L(G')$
+	\item Pro všechna $X \in (X' \cup \Sigma')$ existují řetězce $\alpha, \beta \in (N' \cup \Sigma')^*$ tak, že $S \Rightarrow^* \alpha X \beta \in G'$.
+\end{itemize}
+Metoda:
+\begin{enumerate}
+	\item Položíme $V_0 = \{S\}$ a $i = 1$
+	\item Konstruujeme $V_1 = \{X | A \to \alpha X \beta \in P \land A \in V_{i-1}\} \cup V_{i-1}$
+	\item Je-li $V_i \not= V_{i-1}$, polož $i = i + 1$ a vrať se ke kroku 2.
+	\item Je-li $V_i = N_{n-1}$, pak:
+	\begin{itemize}
+		\item $N' = V_i \cap N$
+		\item $\Sigma' = V_i \cap \Sigma$
+		\item $P' \subseteq P$ obsahuje ta pravidla, která jsou tvořena pouze symboly z $V_i$.
+	\end{itemize}
+\end{enumerate}
+\end{alg}
+
+\begin{alg}
+Odstranění zbytečných symbolů\\
+Vstup: Gramatika $G = (N, \Sigma, P, S)$ generující neprázdný jazyk\\
+Výstup: Gramatika $G' = (N', \Sigma', P', S')$, pro kterou platí:
+\begin{itemize}
+	\item $L(G) = L(G')$
+	\item Žádný symbol z $X \in (X' \cup \Sigma')$ není zbytečný
+\end{itemize}
+Metoda:
+\begin{enumerate}
+	\item Na gramatiky $G$ aplikuj předchozí algoritmus 1 a získej množinu $N_t$ obsahující symboly generující věty jazyka.\\
+	Polož $\overline{G} = (N_t \cup \{S\}, \Sigma, P_1, S)$, kde $P_1$ obsahuje pravidla tvořená pouze symboly z $N_t \cup \Sigma$.
+	\item Algoritmus 2 odstraňující nedostupné symboly aplikuj na gramatiku $\overline{G}$. Výsledkem je gramatika $G' = (N', \Sigma', P', S)$, která neobsahuje zbytečné symboly.
+\end{enumerate}
+\end{alg}
+
+\begin{veta}
+Gramatika $G'$ z předchozího algoritmu je ekvivalentní gramatice  $G$ a nemá zbytečné symboly.
+\end{veta}
+
+\begin{mydef}
+Říkáme, že gramatika $G = (N, \Sigma, P, S)$ je \emph{gramatikou bez $\epsilon$-pravidel}, jestliže buď $P$ neobsahuje žádné $\epsilon$-pravidlo, nebo v případě $\epsilon \in L(G)$, existuje jediné $\epsilon$-pravidlo tvaru $S \to \epsilon$ a výchozí symbol $S$ se nevyskytuje na pravé straně žádného pravidla z $P$.
+\end{mydef}
+
+\begin{alg}
+Transformace na gramatiku bez $\epsilon$-pravidel\\
+Vstup: Gramatika $G = (N, \Sigma, P, S)$ generující neprázdný jazyk\\
+Výstup: Ekvivalentní gramatika $G' = (N', \Sigma', P', S')$ bez $\epsilon$-pravidel
+Metoda:
+\begin{enumerate}
+	\item Sestroj $N_\epsilon = \{ A | A \in N \land A \Rightarrow^* \epsilon \}$. Konstrukce analogická konstrukci $N_t$ v prvním algoritmu.
+	\item Nechť $P'$ je množina pravidel, kterou konstruujeme takto:
+	\begin{enumerate}
+		\item Jestliže $A \to \alpha_0 B_1 \alpha_1 B_2 \dots B_k \alpha_k \in P, k \geq 0$ a každé $B_i \in N_\epsilon, 1 \leq i \leq k$, avšak žádný ze symbolů řetězců $\alpha_j$ není v $N_\epsilon, 0 \leq j \leq k$, pak k $P'$ přidej všechna nová pravidla tvaru
+		$$A \to \alpha_0 X_1 \alpha_1 X_2 \dots X_k \alpha_k$$
+		kde $X_i$ je buď $B_i$ nebo $\epsilon$. Nepřidávej $\epsilon$-pravidlo $A \to \epsilon$, které se objeví, jsou-li všechna $\alpha_i = \epsilon$.
+		\item Jestliže $S \in N_\epsilon$ pak k $P'$ přidej pravidla
+		$$S' \to \epsilon | S $$
+		kde $S'$ je nový výchozí symbol. Poté polož $N' = N \cup \{S'\}$. Jestliže $S \not\in N_\epsilon$, pak $N' = N$ a $S' = S$
+	\end{enumerate}
+	\item Výsledná gramatika má tvar $G' = (N', \Sigma', P', S')$
+\end{enumerate}
+\end{alg}
+
+\begin{veta}
+Předchozí algoritmus převádí vstupní gramatiku $G$ na ekvivalentní gramatiku $G'$ bez $\epsilon$-pravidel.
+\end{veta}
+
+\begin{mydef}
+Přepisovací pravidlo $A \to B, A,B \in N$ se nazývá jednoduché pravidlo.
+\end{mydef}
+
+\begin{alg}
+Odstranění jednoduchých pravidel\\
+Vstup: Gramatika $G = (N, \Sigma, P, S)$ bez $\epsilon$-pravidel
+Výstup: Ekvivalentní gramatika $G' = (N, \Sigma, P', S)$ bez jednoduchých pravidel
+Metoda:
+\begin{enumerate}
+	\item Pro každé $A \in N$ sestroj $N_A = \{ B | A \Rightarrow^* B \}$ takto:
+	\begin{enumerate}
+		\item $N_0 = \{A\}, i = 1$
+		\item $N_1 = \{C | B \to C \in P \land B \in N_{i-1}\}$
+		\item Jestliže $N_i \not= N_{i-1}$ polož $i = i + 1$ a opakuj krok b)
+		\item V opačném případě je $N_A = N_i$.
+	\end{enumerate}
+	\item Sestroj $P'$ takto: Jestliže $B \to \alpha \in P$ a není jednoduchým pravidlem, pak pro všechna $A$ pro něž platí $B \in N_A$ přidej k $P'$ pravidla $A \to \alpha$
+	\item Výsledná gramatika je $G' = (N, \Sigma, P', S)$
+\end{enumerate}
+\end{alg}
+
+\begin{veta}
+Předchozí algoritmus převádí vstupní gramatiku $G$ na ekvivalentní gramatiku $G'$ bez jednoduchých pravidel.
+\end{veta}
+
+\begin{mydef}
+\end{mydef}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Zásobníkové automaty} \label{cha:21}
+1. semestr, TIN, \texttt{opora.pdf}, 4. kapitola
+
+(jazyky přijímané ZA, varianty ZA)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Turingovy stroje (jazyky přijímané TS, varianty TS, lineárně omezené automaty, univerzální TS).} \label{cha:22}
 1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
 
-\chapter{Zásobníkové automaty (jazyky přijímané ZA, varianty ZA).} \label{cha:21}
-\chapter{Turingovy stroje (jazyky přijímané TS, varianty TS, lineárně omezené automaty, univerzální TS).} \label{cha:22}
 \chapter{Nerozhodnutelnost (problém zastavení TS, princip diagonalizace a redukce, Postův korespondenční problém).} \label{cha:23}
 \chapter{Parciální rekurzivní funkce.} \label{cha:24}
 \chapter{Časová a paměťová složitost (třídy složitosti, úplnost, SAT problém).} \label{cha:25}
