@@ -3698,7 +3698,7 @@ Konečné automaty, gramatiky typu 3 a regulární výrazy mají ekvivalentní v
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Transformace a normální formy bezkontextových gramatik.} \label{cha:20}
-1. semestr, TIN, \texttt{opora.pdf}, 4. kapitola
+1. semestr, TIN, \texttt{opora.pdf}, 4. kapitola, sekce 1. - 8.
 
 \begin{mydef}
 Bezkontextová gramatika $G$ je čtveříce $G = (N, \Sigma, P, S)$
@@ -4011,13 +4011,13 @@ Gramatika $G = (N, \Sigma, P, S)$ je v Greibachové normální formě (GNF), je-
 \end{mydef}
 
 \begin{lemma}
-Nechť $G = (N, \Sigma, P, S)$ je gramatika bez levé rekurze. Pak existuje lineární upořádání $<$ definované na množině nonterminálních symbolů $N$ takové, že $A \to B\alpha$ v P, paj $A < B$.
+Nechť $G = (N, \Sigma, P, S)$ je gramatika bez levé rekurze. Pak existuje lineární uspořádání $<$ definované na množině nonterminálních symbolů $N$ takové, že $A \to B\alpha$ v P, paj $A < B$.
 \end{lemma}
 
 \begin{alg}
 Převod do Greibachové normální formy\\
 Vstup: Vlastní gramatika bez levé rekurze $G = (N, \Sigma, P, S)$\\
-Výstup: Ekvivalentné gramatika $G'$ v GNF\\
+Výstup: Ekvivalentní gramatika $G'$ v GNF\\
 Metoda:
 \begin{enumerate}
 	\item Podle předchozí lemmy vytvoř lineární uspořádání $<$ na $N$ takové, že každé $A$-pravidlo začíná buď terminálem, nebo nějakým nonterminálem $B$ takovým, že $A < B$. Nechť
@@ -4042,18 +4042,151 @@ Nevýhodou je velké množství nových pravidel nebo nonterminálů.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Zásobníkové automaty} \label{cha:21}
-1. semestr, TIN, \texttt{opora.pdf}, 4. kapitola
+1. semestr, TIN, \texttt{opora.pdf}, 4. kapitola, sekce 9. - 12.
 
 (jazyky přijímané ZA, varianty ZA)
 
+\section{Základní definice zásobníkových automatů}
 \begin{mydef}
+\emph{Zásobníkový automat} $P$ je sedmice
+$$P = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)$$
+kde
+\begin{enumerate}
+	\item $Q$ je konečná množina stavových symbolů reprezentujících vnitřní stavy řídicí jednotky.
+	\item $\Sigma$ je konečná vstupní abeceda; jejími prvky jsou vstupní symboly.
+	\item $\Gamma$ je konečná abeceda zásobníkových symbolů
+	\item $\delta$ je zobrazení množiny $Q \times (\Sigma \cup \{\epsilon\}) \times \Gamma$ do konečné množiny podmnožin množiny $Q \times \Gamma^*$ popisující funkci přechodů
+	\item $q_0 \in Q$ je počáteční stav řídicí jednotky
+	\item $Z_0 \in \Gamma$ je symbol, který je na počátku uložen do zásobníku -- tzn. \emph{startovací symbol} zásobníku.
+	\item $F \in Q$ je množina koncových stavů.
+\end{enumerate}
 \end{mydef}
+
+\begin{mydef}
+\emph{Konfigurací} zásobníkového automatu $P$ nazveme trojici
+$$(q, w, \alpha) \in Q \times \Sigma^* \times \Gamma^*$$
+kde
+\begin{enumerate}
+	\item $q$ je přítomný stav řídicí jednotky
+	\item $w$ je doposud nepřečtená část vstupního řetězce; první symbol řetězce $w$ je pod čtecí hlavou. Je-li $w = \epsilon$, pak byly všechny symboly ze vstupní pásky přečteny.
+	\item $\alpha$ je obsah zásobníku. Pokud nebude uvedeno jinak, budeme zásobník reprezentovat řetězcem, jehož nejlevější symbol koresponduje s vrcholem zásobníku. Je-li $\alpha = \epsilon$, pak je zásobník prázdny.
+\end{enumerate}
+\end{mydef}
+
+\begin{mydef}
+\emph{Přechod} zásobníkového automatu $P$ budeme reprezentovat binární relací $\vdash_P$ (nebo $\vdash$, bude-li zřejmé, že jde o automat $P$), která je definována na množině konfigurací zásobníkového automatu $P$. Relace
+$$(q, w, \beta) \vdash (q', w', \beta')$$
+platí pro $q, q' \in Q, w, w' \in \Sigma^*, \beta, \beta' \in \Gamma^*$, jestliže $w = aw'$ pro nějaké $a \in (\Sigma \cup \{\epsilon\}), \beta = Z \alpha$ a $\beta' = \gamma \alpha$ pro nějaké $Z \in \Gamma, a, \gamma \in \Gamma^*$ a $\delta(q, a, Z)$ obsahuje prvek $(q', \gamma)$.
+\end{mydef}
+
+Relace $\vdash^i, \vdash^+, \vdash^*$ jsou definovány obvyklém způsobem.
+
+\emph{Počáteční konfigurace} zásobníkového automatu má tvar $(q_0, w, Z_0)$ pro $w \in \Sigma^*$, tj. automat je v počátečním stavu $q_0$, na vstupní pásce je řetězec $w$ a v zásobníku je startovací symbol $Z_0$. \emph{Koncová konfigurace} má tvar $(q, \epsilon, \alpha)$, kde $q \in F$ je koncový stav a $\alpha \in \Gamma^*$.
+
+\begin{mydef}
+Platí-li pro řetězec $w \in \Sigma^*$ relace $(q_0, w, Z_0) \vdash^* (q, \epsilon, \alpha)$ pro nějaké $q \in F$ a $\alpha \in \Gamma^*$, pak říkáme, že řetězec $w$ je přijímán zásobníkovým automatem $P$. Množinu $L(P)$ všech řetězců přijímaných zásobníkovým automatem $P$, který nazýváme
+\emph{jazykem přijímaným zásobníkovým automatem}.
+\end{mydef}
+
+\section{Varianty zásobníkových automatů}
+
+\begin{mydef}
+\emph{Rozšířeným zásobníkovým automatem} rozumíme sedmici
+$$P = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)$$
+kde $\delta$ je zobrazení z konečné podmnožiny $Q \times (\Sigma \cup \{\epsilon\}) \times \Gamma^*$ do množiny podmnožin množiny $Q \times \Gamma^*$. Ostatní symboly mají stejný význam jako v základní definici.
+
+Podobně, relace přechodu $\vdash$ je definovaná jako \emph{nejmenší} relace taková, že $(q, aw, \alpha \gamma) \vdash (q', w, \beta \gamma)$ platí jestliže $\delta(q, a, \alpha)$ obsahuje $(q', \beta)$ pro $q, q' \in Q, a \in \Sigma \cup \{\epsilon\}$ a $\alpha, \beta, \gamma \in \Gamma^*$. Tato relace odpovídá přechodu, v němž je vrcholový řetězec odstraněn a nahrazen řetězcem $\beta$ (v základní definici je pouze znak abecedy -- $\alpha \in \Gamma^*$).
+\end{mydef}
+
+Jazyk definovaný automatem $P$ je
+$$L(P) = \{w | (q_0, w, Z_0) \vdash^* (q, \epsilon, \alpha), q \in F, \alpha \in \Gamma^*\}$$
+
+Rozšířený zásobníkový automat může, na rozdíl od základní definice provádět přechody, i když je zásobník prázdný.
+
+\begin{veta}
+Nechť $P = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)$ je rozšířený zásobníkový automat. Pak existuje zásobníkový automat $P_1$ takový, že $L(P_1) = L(P)$.
+\end{veta}
+
+\begin{mydef}
+Nechť $P = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)$ je zásobníkový nebo rozšířený zásobníkový automat. Řetězec $w$ je přijímán s \emph{vyprázdněním zásobníku}, jestliže platí $(q_0, w, Z_0) \vdash^* (q, \epsilon, \epsilon), q \in Q$. Označme $L_\epsilon(P)$ množinu všech řetězců, které jsou přijímány zásobníkovým automatem $P$ s vyprázdněním zásobníku.
+\end{mydef}
+
+\begin{veta}
+Nechť $L$ je jazyk přijímaný zásobníkovým automatem $P = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F), L = L(P)$. Lze zkonstruovat zásobníkový automat $P'$ takový, že $L_\epsilon(P) = L$.
+\end{veta}
+Stav vyprazdňující zásobník a znak dna zásobníku, který je odebrán pouze v tomto stavu.
+
+\begin{veta}
+Nechť $P = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, \emptyset)$ je zásobníkový automat přijímající vyprázdněním zásobníku. Lze zkonstruovat zásobníkový automat $P'$ takový, že $L(P') = L_\epsilon(P)$.
+\end{veta}
+Speciální symbol na dně zásobníku. Po jeho odstranění přechází automat do nového koncového stavu.
+
+\section{Ekvivalence bezkontextových jazyků a jazyků přijímaných zásobníkovými automaty}
+
+\begin{veta}
+Nechť $G = (N, \Sigma, P, S)$ je bezkontextová gramatika. Z gramatiky $G$ můžeme zkonstruovat zásobníkový automat $R$ takový, že $L_\epsilon(R) = L(G)$.
+\end{veta}
+
+Zásobníkový automat $R = (\{q\}, \Sigma, N \cup \Sigma, \delta, S, \emptyset\}$. Pravidla $A \to \alpha$ převedeme na $(q, \alpha \in \delta(q, \epsilon, A)$. Pravidla $\delta(q, a, a) = \{(q, \epsilon)\}$ pro všechna $a \in \Sigma$.
+
+\begin{veta}
+Nechť $G = (N, \Sigma, P, S)$ je bezkontextová gramatika. Rozšířený zásobníkový automat $R = (\{q,r\}, \Sigma, N \cup \Sigma \cup \{\$\}, \delta, q, \$, \{r\})$, kde zobrazení $\delta$ je definováno takto:
+\begin{enumerate}
+	\item $\delta(q, a, \epsilon) = \{(q, a)\}$ pro všechna $a \in \Sigma$.
+	\item Je-li $A \to \alpha$ pravidlo v $P$, pak $\delta(q, \emptyset, \alpha)$ obsahuje $(q, A)$.
+	\item $\delta(q, \epsilon, S\$) = \{(r, \epsilon)\}$.
+\end{enumerate}
+přijímá jazyk $L(G)$, tj. $L(R) = L(G)$.
+\end{veta}
+
+Syntaktická analýza zdola nahoru (na zásobník ukládáme symboly na vstupu a když tvoří $l$-frázi, redukujeme je na "levé strany" pravidel až ke kořenu. Když je na zásobníku výchozí symbol, přejdeme do koncového stavu.
+
+\begin{veta}
+Nechť $R = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)$ je zásobníkový automat. Pak existuje bezkontextová gramatika $G$, pro kterou platí $L(G) = L(R)$.
+\end{veta}
+Levá derivace terminálního řetězce $w$ bude přímo korespondovat s posloupností přechodů $R$. Nonterminální symboly tvaru $[qZr], q,r \in Q, Z \in \Gamma$.
+
+\section{Deterministický zásobníkový automat}
+
+\begin{mydef}
+Zásobníkový automat $P = (Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)$ nazýváme deterministickým zásobníkovým automatem, jestliže pro každé $q \in Q$ a $Z \in \Gamma$ platí buď pro každé $a \in \Sigma$ obsahuje $\delta(q, a, Z)$ nanejvýš jeden prvek a $\gamma(q, \epsilon, Z) = \emptyset$, nebo $\delta(q, a, Z) = \emptyset$ pro všechna $a \in \Sigma$ a $\delta(q, \epsilon, Z)$ obsahuje nanejvýš jeden prvek.
+\end{mydef}
+
+\begin{mydef}
+Jazyk $L$ se nazývá \emph{deterministický bezkontextový jazyk}, jestliže existuje deterministický zásobníkový automat $P$ takový, že $L(P) = L$.
+\end{mydef}
+
+\begin{mydef}
+Zásobníkový automat $P = (Q, \Sigma, \Gamma, \delta, q_0, z_0, F)$ nazýváme \emph{deterministický} RZA (DRZA), jestliže platí:
+\begin{enumerate}
+	\item $\forall q \in Q \forall x \in \Sigma \cup \{\epsilon\} \forall \gamma \in \Gamma: |\delta(q, a, \gamma) \leq 1$
+	\item Je-li $\delta(q, a, \alpha) \not= \emptyset, \delta(q, a, \beta) \not= \emptyset$ a $\alpha \not='\beta$, pak ani $\alpha$ není předponou $\beta$, ani $\beta$ není předponu $\alpha$.
+	\item Je-li $\delta(q, a, \alpha) \not= \emptyset, \delta(q, \epsilon, \beta) \not= \emptyset$, pak ani $\alpha$ není předponou $\beta$, ani $\beta$ není předponu $\alpha$.
+\end{enumerate}
+\end{mydef}
+
+\begin{veta}
+Deterministické rozšířené zásobníkové automaty mají ekvivalentní vyjadřovací sílu jako deterministické zásobníkové automaty.
+\end{veta}
+
+\begin{veta}
+Deterministické zásobníkové automaty mají striktně menší vyjadřovací sílu než nedeterministické zásobníkové automaty.
+\end{veta}
+
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Turingovy stroje (jazyky přijímané TS, varianty TS, lineárně omezené automaty, univerzální TS).} \label{cha:22}
 1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
+
+\begin{mydef}
+\end{mydef}
+
 
 \chapter{Nerozhodnutelnost (problém zastavení TS, princip diagonalizace a redukce, Postův korespondenční problém).} \label{cha:23}
 \chapter{Parciální rekurzivní funkce.} \label{cha:24}
