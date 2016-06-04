@@ -3979,7 +3979,7 @@ Gramatika $G = (N, \Sigma, P, S)$ je v \emph{Chomského normální formě} (CNF)
 \begin{alg}
 Převod do Chomského normální formy\\
 Vstup: Vlastní gramatika $G = (N, \Sigma, P, S)$\\
-Výstup: Gramatika $G' = (N', \Sigma, P', S')$ v CNF takové, že $L(G) = L(G')$\\
+Výstup: Gramatika $G' = (N', \Sigma, P', S')$ v CNF taková, že $L(G) = L(G')$\\
 Metoda:
 \begin{enumerate}
 	\item Množina pravidel $P'$ obsahuje všechna pravidla $A \to a$ z $P$.
@@ -3998,8 +3998,43 @@ Metoda:
 \end{enumerate}
 \end{alg}
 
+\begin{veta}
+Nechť $L$ je bezkontextový jazyk. Pak existuje bezkontextová gramatika $G$ v CNF taková, že $L = L(G)$
+\end{veta}
+
+Počet derivací v CNF pro libovolný řetězec je vždy lichý.
+
+\section{Geribachové normální forma}
+
 \begin{mydef}
+Gramatika $G = (N, \Sigma, P, S)$ je v Greibachové normální formě (GNF), je-li $G$ gramatikou bez $\epsilon$-pravidel a jestliže každé pravidlo (s výjimkou případného pravidla $S \to \epsilon$) má tvar $a \to a \alpha$, kde $a \in \Sigma, \alpha \in N^*$.
 \end{mydef}
+
+\begin{lemma}
+Nechť $G = (N, \Sigma, P, S)$ je gramatika bez levé rekurze. Pak existuje lineární upořádání $<$ definované na množině nonterminálních symbolů $N$ takové, že $A \to B\alpha$ v P, paj $A < B$.
+\end{lemma}
+
+\begin{alg}
+Převod do Greibachové normální formy\\
+Vstup: Vlastní gramatika bez levé rekurze $G = (N, \Sigma, P, S)$\\
+Výstup: Ekvivalentné gramatika $G'$ v GNF\\
+Metoda:
+\begin{enumerate}
+	\item Podle předchozí lemmy vytvoř lineární uspořádání $<$ na $N$ takové, že každé $A$-pravidlo začíná buď terminálem, nebo nějakým nonterminálem $B$ takovým, že $A < B$. Nechť
+	$$N = \{A_1, A_2, \dots, A_n\} \text{ a } A_1 < A_2 < \dots < A_n$$
+	\item Polož $i = n -1$
+	\item Je-li $i = 0$ přejdi k bodu (5), je-li $i \not=0$ nahraď každé pravidlo tvaru $A_i \to A_j \alpha$, kde $j > i$ pravidly $A_i \to \beta_1 \alpha | \dots \beta_m \alpha$, kde $A_j \to \beta_1 | \dots | \beta_m$ jsou všechna $A_j$-pravidla. (každý z řetězců $\beta_1, \dots, \beta_m$ začíná terminálem.)
+	\item Polož $i = i - 1$ a opakuj krok (3)
+	\item V tomto okamžiku všechna pravidla (s výjimkou pravidla $S \to \epsilon$) začínají terminálním symbolem. V každém pravidle $A \to aX_1 \dots X_k$ nahraď ty symboly $X_j$, které jsou terminálními symboly, novými nonterminálem $X'_j$.
+	\item Pro všechna $X'_k$ z bodu (5) přidej pravidla $X'_j \to X_j$
+\end{enumerate}
+\end{alg}
+
+\begin{veta}
+Nechť $L$ je bezkontextový jazyk. Pak existuje gramatika $G$ v GNF taková, že $L(G) = L$.
+\end{veta}
+
+Nevýhodou je velké množství nových pravidel nebo nonterminálů.
 
 
 
@@ -4010,6 +4045,9 @@ Metoda:
 1. semestr, TIN, \texttt{opora.pdf}, 4. kapitola
 
 (jazyky přijímané ZA, varianty ZA)
+
+\begin{mydef}
+\end{mydef}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
