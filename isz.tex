@@ -3086,7 +3086,7 @@ Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ jsou třídy jazyků typu $i$. Pak platí
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Vlastnosti formálních jazyků} \label{cha:17}
 
-1. semestr, TIN, \texttt{opora.pdf}, kapitola 3.5, TODO
+1. semestr, TIN, \texttt{opora.pdf}, kapitola 3.5, 4.13
 
 (typické vlastnosti a jejich rozhodnutelnost)
 
@@ -3170,7 +3170,123 @@ Pak je rozhodnutelný problém \emph{ekvivalence}, tj. $L(G_1) = L(G_2)$ nebo $L
 \end{veta}
 Podle relace nerozlišitelnosti stavů $\equiv$\$
 
+\section{Vlastnosti bezkontextových jazyků}
 
+\subsection{Strukturální vlastnosti bezkontextových jazyků}
+
+\begin{veta}
+Nechť $L$ je bezkontextový jazyk. Pak existuje konstanta $k > 0$ taková, že je-li $z \in L$ a $|z| \geq k$, pak lze $z$ napsat ve tvaru:
+$$x = u v w x y, ex \not= \epsilon, |vwx| \leq k$$
+a pro všechna $i \geq 0$ je $uv^iwx^iy \in L$
+\end{veta}
+
+\begin{lemma}
+Jazyk $L = \{a^n b^n c^n | m \geq 1\}$ není bezkontextovým jazykem.
+\end{lemma}
+Důkaz: Nelze zvolit řetězce $v$ a $x$ tak, aby jejich iterací zůstal stejný počet symbolů $a, b, c$ a současně pořadí symbolů $a, b, c$ zůstalo nezměněno.
+
+Výše zmíněný jazyk je typickým kontextovým jazykem.
+
+\subsection{Uzávěrové vlastnosti}
+
+\subsubsection{Substituce jazyků}
+\begin{mydef}
+Nechť $\mathcal{L}$ je třída jazyků a nechť $L \subseteq \Sigma^*$ je jazykem třídy $\mathcal{L}$. Dále nechť $\Sigma = \{a_1, a_2, \dots, a_n\}$ pro nějaké $n \in \mathbb{N}$ a nechť jazyky označené $L_{a_1}, L_{a_2}, \dots, L_{a_n}$ jsou rovněž jazyky třídy $\mathcal{L}$. Říkáme, že třída $\mathcal{L}$ je \emph{uzavřena vzhledem k substituci}, jestliže pro každý výběr jazyků $L, L_{a_1}, L_{a_2}, \dots, L_{a_n}$ ej také jazyk $\sigma_{L_{a_1}, L_{a_2}, \dots, L_{a_n}}(L)$
+$$\sigma_{L_{a_1}, L_{a_2}, \dots, L_{a_n}}(L) = \{x_1 x_2 \dots x_m | b_1 b_2 \dots b_m \in L \land \forall i \in \{1, \dots, m\} : x_i \in L_{b_i}\} $$
+ve třídě $\mathcal{L}$.
+\end{mydef}
+
+\subsubsection{Morfismus jazyků}
+
+\begin{mydef}
+Nechť $\Sigma$ a $\Delta$ jsou abecedy a $L \in \Sigma^*$ je jazyk nad abecedou $\Sigma$. Zobrazení $h: \Sigma^* \to \Delta^*$ nazýváme \emph{morfismem nad slovy}, platí-li $\forall w = a_1 a_2 \dots a_n \in \Sigma^* : H(w) = h(a_1) h(a_2) \dots h(a_n)$. \emph{Morfismus jazyka} $h(L)$ pak definujeme jako $h(L) = \{h(w) | w \in L\}$.
+\end{mydef}
+(zvláštní případ substituce, kde každý substituovaný jazyk má právě jednu větu)
+
+\subsubsection{Uzavřenost}
+\begin{veta}
+Třída bezkontextových jazyků je uzavřena vůči substituci
+\end{veta}
+
+\begin{veta}
+Bezkontextové jazyky jsou uzavřeny vzhledem k:
+\begin{enumerate}
+	\item sjednoceni
+	\item konkatenaci
+	\item iteraci
+	\item pozitivní iteraci
+	\item morfismu
+\end{enumerate}
+\end{veta}
+(důkazy plynou ze důkazu substituce)
+
+\begin{veta}
+Bezkontextové jazyky jsou uzavřeny vzhledem k průniku s regulárními jazyky.
+\end{veta}
+
+\begin{mydef}
+Je-li $h: \Sigma^* \to \Delta^*$ morfismus, pak definujeme \emph{inverzní morfismus nad slovy} z $\Delta^*$ jako $h^{-1}(w) = \{x \in \Sigma^* | h(x) = w\}$ a \emph{inverzní morfismus jazyka $L$} nad $\Delta$ jako $h^{-1}(L) = \{x \in \Sigma^* | h(x) \in L\}$.
+\end{mydef}
+
+\begin{veta}
+Bezkontextové jazyky jsou uzavřeny vzhledem k inverznímu morfismu.
+\end{veta}
+
+\subsubsection{Neuzavřenost vůči průniku a doplňku}
+
+\begin{veta}
+Bezkontextové jazyky \emph{nejsou} uzavřeny vůči průniku a doplňku.
+\end{veta}
+Důkaz: Průnik $a^n b^n c^m$ a $a^n b^m c^m$ je opět známý kontextový jazyk $a^m b^m c^m$. Doplněk pak přes De-Morganovy zákony a přes neuzavřenost průniku.
+
+\subsection{Rozhodnutelné a nerozhodnutelné problémy pro bezkontextové jazyky}
+
+\begin{veta}
+Následující problémy jsou \emph{rozhodnutelné}, tj. algoritmicky řešitelné:
+\begin{enumerate}
+	\item problém \emph{neprázdnosti jazyka} $L(G)$ pro libovolnou bezkontextovou gramatiku $G$.
+	\item problém \emph{příslušnosti řetězce $w \in \Sigma^*$ do jazyka $L(G)$} pro libovolnou bezkontextovou gramatiku
+	\item problém \emph{konečnosti jazyka $L(G)$} pro libovolnou bezkontextovou gramatiku $G$.
+\end{enumerate}
+\end{veta}
+Důkazy: (1) Algoritmus pro získání nonterminálů generujících terminální řetezce. (2) průnik NZA s KA přijímajícím právě řetězec $w$ a ověření neprázdnosti. (3) Pumping lemma.
+
+\begin{veta}
+Následující problémy jsou \emph{nerozhodnutelné}, tj. nejsou algoritmicky řešitelné:
+\begin{enumerate}
+	\item problém \emph{ekvivalence bezkontextových gramatik}, tj. otázka zda $L(G_1) = L(G_2)$ pro dvě bezkontextové gramatiky $G_1, G_2$
+	\item problém \emph{inkluze jazyků bezkontextových gramatik}, tj. otázka zda $L(G_1) \subseteq L(G_2)$ pro dvě bezkontextové gramatiky $G_1, G_2$.
+\end{enumerate}
+\end{veta}
+Důkaz redukcí z Postova korespondenčního problému.
+
+\subsection{Uzávěrové vlastnosti deterministických bezkontextových jazyků}
+
+\begin{veta}
+Deterministické bezkontextové jazyky jsou uzavřeny vůči průniku s regulárními jazyky a doplňku.
+\end{veta}
+
+\begin{veta}
+Deterministické bezkontextové jazyky \emph{nejsou} uzavřeny vůči průniku a sjednocení.
+\end{veta}
+
+\begin{veta}
+Deterministické bezkontextové jazyky \emph{nejsou} uzavřeny vůči konkatenaci a iteraci.
+\end{veta}
+Důkaz: Prefixy.
+
+\subsection{Některé další zajímavé vlastnosti bezkontextových jazyků}
+
+\begin{mydef}
+Bezkontextová gramatika $G = (N, \Sigma, P, S)$ má vlastnost sebevložení, jestliže existují $A \in N$ a $ u,v \in \Sigma^+$ takové, že $A \Rightarrow^+ uAv$ a $A$ není zbytečný nonterminál. Bezkontextový jazyk má vlastnost sebevložení, jestliže každá gramatika, která jej generuje, má vlastnost sebevložení.
+\end{mydef}
+
+\begin{veta}
+Bezkontextový jazyk má vlastnost sebevložení, právě tehdy když není regulární.
+\end{veta}
+
+\begin{veta}
+\end{veta}
 
 
 
