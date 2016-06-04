@@ -3861,7 +3861,7 @@ Gramatika $G'$ z předchozího algoritmu je ekvivalentní gramatice  $G$ a nemá
 \begin{alg}
 Transformace na gramatiku bez $\epsilon$-pravidel\\
 Vstup: Gramatika $G = (N, \Sigma, P, S)$ generující neprázdný jazyk\\
-Výstup: Ekvivalentní gramatika $G' = (N', \Sigma', P', S')$ bez $\epsilon$-pravidel
+Výstup: Ekvivalentní gramatika $G' = (N', \Sigma', P', S')$ bez $\epsilon$-pravidel\\
 Metoda:
 \begin{enumerate}
 	\item Sestroj $N_\epsilon = \{ A | A \in N \land A \Rightarrow^* \epsilon \}$. Konstrukce analogická konstrukci $N_t$ v prvním algoritmu.
@@ -3888,8 +3888,8 @@ Přepisovací pravidlo $A \to B, A,B \in N$ se nazývá jednoduché pravidlo.
 
 \begin{alg}
 Odstranění jednoduchých pravidel\\
-Vstup: Gramatika $G = (N, \Sigma, P, S)$ bez $\epsilon$-pravidel
-Výstup: Ekvivalentní gramatika $G' = (N, \Sigma, P', S)$ bez jednoduchých pravidel
+Vstup: Gramatika $G = (N, \Sigma, P, S)$ bez $\epsilon$-pravidel\\
+Výstup: Ekvivalentní gramatika $G' = (N, \Sigma, P', S)$ bez jednoduchých pravidel\\
 Metoda:
 \begin{enumerate}
 	\item Pro každé $A \in N$ sestroj $N_A = \{ B | A \Rightarrow^* B \}$ takto:
@@ -3907,6 +3907,96 @@ Metoda:
 \begin{veta}
 Předchozí algoritmus převádí vstupní gramatiku $G$ na ekvivalentní gramatiku $G'$ bez jednoduchých pravidel.
 \end{veta}
+
+\begin{mydef}
+Říkáme, že $G$ je \emph{gramatika bez cyklů}, jestliže v ní neexistuje derivace tvaru $A \Rightarrow^+ A$ pro žádné $A \in N$. Jestliže $G$ je gramatika bez cyklů a bez $\epsilon$-pravidel a nemá žádné zbytečné symboly, pak říkáme, že $G$ je \emph{vlastní gramatika}.
+\end{mydef}
+
+\begin{veta}
+Je-li $L$ bezkontextový jazyk, pak existuje jeho vlastní gramatika $G$ taková, že $L = L(G)$.
+\end{veta}
+
+Gramatika, která obsahuje cykly je víceznačná a nemůže být použita v konstrukci deterministického syntaktického analyzátoru.
+
+\begin{mydef}
+Nechť $G=(N, \Sigma, P, S)$. Přepisovací pravidlo z $P$ se nazývá \emph{rekurzivní zleva (rekurzivní zprava)}, jestliže je tvaru $A \to A \alpha (A \to \alpha A), A \in N, \alpha \in (N \cup \Sigma)^*$. Jestliže v $G$ existuje derivace $A \Rightarrow^+ \alpha A \beta$ pro nějaké $A \in N$, říkáme, že gramatika $G$ je rekurzivní. Je-li $\alpha = \epsilon$, pak mluvíme o \emph{gramatice rekurzivní zleva}, je-li $\beta = \epsilon$, pak říkáme, že $G$ je \emph{rekurzivní zprava}.
+\end{mydef}
+
+(je-li jazyk $L(G)$ nekonečný, pak $G$ musí být rekurzivní.)
+
+\begin{mydef}
+Pravidlo $A \to \alpha$, s levou stranou tvořenou nonterminálem $A$, budeme nazývat $A$-pravidlo.
+\end{mydef}
+
+\begin{veta}
+Nechť $G = (N, \Sigma, P, S)$ je gramatika a nechť $A \to A \alpha_1 | A \alpha_2 | \dots | A \alpha_m | \beta_1 | \beta_2 | \dots | \beta_n$ jsou všechna $A$-pravidla. Žádný z řetězců $\beta_i$ nezačíná nonterminálem $A$. Gramatika $G' = (N \cup \{A'\}, \Sigma, P', S)$ kde $P'$ obsahuje namísto uvedených pravidel pravidla
+$$A \to \beta_1 | \beta_2 | \dots | \beta_n | \beta_1 A' | \beta_2 A' | \dots | \beta_n A' $$
+$$A' \to \alpha_1 | \alpha_2 | \dots | \alpha_n | \alpha_1 A' | \alpha_2 A' | \dots | \alpha_n A' $$
+je ekvivalentní s gramatikou $G$, tj. $L(G) = L(G')$.
+\end{veta}
+(náhrada pravidel rekurzivních zleva, pravidly rekurzivními zprava.)
+
+\begin{veta}
+Nechť $G = (N, \Sigma, P, S)$ je gramatika. $A \to \alpha B \beta, B \in N, \alpha, \beta \in (N \cup \Sigma)^*$ je pravidlo z $P$ a $B \to \gamma_1 | \gamma_2 | \dots | \gamma_n$ jsou všechna $B$-pravidla v P. Nechť $G = (N, \Sigma, P', S)$, kde
+$$P' = P - \{A \to \alpha B \beta\} \cup \{A \to \alpha \gamma_1 \beta | \alpha \gamma_2 \beta | \dots | \alpha \gamma_n \beta\}$$
+Pak $L(G) = L(G')$.
+\end{veta}
+
+\begin{alg}
+Odstranění levé rekurze\\
+Vstup: Vlastní gramatika $G = (N, \Sigma, P, S)$\\
+Výstup: Gramatika $G'$ bez levé rekurze\\
+Metoda:
+\begin{enumerate}
+	\item Nechť $N = \{A_1, A_2, \dots, A_n\}$. Gramatiku budeme transformovat tak, že je-li $A_i \to \alpha$ pravidlo, pak $\alpha$ začíná buď terminálem, nebo nonterminálem $A_j, j > i$. K tomuto účelu položíme $i = 1$.
+	\item Nechť $A_i \to A_i \alpha | \dots | A_i \alpha_m | \beta_1 | \dots | \beta_p$ jsou všechna $A_I$-pravidla a nechť žádné $\beta_i$ nezačíná nonterminálem $A_k$, je-li $k \leq i$.
+
+	Nahraď všechna $A_i$-pravidla těmito pravidly:
+	$$A_i \to \beta_1 | \dots | \beta_p | \beta_1 A'_i | \dots | \beta_p A'_i$$
+	$$A'_i \to \alpha_1 | \dots | \alpha_m | \alpha_1 A'_i | \dots | \alpha_m A'_i$$
+	kde $A'_i$ je nový nonterminál. Takto všechna $A_i$-pravidla začínají buď terminálem, nebo nonterminálem $A_k, k > i$.
+	\item Je-li $i = n$, pak jsme získali výslednou gramatiku $G'$. V opačném případě polož $i = i +1$ a $j = 1$.
+	\item Každé pravidlo tvaru $A_i \to A_j \alpha$ nahraď pravidly $A_i \to \beta_1 \alpha | \dots | \beta_p \alpha$ kde $A_j \to \beta_1 | \dots | \beta_p$ jsou všechna $A_j$-pravidla. Po této transformaci budou všechna $A_j$-pravidla začínat buď terminálem, nebo nonterminálem $A_k, k > j$, takže také všechna $A_i$ -pravidla budou mít tuto vlastnost.
+	\item Je-li $j = i - 1$, pak přejdi ke kroku (2). Jinak $j = j +1 $ a opakuj krok (4).
+\end{enumerate}
+\end{alg}
+
+\begin{mydef}
+Každý bezkontextový jazyk lze generovat gramatikou bez levé rekurze.
+\end{mydef}
+
+\section{Chomského normální forma}
+
+\begin{mydef}
+Gramatika $G = (N, \Sigma, P, S)$ je v \emph{Chomského normální formě} (CNF), jestliže každé pravidlo z $P$ má jeden z těchto tvarů:
+\begin{enumerate}
+	\item $A \to BC, A, B, C \in N$ nebo
+	\item $A \to a, a \in \Sigma$ nebo
+	\item Je-li $\epsilon \in L(G)$, pak $S \to \epsilon$ je pravidlo z $P$ a výchozí symbol $S$ se neobjeví na pravé straně žádného pravidla.
+\end{enumerate}
+\end{mydef}
+
+\begin{alg}
+Převod do Chomského normální formy\\
+Vstup: Vlastní gramatika $G = (N, \Sigma, P, S)$\\
+Výstup: Gramatika $G' = (N', \Sigma, P', S')$ v CNF takové, že $L(G) = L(G')$\\
+Metoda:
+\begin{enumerate}
+	\item Množina pravidel $P'$ obsahuje všechna pravidla $A \to a$ z $P$.
+	\item Množina pravidel $P'$ obsahuje všechna pravidla $A \to BC$ z $P$.
+	\item Je-li pravidlo $S \to \epsilon$ v $P$, pak $S \to \epsilon$ je také v $P'$.
+	\item Pro každé pravidlo tvaru $A \to X_1 \dots X_k$, kde $k > 2$ z $P$ přidej k $P'$ tuto množinu pravidel. Symbolem $X'_i$ značíme nonterminál $X_i$, je-li  $X_i \in N$, nebo nový nonterminál, je-li $X_i \in \Sigma$:
+	\begin{align*}
+		A								&\to X'_1 \left<X_2 \dots X_k \right> \\
+		\left<X_2 \dots X_k \right>		&\to X'_2 \left<X_3 \dots X_k \right> \\
+										& \hdots \\
+		\left<X_{k-1} \dots X_k \right>	&\to X'_{k-1} X'_k \\
+	\end{align*}
+	kde každý symbol $\left<X_i \dots X_k \right>$ značí nový nonterminální symbol.
+	\item Pro každé pravidlo tvaru $A \to X_1 X_2$, kde nějaký ze symbolů $X_1$ nebo $X_2$ leží v $\Sigma$ přidej k $P'$ pravidlo $A \to X'_1 X'_2$, kde $X'_i$ značíme nonterminál $X_i$, je-li $X_i \in N$, nebo nový nonterminál, je-li $X_i \in \Sigma$.
+	\item Pro každý nový nonterminál tvaru $a'$ přidej k $P'$ pravidlo $a' \to a$. Výsledná gramatika je $G' = (N', \Sigma, P', S')$; Množina $N'$ obsahuje všechny nonterminály tvaru $\left<X_i \dots X_k \right>$ a $a'$.
+\end{enumerate}
+\end{alg}
 
 \begin{mydef}
 \end{mydef}
