@@ -3069,8 +3069,6 @@ Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ značí třídu všech jazyků typu $i$. 
 Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ jsou třídy jazyků typu $i$. Pak platí $\mathcal{L}_0 \supset \mathcal{L}_1 \supset \mathcal{L}_2 \supset \mathcal{L}_3$.
 \end{veta}
 
-%TODO XXX??
-
 
 
 
@@ -3086,7 +3084,7 @@ Nechť $\mathcal{L}_i, i = 0, 1, 2, 3$ jsou třídy jazyků typu $i$. Pak platí
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Vlastnosti formálních jazyků} \label{cha:17}
 
-1. semestr, TIN, \texttt{opora.pdf}, kapitola 3.5, 4.13
+1. semestr, TIN, \texttt{opora.pdf}, kapitola 3.5, 4.13, 5.6, 5.7.4
 
 (typické vlastnosti a jejich rozhodnutelnost)
 
@@ -3307,10 +3305,43 @@ Podmnožinu množiny vektorů $\mathbb{N}^k$ nazveme \emph{lineární množinou}
 \end{veta}
 Nebo: Komutativní obraz každého bezkontextového jazyka odpovídá nějakému regulárnímu jazyku.
 
+\section{Vlastnosti jazyků rekurzivních a rekurzivně vyčíslitelných}
+
+\subsection{Uzavřenost vůči $\cup, \cap, \cdot, *$}
+
 \begin{veta}
+Třídy rekurzivních a rekurzivně vyčíslitelných jazyků jsou uzavřeny vůči operacím $\cup, \cap, \cdot$ a $*$.
+\end{veta}
+Důkazy:
+\begin{itemize}
+	\item $\cup$: Nedeterministický přechody ($\Delta/\Delta$) do původních počátečních stavů z nového počátečního stavu.
+	\item $\cap$ Třípáskový: Na první je vstup, na simuluje první TS, na třetí simuluje dtuhý TS.
+	\item $\cdot$ Třípáskový NTS okopíruje nedeterministicky zvolený prefix vstupu na druhou pásku, kde simuluje první TS, zbytek na třetí pásku, kde simuluje druhý TS
+	\item $*$ Zobecněním předchozího, dvoupáskový NTS.
+\end{itemize}
+Jsou-li stroje úplné, pak stroje vybudované podle předchozích pravidel jsou také \emph{úplné}, což dokazuje uzavřenost vůči uvedeným operacím také u rekurzivních jazyků.
+
+\subsection{(Ne)uzavřenost vůči komplementu}
+
+\begin{veta}
+Třída rekurzivních jazyků je uzavřena vůči komplementu.
+\end{veta}
+Důkaz: Výměna $q_F$ a stavu $q_\text{REJECT}$.
+
+Třída rekurzivně vyčíslitelných jazyků není uzavřena vůči komplementu!
+
+\begin{veta}
+Jsou-li jazyky $L$ i $\overline{L}$ rekurzivně vyčíslitelné, pak jsou oba rekurzivní.
 \end{veta}
 
+\section{Vlastnosti kontextových jazyků}
+\begin{veta}
+Třída kontextových jazyků je uzavřena vůči operacím $\cup, \cap, \cdot, *$ a komplementu.
+\end{veta}
+Důkaz podobně jako u rekurzivně spočetných. Komplement složitější (LOA je nedeterministický).
 
+\begin{veta}
+\end{veta}
 
 
 
@@ -4555,6 +4586,39 @@ Důkaz: Provádíme simulaci derivací na druhé pásce TS
 \begin{veta}
 Třída jazyků přijímaných TS (neboli jazyků rekurzivně vyčíslitelných) je shodná s třídou jazyků typu 0.
 \end{veta}
+
+\section{Lineárně omezené automaty}
+gramatiky typu 1 -- kontextové gramatiky
+
+\subsection{Lineárně omezené automaty}
+\emph{Lineárně omezený automat} (LOA) je \emph{nedeterministický} TS, který nikdy neopustí tu část pásky, na níž je zapsán jeho výstup.
+
+Není známo, zde deterministický LOA je či není striktně slabší než LOA.
+
+\subsection{LOA a kontextové jazyky}
+\begin{veta}
+Třída jazyků, kterou lze generovat kontextovými gramatikami, odpovídá třídě jazyků, které lze přijímat LOA.
+\end{veta}
+Pravidla kontextové gramatiky $\alpha \to \beta$, kde $|\alpha| \leq |\beta|$, nebo $S \to \epsilon$.
+
+\subsection{Kontextové a rekurzivní jazyky}
+\begin{veta}
+Každý kontextová jazyk je rekurzivní.
+\end{veta}
+
+\begin{veta}
+\emph{Ne} každý rekurzivní jazyk je kontextový.
+\end{veta}
+
+U kontextových jazyků
+\begin{itemize}
+	\item lze rozhodnout členství věty do jazyka (rekurzívnost)
+	\item nelze rozhodovat inkluzi jazyků (neplatí ani pro bezkontextové jazyky)
+\end{itemize}
+\emph{Nelze rozhodovat prázdnost jazyka} (redukce z Postova problému přiřazení).
+\begin{veta}
+\end{veta}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
