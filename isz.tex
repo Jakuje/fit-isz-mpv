@@ -3285,6 +3285,28 @@ Bezkontextová gramatika $G = (N, \Sigma, P, S)$ má vlastnost sebevložení, je
 Bezkontextový jazyk má vlastnost sebevložení, právě tehdy když není regulární.
 \end{veta}
 
+\begin{mydef}
+Označme $ZAV_n$  pro $n \geq 0$ jazyky stávající se ze všech vyvážených řetězců závorek $n$ typů. Tyto jazyky -- označované též jako Dyckovy jazyky -- jsou generovány gramatikami s pravidly tvaru:
+$$S \to [^1 S ]^1 | [^2 S ]^2 | \dots | [^n S ]^n | SS | \epsilon $$
+\end{mydef}
+
+\begin{veta}
+(Chomsky-Scutzenberger) Každý bezkontextový jazyk je morfismem průniku nějakého jazyka závorek a nějaké regulární množiny. Jinými slovy, pro každý $L \in \mathcal{L}_2$ existují $n \geq 0$, regulární množina $R$ a morfismus $h$ takový, že $L = h( ZAV_n \cap R)$.
+\end{veta}
+
+\begin{mydef}
+Mějme abecedu $\Sigma = \{a_1, a_2, \dots, a_n\}$. \emph{Parikova funkce} je funkce $\psi: \Sigma^* \to \mathbb{N}^k$ definovaná pro $w \in \Sigma^*$ jako $\psi(w) = (\#a_1(w), \#a_2(w), \dots, \#a_n(w))$, kde $\#a_i(w)$ udává počet výskytů symbolu $a_i$ ve $w$.
+\end{mydef}
+
+\begin{mydef}
+Podmnožinu množiny vektorů $\mathbb{N}^k$ nazveme \emph{lineární množinou}, je-li dána bází $u_0 \in \mathbb{N}^k$ a periodami $u_1, \dots, u_m \in \mathbb{N}^k$ jako $\{u_0 + a_1 u_1 + \dots + a_m u_m | a_1, \dots, a_m \in \mathbb{N}\}$. Podmnožinu $\mathbb{N}^k$ nazveme \emph{semilineární množinou}, je-li sjednocením konečného množství lineárních množin.
+\end{mydef}
+
+\begin{veta}
+(Parikh) Pro libovolný bezkontextový jazyk $L, \psi(L)$ je semilineární množina.
+\end{veta}
+Nebo: Komutativní obraz každého bezkontextového jazyka odpovídá nějakému regulárnímu jazyku.
+
 \begin{veta}
 \end{veta}
 
