@@ -4319,14 +4319,249 @@ Deterministické zásobníkové automaty mají striktně menší vyjadřovací s
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Turingovy stroje (jazyky přijímané TS, varianty TS, lineárně omezené automaty, univerzální TS).} \label{cha:22}
-1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
+\chapter{Turingovy stroje} \label{cha:22}
+1. semestr, TIN, \texttt{opora.pdf}, 5. kapitola
+
+(jazyky přijímané TS, varianty TS, lineárně omezené automaty, univerzální TS)
+
+\section{Základní koncepce Turingových strojů}
+\subsection{Churchova teze}
+\emph{Churchova (Church-Turingova) teze: Turingovy stroj (a jim ekvivalentní systémy) definují svou výpočetní silou to, co intuitivně považujeme za efektivně vyčíslitelné.}
+
+Není teorém. Ale Turingovy stroje jsou velmi robustní -- úpravy nemění jejich výpočetní sílu (determinismus, počet pásek), odlišné výpočetní modely s odpovídající silou ($\lambda$-kalkul, Minského stroje) a neexistuje žádný výpočetní proces, který bychom označili za efektivně vyčíslitelný a který by nebylo možné realizovat na Turingově stroji.
+
+\subsection{Turingův stroj}
 
 \begin{mydef}
+Turingův stroj (TS) je šestice tvaru $M = (Q, \Sigma, \Gamma, \delta, q_0, q_F)$, kde:
+\begin{enumerate}
+	\item $Q$ je konečná množina vnitřních (řídicích) stavů
+	\item $\Sigma$ je konečná množina symbolů nazývaná vstupní abeceda $\Delta \not= \Sigma$.
+	\item $\Gamma$ je konečná množina symbolů $\Sigma \subset \Gamma, \Delta \in \Gamma$, nazývané pásková abeceda
+	\item parciální funkce $\delta: (Q \ \{q_F\}) \times \Gamma \to Q \times (\Gamma \cup \{L,R\})$, kde $L, R \not\in \Gamma$, je přechodová funkce.
+	\item $q_0$ je počáteční stav $q_0 \in Q$
+	\item $q_F$ je koncový stav $q_F \in Q$
+\end{enumerate}
 \end{mydef}
 
+\subsection{Konfigurace Turingova stroje}
+Symbol $\Delta$ značí tzv. \emph{blank} (prázdný symbol), který se vyskytuje na místech pásky, která ještě nebyla použita (může ale být na pásku zapsán i později).
 
+\emph{Konfigurace pásky} je dvojice sestávající z nekonečného řetězce reprezentujícího obsah pásky a pozici hlavy v tomto řetězci -- přesně jde o prvek množiny $\{\gamma \Delta^\omega | \gamma \in \Gamma^*\} \times \mathbb{N}\}$. Konfiguraci pásky zapisujeme jako $\Delta x y z \underline{x} \Delta x \Delta \Delta \dots$ (podtržení značí pozici hlavy).
+
+\emph{Konfigurace stroje} je pak dána stavem řízení a konfigurací pásky -- formálně se jedná o prvek množiny $Q \times \{\gamma \Delta^* | \gamma \in \Gamma^*\} \times \mathbb{N}$.
+
+\subsection{Přechodová relace TS}
+Pro libovolný řetězec $\gamma \in \Gamma^\omega$ a číslo $n \in \mathbb{N}$ označíme $\gamma_n$ n-tý symbol daného řetězce a označíme $s_b^n(\gamma)$ řetězec, který vznikne z $\gamma$ záměnou $\gamma_n$ za $b$.
+
+\emph{Krok výpočtu} TS M definujeme jako nejmenší binární relaci $\underset{M}{\vdash}$ takovou, že $\forall q_1, q_2 \in Q \forall \gamma \in \Gamma^\omega \forall n \in \mathbb{N} \forall b \in \Gamma$:
+\begin{itemize}
+	\item $(q_1, \gamma, n) \underset{M}{\vdash} (q_2, \gamma, n+1)$ pro $\gamma(q_1, \gamma_n) = (q_2, R)$ --operace \emph{posuvu doprava}
+	\item $(q_1, \gamma, n) \underset{M}{\vdash} (q_2, \gamma, n-1)$ pro $\gamma(q_1, \gamma_n) = (q_2, L)$ --operace \emph{posuvu doleva}
+	\item $(q_1, \gamma, n) \underset{M}{\vdash} (q_2, s_b^n(\gamma), n)$ pro $\gamma(q_1, \gamma_n) = (q_2, b)$ --operace \emph{zápisu} $b$ při $\gamma_n$ pod hlavou
+\end{itemize}
+
+\subsection{Výpočet TS}
+\emph{Výpočet TS} $M$ začínající z konfigurace $K_0$ je posloupnost konfigurací $K_0, K_1, K_2, \dots$, ve které $K_i \underset{M}{\vdash} K_{i+1}$ pro všechna $i \geq 0$ taková, že $K_{i+1}$ je v dané posloupnost, a která je buď
+\begin{itemize}
+	\item \emph{nekonečná}
+	\item \emph{konečná} s koncovou konfigurací $(q, \gamma, n)$, přičemž rozlišujeme následující \emph{typy zastavení} TS:
+	\begin{enumerate}
+		\item \emph{normální} -- přechodem do koncového stavu, tj. $q = q_F$ a 
+		\item \emph{abnormální}:
+		\begin{enumerate}
+			\item pro $(q, \gamma_n)$ není $\delta$ definována, nebo
+			\item hlava je na nejlevější pozici pásky a dojde k posunu doleva, tj $\delta(q, \gamma_n) = (q', L)$ pro nějaké $q' \in Q$.
+		\end{enumerate}
+	\end{enumerate}
+\end{itemize}
+
+\subsection{Alternativní reprezentace TS}
+Alternativně může být TS definován s množinou koncových stavů místo jednoho. Také může být definována dvojice $q_{accept}$ a $q_{reject}$ namísto $q_F$, na prvním poličku pásky může být znak "konec pásky, z něhož není možný posun doleva, definice $\delta$ jako totální funkce, nebo přepis a posun hlavy je spojen do jedné operace.
+
+\subsection{Grafická reprezentace TS}
+
+Grafická reprezentace přechodu ($x$ -- co se čte, $s$ -- zápis/L/R):
+\begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,on grid,auto]
+	\node[state] (p)   {$p$};
+	\node[state] (q) [right=of s]  {$q$};
+	\path[->] (p) edge  node {$x/s$} (q);
+\end{tikzpicture}
+
+Grafická reprezentace počátečního a koncového stavu:
+\begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,on grid,auto]
+	\node[state,initial] (p)   {$p$};
+	\node[state,accepting] (qf) [above right=of s]  {$q_F$};
+\end{tikzpicture}
+
+\subsection{Modulární konstrukce TS}
+Konstrukce z jednodušších celků (\uv{podprogramů}). Př. Posun hlavy doprava, nalezení výskytu symbolu $x$ vpravo od aktuální pozice hlavy.
+
+\subsection{Kompozitní diagram TS}
+Předpokládáme, že všechny komponenty mají stejnou vstupní abecedu $\Sigma$ i páskovou abecedu $\Gamma$.
+
+\emph{Bezpodmínečné předání řízení} graficky značíme šipkou mezi příslušnými komponentami $A \to B$. Znamená předání řízení z koncového stavu $q_F^A$ stroje $A$ do počátečního stavu $q_0^B$ stroje $B$.
+Formálně to znamená, že ve výsledném TS, který zahrnuje všechny stavy a přechody obou komponent, stav $a_F^A$ ztrácí status koncového stavu, $q_0^B$ ztrácí status počátečního symbolu a jsou doplněný přechody tak, že $\forall x \in \Gamma: \delta(g_F^A, x) = q_0^B, x)$. S ohledem na determinismus platí, žez jedné komponenty může být řízení bezpodmínečně předáno nanejvýš jedné komponentě.
+
+\emph{Sekvenci strojů} $A \to B \to C$ často zkracujeme na $ABC$. Příchozí šipky mohou směřovat ke kterémukoliv ze strojů, odchozí musí být spojena s poslední komponentou v sekvenci.
+
+\emph{Podmíněné předání řízení} umožňuje na úrovni kompozitního diagramu dosáhnout větvení výpočtu. Graficky je podmíněné předání řízení značeno  šipkou se seznamem čárkou oddělených symbolů z páskové abecedy. Nelze kombinovat podmíněné a nepodmíněné předání řízení u deterministických TS.
+
+Při podmíněném předání řízení je možné použít také větve pokrývající všechny \emph{ostatní symboly}, jež nejsou pokryty běžným podmíněným předáním řízení. K tomuto účelu použijeme šipku, která obsahuje seznam všech symbolů, přes které se podmíněné předání řízení z dané komponenty, uvozený symbolem negace $\neg$.
+
+Pro zjednodušení konstrukce strojů, ve kterých se stejným způsobem zpracovává několik různých symbolů se používá tzv. \emph{parametrová konvence}, Jedná se o podmíněné předání řízení zapsané jako $\xrightarrow{x_1, \dots x_n} \} \xrightarrow{\omega}$, kde $x_1, \dots, x_n \in \Gamma, n \geq 2, \omega \not\in \Gamma \cup \{L, R\}$. Při předání řízené tímto způsobem nabývá $\omega$ hodnoty toho symbolu z množiny $x_1, \dots, x_n$, který je aktuálně pod čtecí hlavou. Parametrová konvence je vlastně jakousi analogií k použití maker.
+
+\subsection{Základní stavební bloky TS}
+Uvažujme $\Gamma = \{x, y, \Delta\}$, mezi \emph{základní stavební bloky TS} obvykle patří následující stroje:
+\begin{enumerate}
+	\item Stroje $L, R, x$:
+
+\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto]
+	\node[state,initial,initial text={L:}] (p)   {};
+	\node[state] (q) [right=of s]  {};
+	\path[->]
+		(p) edge [bend left,above]	  node{$x/L$} (q)
+		(p) edge 					  node{$y/L$} (q)
+		(p) edge [bend right,below]	  node{$\Delta/L$} (q)
+	;
+\end{tikzpicture}
+\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto]
+	\node[state,initial,initial text={R:}] (p)   {};
+	\node[state] (q) [right=of s]  {};
+	\path[->]
+		(p) edge [bend left,above]	  node{$x/R$} (q)
+		(p) edge 					  node{$y/R$} (q)
+		(p) edge [bend right,below]	  node{$\Delta/R$} (q)
+	;
+\end{tikzpicture}
+\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto]
+	\node[state,initial,initial text={x:}] (p)   {};
+	\node[state] (q) [right=of s]  {};
+	\path[->]
+		(p) edge [bend left,above]	  node{$x/x$} (q)
+		(p) edge 					  node{$y/x$} (q)
+		(p) edge [bend right,below]	  node{$\Delta/x$} (q)
+	;
+\end{tikzpicture}
+	\item Stroje $L_x, R_x, L_{\neg x}, R_{\neg x}$ pro posun doprava/doleva dokud nenarazíme na znak $x$/$y$ (dokud nenarazíme na jiný znak než $x$/$y$).
+	\item Stroje $S_R$ a $S_L$ pro posuv obsahu pásky: Stroj $S_R$ posune řetězec neblankových symbolů nacházejících se vlevo od aktuální pozice hlavy o jeden symbol doprava.
+\end{enumerate}
+
+Příklady: Kopírovací stroj, Generování řetězců, dekrement kladného čísla zapsaného ve dvojkové soustavě.
+
+
+\section{Turingovy stroje jako akceptory jazyků}
+
+\begin{mydef}
+\begin{enumerate}
+	\item Řetězec $w \in \Sigma^*$ je přijat TS $M = (Q, \Sigma, \Gamma, \delta, q_O, q_F)$, jestliže $M$ při aktivaci z \emph{počáteční konfigurace pásky} $\underline{\Delta} w \Delta \dots$ a počátečního stavu $q_0$ zastaví přechodem do koncového stavu $q_F$, tj. $(q_0, \Delta w \Delta^\omega, 0) \overset{*}{\underset{M}{\vdash}} (q_F, \gamma, n)$ pro nějaké $\gamma \in \Gamma^*$ a $n \in \mathbb{N}$.
+	\item Množinu $L(M) = \{ w | w \text{ je přijat TS } M\} \subseteq \Sigma^*$ nazýváme jazyk přijímaný TS M.
+\end{enumerate}
+\end{mydef}
+
+\section{Modifikace TS}
+\subsection{Přijímání zvláštní konfigurací pásky}
+Můžeme \emph{přijetí řetězce TS} definovat tak, že TS začíná s konfigurací pásky $\underline{\Delta} w \Delta \dots$ a zastaví s konfigurací pásky $\underline{\Delta} Y \Delta \dots, Y \in \Gamma \backslash \Sigma$ ($Y$ značí Yes).
+
+\begin{veta}
+Máme-li TS $M$, který přijímá $L(M)$ přechodem do $q_F$, můžeme vždy sestrojit stroj $M''$, který bude přijímat $L(M)$ zastavením s konfigurací pásky $\underline{\Delta} Y \Delta \dots$.
+\end{veta}
+(a naopak) Lze na ně pohlížet jako na výpočetní mechanismy implementující funkci $\Sigma^* \to \Gamma^*$ na pásce.
+
+\subsection{Vícepáskové Turingovy stroje}
+Vícepáskový TS disponuje $k$ jednosměrně nekonečnými páskami, z nichž každá je vybavena vlastní čtecí/zapisovací hlavou a je připojena ke společní konečně stavové jednotce. V jednom kroku stroj nejdříve na každé pásce zvlášť přečte symbol, posune hlavu nebo přepíše symbol a poté se v závislosti na čtených symbolech změní stav řídicí jednotky.
+
+Formálně $k$ pásek s páskovými abecedami $\Gamma^*_1, \Gamma^*_2, \dots, \Gamma^*_k$ a $k$ odpovídajících hlav s přechodovou funkcí tvaru:
+$$\delta(Q \backslash \{q_F\}) \times \Gamma_1 \times \Gamma_2 \times \dots \times \Gamma_k \to Q \times \bigcup\limits_{u \in \{1, \dots, k\}} \{i\} \times (\Gamma_i \cup \{L, R\})$$
+kde $i$ značí pásku, na kterou se zapisuje (na které se posouvá hlava).
+
+(Jazyk $x^ny^nz^n$: Čteme všechna $x$ na první pásce a zapisujeme $X$ na druhou. Poté čteme $y$ a přepisujeme $X$ na druhé pásce pomocí $Y$ (odzadu). Poslední sekvenci $z$ opět kontrolujeme, jestli sedá počet $Y$ na druhé pásce s počtem $z$ na první.
+
+\begin{veta}
+Pro každý $k$-páskový TS $M$ existuje jednopáskový TS $M'$ takový, že $L(M) = L(M')$.
+\end{veta}
+Důkaz: Přidáme další pásky označující pozice hlavy na jednotlivých páskách a 
+
+Zvětšení paměťových možností TS nerozšiřuje jejich schopnosti přijímat jazyky.
+
+\subsection{Nedeterministické Turingovy stroje}
+
+\begin{mydef}
+Nedeterministický TS je šestice $M = (Q, \Sigma, \Gamma, \delta, q_0, q_F)$, kde význam jednotlivých složek je shodná s deterministickým TS až na $\delta$, jež má tvar:
+$$\delta: (Q \backslash \{q_F\}) \times \Gamma \to 2^{Q \times (\Gamma \cup \{L,R\})}$$
+\end{mydef}
+
+\begin{mydef}
+Jazyk $L(M)$ NTS $M = (Q, \Sigma, \Gamma, \delta, q_0, q_F)$ je množina řetězců $w \in \Sigma^*$ takových, že $M$ při aktivaci z $q_0$ při počátečním obsahu pásky $\underline{\Delta} w \Delta \dots$ může zastavit přechodem do $q_F$.
+\end{mydef}
+
+Příklad: Jazyk $L = \{ww^r\}$ s uhádnutím středu.
+
+\begin{veta}
+Pro každý NTS $M$ existuje DTS $M'$ takový, že $L(M) = L(M')$.
+\end{veta}
+
+Zavedením nedeterminismu do TS se nezvyšují jejich schopnost přijímat jazyky.
+
+\section{Jazyky rekurzivně vyčíslitelné a jazyky rekurzivní}
+\subsection{Rekurzivní vyčíslitelnost a rekurzivnost}
+\begin{mydef}
+Jazyk $L \subseteq \Sigma^*$ se nazývá
+\begin{itemize}
+	\item \emph{rekurzívně vyčíslitelný}, jestliže $L = L(M)$ pro nějaký TS $M$
+	\item \emph{rekurzivní}, jestliže $L = L(M)$ pro nějaký úplný TS $M$
+\end{itemize}
+Je-li $M$ úplný Turingův stroj, pak říkáme, že M \emph{rozhoduje jazyk} L(M).
+\end{mydef}
+
+Ke každému rekurzívnímu jazyku existuje TS, který ho rozhoduje, tj. zastaví pro každé vstupní slovo -- tento TS lze samozřejmě upravit tak, aby pro každý řetězec z daného jazyka zastavil s páskou $\underline{\Delta} Y \Delta \dots$, a jinak zastavil s páskou $\underline{\Delta} N \Delta \dots$.
+
+TS přijímající rekurzivně vyčíslitelný jazyk $L$ zastaví pro každé $w \in L$, ovšem pro $w \not\in L$ může zastavit, ale také může donekonečna cyklit.
+
+\subsection{Rozhodovací problémy}
+
+\emph{Rozhodovací problém} (decision problem) $P$ může být chápán jako funkce $f_P$ s oborem hodnot $\{true, false\}$. Rozhodovací problém je obvykle specifikován:
+\begin{itemize}
+	\item definičním oborem $A_P$ reprezentujícím množinu možných instancí problému (možných vstupů) a
+	\item podmnožinou $B_P \subseteq A_P, B_P = \{p | f_P(p) = true\}$ instancí, pro které je hodnot $f_P$ rovna \emph{true}.
+\end{itemize}
+V teorii formálních jazyků používáme ke kódování jednotlivých instancí problémů řetězce nad vhodnou abecedou $\Sigma$. Pak je rozhodovací problém $P$ přirozeně specifikován jazykem $L_p = \{ w \in \Sigma^* | w = \text{code}(p), p \in B_P\}$, kde $\text{code}:  A_P \to \Sigma^*$ je injektivní funkce, které přiřazuje instancím problém příslušný řetězec (nezávisle na $f_P$).
+
+\subsection{Rozhodování problémů TS}
+\begin{mydef}
+Nechť $P$ je problém specifikovaný jazykem $L_P$ nad $\Sigma$. Problém $P$ nazveme:
+\begin{itemize}
+	\item rozhodnutelný, pokud $L_P$ je rekurzivní jazyk, tj. existuje TS, který $L_P$ rozhoduje (přijme každý řetězec $w \in L_P$ a zamítne každý řetězec $w \in \Sigma \backslash L_P$)
+	\item nerozhodnutelný, když není rozhodnutelný a 
+	\item částečně rozhodnutelný, jestliže $L_P$ je rekurzivně vyčíslitelný jazyk, tj. existuje TS, který přijme každý řetězec $w \in L_P$ a každý řetězec $w \in \Sigma \backslash L_P$ zamítne, nebo je jeho výpočet na něm nekonečný.
+\end{itemize}
+\end{mydef}
+
+\section{TS a jazyky typu 0}
+\subsection{Jazyky přijímané TS jsou typu 0}
+\emph{Konfigurace TS} je dána (1) stavem řízení, (2) obsahem pásky a (3) pozicí hlavy. Můžeme zkombinovat do jediného řetězce $[\Delta x q y z \Delta \dots ]$, kde $q$ je stav a $y$ je pozice hlavy.
+
+\begin{veta}
+Každý jazyk přijímaný TS (tj. každý rekurzívně vyčíslitelný jazyk) je jazykem typu 0.
+\end{veta}
+
+\subsection{Jazyky typu 0 jsou přijímány TS}
+\begin{veta}
+Každý jazyk typu 0 je přijímán nějaký TS (tj. je rekurzivně vyčíslitelný).
+\end{veta}
+Důkaz: Provádíme simulaci derivací na druhé pásce TS
+
+\subsection{Jazyky typu 0 = jazyky přijímané TS}
+\begin{veta}
+Třída jazyků přijímaných TS (neboli jazyků rekurzivně vyčíslitelných) je shodná s třídou jazyků typu 0.
+\end{veta}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Nerozhodnutelnost (problém zastavení TS, princip diagonalizace a redukce, Postův korespondenční problém).} \label{cha:23}
+
+1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
+
 \chapter{Parciální rekurzivní funkce.} \label{cha:24}
 \chapter{Časová a paměťová složitost (třídy složitosti, úplnost, SAT problém).} \label{cha:25}
 \chapter{Ukazatele a zákony paralelního zpracování. Funkce konst. účinnosti a škálovatelnost.} \label{cha:26}
