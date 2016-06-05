@@ -4622,11 +4622,135 @@ U kontextových jazyků
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Nerozhodnutelnost (problém zastavení TS, princip diagonalizace a redukce, Postův korespondenční problém).} \label{cha:23}
+\chapter{Nerozhodnutelnost} \label{cha:23}
+1. semestr, TIN, \texttt{opora.pdf}, 6. kapitola
 
+(problém zastavení TS, princip diagonalizace a redukce, Postův korespondenční problém)
+
+\section{Jazyky mimo třídu 0}
+(algoritmicky neřešitelné problémy)
+
+\subsection{Existence jazyků mimo třídu 0}
+\begin{veta}
+Pro každou abecedu $\Sigma$ existuje jazyk nad $\Sigma$, který není typu 0.
+\end{veta}
+
+\begin{lemma}
+Pro neprázdnou a konečnou množinu $\Sigma$ je množina $2^{\Sigma^*}$ nespočetná.
+\end{lemma}
+Důkaz: Diagonalizace:
+\begin{itemize}
+	\item Předpokládejme, že $2^{\Sigma^*}$ je spočetná. Pak dle definice spočetnosti existuje bijekce $f: \mathbb{N} \leftrightarrow 2^{\Sigma^*}$
+	\item Uspořádejme $\Sigma^*$ do nějaké posloupnosti $w_1, w_2, w_3, \dots$, např. $\epsilon, x, y, xx, xy, yx, yy, xxx, \dots$ pro $\Sigma = \{x, y\}$. Nyní můžeme $f$ zobrazit \emph{nekonečnou maticí}:
+	$$\begin{matrix}
+				& w_0		& w_1		& w_2		& \dots	& w_i		& \dots \\
+	L_0 = f(O)	& a_{00}	& a_{01}	& a_{02}	& \dots	& a_{0i}	& \dots \\
+	L_1 = f(1)	& a_{10}	& a_{11}	& a_{12}	& \dots	& a_{1i}	& \dots \\
+	L_2 = f(2)	& a_{10}	& a_{21}	& a_{22}	& \dots	& a_{2i}	& \dots \\
+	\dots
+	\end{matrix} \text{, kde } a_ij = 
+	\begin{cases}
+		0 \text{ jestliže } w_j \not\in L_i \\
+		1 \text{ jestliže } w_j \in L_i
+	\end{cases}$$
+	\item Uvažujme jazyk $\overline{L} = \{w_i | a_{ii} = 0\}$. $\overline{L}$ se liší od každého jazyka $L_i = f(i), i = \mathbb{N}$:
+	\begin{itemize}
+		\item je-li $a_{ii} = 0$, pak $w_i$ patří do jazyka
+		\item je-li $a_{ii} = 1$, pak $w_i$ nepatří do jazyka
+	\end{itemize}
+	\item Současně ale $\overline{L} \in 2^{\Sigma^*}, f$ tudíž není surjektivní, což je spor.
+\end{itemize}
+
+\section{Problém zastavení}
+\subsection{Kódování TS}
+\emph{Kódovací systém} pro TS zahrnuje (1) kódování stavů (tak, aby byly odlišeny všechny stavy včetně $q_0, q_F$), (2) symbolů z $\Gamma$ a (3) přechodové funkce $\delta$. \emph{Kódování stavů}: Množinu stavů $Q$ uspořádáme do posloupnosti $q_0, q_F, q, p, \dots, t$. Stav $q_j$ zakódujeme jako $0^j$, přičemž indexujeme (např. od nuly.
+
+\emph{Kódování symbolů} a příkazů $L/R$: Předpokládáme, že $\Gamma = \Sigma \cup \{\Delta\}$. Uspořádáme $\Sigma$ do posloupnosti $a_1, a_2, \dots, a_n$ a zvolíme tyto kódy: $\Delta \to \epsilon, L \to 0, R \to 00, a_i \to 0^{i+2}$.
+
+\emph{Přechod} $\delta(p, x) = (q, y)$, kde $y \in \Gamma \cup \{L,R\}$, reprezentujeme čtveřicí $(p, x, q, y)$ a kódujeme zřetězením kódů $p, x, q, y$ při použití 1 jako oddělovač, tj. jako $\left<p\right>1\left<y\right>1\left<q\right>1\left<y\right>$, kde $\left<\_\right>$ značí kód $\_$.
+
+Celý TS kódujeme jako posloupnost kódů přechodů oddělených a ohraničených 1.
+
+\subsection{Univerzální TS}
+Programovatelný stroj, který umožňuje ve vstupním řetězci specifikovat konkrétní TS (tj. program) i data, nad nimiž má tento stroj pracovat.
+
+TS, který má být simulován budeme kódovat jak bylo uvedeno výše, vstupní řetězec budeme kódovat jako posloupnost příslušného kódu symbolů oddělených a ohraničených 1. Kód stroje a vstupního řetězce oddělíme např. $\#$.
+
+Univerzální TS, který zpracuje toto zadání, můžeme navrhnout jako třípáskový stroj, který
+\begin{itemize}
+	\item má na 1. psáce zadání (později výstup
+	\item 2. pásku používá k simulaci pracovní pásky původního stroje
+	\item na 3. pásce má zaznamenán aktuální stav simulovaného stroje a aktuální pozici hlavy (pozice hlavy $i$ je kována jako $0^i$).
+\end{itemize}
+
+Univerzální stroj pracuje takto:
+\begin{enumerate}
+	\item Stroj zkontroluje, zda vstup odpovídá zadání. Pokud ne, abnormálně zastaví.
+	\item Přepíše $w$ na 2. pásku, na 3. pásku umístí kód $q_0$ a za něj poznačí, že hlava se nachází na levém okraji pásky
+	\item Na druhé pásce vyhledá aktuální symbol pod hlavou simulovaného stroje a na 1. pásce vyhledá přechod proveditelný  ze stavy zapsaného na začátku 3. pásky pro tento vstupní symbol. Pokud žádný přechod není možný, stroj abnormálně zastaví.
+	\item Stroj povede na 2. a 3. pásce změny odpovídající simulovanému přechodu (přepis aktuálního symbolu, změna pozice hlavy, změna řídícího symbolu stavu).
+	\item Pokud nebyl dosažen stav $q_F$ simulovaného stroje, přejdeme na bod 3. Jinak stroj vymaže první pásku, umístí na ni obsah 2. pásky a zastaví normálně (přechodem do koncového stavu).
+\end{enumerate}
+Víme, že uvedený strom můžeme převést na jednopáskový univerzální TS, který budeme dále značit jako $T_U$.
+
+\subsection{Problém zastavení TS}
+
+\begin{veta}
+Problém zastavení TS (Halting Problem), kdy nás zajímá, zda daný TS $M$ pro daný vstupní řetězec $w$ zastaví, není rozhodnutelná, ale je částečně rozhodnutelný.
+\end{veta}
+Odpovídá rozhodování jazyka $HP = \{\left<M\right>\#\left<w\right> | M \text{ zastaví při } w\}$, kde $\left<M\right>$ je kód TS $M$ a $\left<w\right>$ je kód $w$.
+
+Částečnou rozhodnutelnost dokážeme pomocí modifikace, která převede abnormální zastavení na přechod do $q_F$.
+
+Nerozhodnutelnost ukážeme pomocí diagonalizace.
+
+Komplement problému zastavení není ani částečně rozhodnutelný a jazyk $co-HP = \{\left<M\right>\#\left<w\right> | M \text{ nezastaví při } w\}$ je příkladem jazyku, který není ani rekurzivně vyčíslitelný.
+
+\section{Redukce}
+\subsection{Důkaz nerozhodnutelnost redukcí}
+Technika \emph{redukce} patří spolu s diagonalizací k nejpoužívanějším technikám důkazu, že problém není rozhodnutelná (částečně rozhodnutelný), neboli že jazyk není rekurzivní (rekurzivně vyčíslitelný):
+\begin{itemize}
+	\item víme, že jazyk $A$ není rekurzivní (rekurzivně vyčíslitelný)
+	\item zkoumáme jazyk $B$
+	\item ukážeme, že $A$ lze úplným TS převést (redukovat) na $B$
+	\item to ale znamená, že $B$ rovněž není rekurzivní (rekurzivně vyčíslitelný) -- jinak by šlo použít úplná TS (ne-úplný TS) přijímající $B$ a příslušné redukce k sestavení úplného TS (ne-úplného TS) přijímajícího $A$., což by byl spor.
+\end{itemize}
+
+\begin{mydef}
+Nechť $A, B$ jsou jazyky $A \subseteq \Sigma^*, B \subseteq \in \Psi^*$. Redukce jazyka $A$ na jazyk $B$ je rekurzivně vyčíslitelná funkce $\sigma: \Sigma^* \to \Psi^*$ taková, že $w \in A \Leftrightarrow \sigma(w) \in B$.
+\end{mydef}
+
+Existuje-li redukce jazyka $A$ na $B$, říkáme, že $A$ je redukovatelná na $B$, což značíme $A \leq B$.
+
+\begin{veta}
+Nechť $A \leq B$.
+\begin{enumerate}
+	\item Není-li jazyk $A$ rekurzivně vyčíslitelný, pak ani jazyk $B$ není rekurzivně vyčíslitelný.
+	\item Není-li jazyk $A$ rekurzivní, pak ani jazyk $B$ není rekurzivní.
+	\item Je-li jazyk $B$ rekurzivně vyčíslitelný, pak i jazyk $A$ je rekurzivně vyčíslitelný.
+	\item Je-li jazyk $B$ rekurzivní, pak i jazyk $A$ je rekurzivní.
+\end{enumerate}
+\end{veta}
+
+\begin{veta}
+\end{veta}
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Parciální rekurzivní funkce.} \label{cha:24}
 1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
 
-\chapter{Parciální rekurzivní funkce.} \label{cha:24}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Časová a paměťová složitost (třídy složitosti, úplnost, SAT problém).} \label{cha:25}
 \chapter{Ukazatele a zákony paralelního zpracování. Funkce konst. účinnosti a škálovatelnost.} \label{cha:26}
 \chapter{Paralelizace programů: vzory programových a datových struktur, podpůrné struktury.} \label{cha:27}
