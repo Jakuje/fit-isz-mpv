@@ -4732,14 +4732,125 @@ Nechť $A \leq B$.
 \end{enumerate}
 \end{veta}
 
+\section{Problém náležitost a další problémy}
+
+\subsection{Problém náležitosti pro $\mathcal{L}_0$}
 \begin{veta}
+Problém náležitosti (Membership probem) řetězce $w$ do jazyka $L$ typu 0 \emph{není rozhodnutelný}, ale je \emph{částečně rozhodnutelný}.
+\end{veta}
+Částečná rozhodnutelnost: Univerzání TS, který bude simulovat $M$.
+
+Nerozhodnutelnost: redukcí z problému zastavení.
+
+Komplement problému náležitosti není ani částečně rozhodnutelný.
+
+\subsection{Další problémy}
+
+Konstrukce úplného TS: Rozhodnutelné
+\begin{itemize}
+	\item Daný TS má alespoň 2005 stavů
+	\item Daný TS učiní více než 2005 kroků na vstupu $\epsilon$
+	\item Daný TS učiní více než 2005 kroků na nějakém vstupu
+\end{itemize}
+
+Konstrukce (ne-úplného) TS: Částečně rozhodnutelné:
+\begin{itemize}
+	\item Jazyk daného TS je neprázdný
+	\item Jazyk daného TS obsahuje alespoň 2005 slov
+\end{itemize}
+
+Důkaz redukcí: Nerozhodnutelné:
+\begin{itemize}
+	\item Jazyk daného TS je prázdný
+	\item Jazyk daného TS obsahuje nanejvýš 2005 slov
+	\item Jazyk daného TS je konečný (regulární, bezkontextový, kontextový, rekurzivní)
+\end{itemize}
+
+\section{Postův korespondenční problém}
+jako problém zastavení, důležité východisko redukce pro dokazování nerozhodnutelnosti mnoha problémů.
+
+\subsection{Postův korespondenční problém}
+\begin{mydef}
+\begin{itemize}
+	\item \emph{Postův systém} nad abecedou $\Sigma$ je dán neprázdným seznamem $S$ dvojic neprázdných řetězců nad $\Sigma, S = \left<(\alpha_1, \beta_1), \dots,\alpha_k, \beta_k)\right>, \alpha_i, \beta_i \in \Sigma^+, k \geq 1$.
+	\item Řešením \emph{Postova systému} je každá neprázdná posloupnost přirozených čísel $I = \left<i_1, i_2, \dots, i_m\right>, 1 \leq i_j \leq k, m \geq 1$, taková, že
+	$$\alpha_{i_1}\alpha_{i_2}\dots\alpha_{i_m} = \beta_{i_1}\beta_{i_2}\dots\beta_{i_n}$$
+	(Pozor: $m$ není omezení délky a indexy se mohou opakovat!)
+	\item Postův problém (PCP) zní: Existuje pro daný Postův problém řešení?
+\end{itemize}
+\end{mydef}
+
+\subsection{Nerozhodnutelnost PCP}
+\begin{veta}
+Postův korespondenční problém je nerozhodnutelný
+\end{veta}
+Plyne z nerozhodnosti iniciálního PCP, u kterého požadujeme, aby řešení začínalo vždy jedničkou. To dále redukcí z problému náležitosti TS.
+
+\subsection{Nerozhodnutelnost redukcí z PCP}
+Problém prázdnosti jazyka dané kontextové gramatiky není ani částečně rozhodnutelný.
+\begin{itemize}
+	\item Použijeme redukci komplementu PCP. Redukce přiřadí seznamu $S = (\alpha_1, \beta_1), \dots, (\alpha_1, \beta_1)$, definujícímu instanci PCP, kontextovou gramatiku G takovou, že PCP založený na S nemá řešení právě tehdy, když $L(G) = \emptyset$.
+	\item Uvažujeme jazyky $L_\alpha, L_\beta$ nad $\Sigma \cup \{\#, 1, \dots, k\}$ (předp. $\Sigma \cap \{\#, 1, \dots, k\} = \emptyset$):
+	$$L_\alpha = \{\alpha_{i_1}, \dots \alpha_{i_m} \# i_m, \dots i_1 | 1 \leq i_j \leq k, j = 1, \dots, m, m \geq 1\} $$
+	$$L_\alpha = \{\beta_{i_1}, \dots \beta_{i_m} \# i_m, \dots i_1 | 1 \leq i_j \leq k, j = 1, \dots, m, m \geq 1\} $$
+	\item Je zřejmé, že $L_\alpha, L_\beta$ jsou kontextové jazyky (dokonce bezkontextové deterministické), tudíž $L_\alpha \cap L_\beta$ je také kontextový a můžeme tedy efektivně sestavit gramatiku $G$, která tento jazyk generuje (např. konstrukcí LOA).
+	\item $L_\alpha \cap L_\beta$ zřejmě obsahuje právě řetězce $u\#v$, kde $v$ odpovídá inverzi řešení dané instance PCP.
+	\item Hledaná redukce tedy přiřadí dané instanci PCP gramatiku G.
+\end{itemize}
+
+\subsection{Souhrn některých vlastností jazyků}
+
+\begin{tabular}{l |c|c|c|c|c|c|}
+											&Reg&DCF& CF& CS&Rec&RE \\ \hline
+	$w \in L(G)$?							& R & R & R & R & R & N \\ \hline
+	$L(G)$ prázdný? konečný?				& R & R & R & N & N & N \\ \hline
+	$L(G) = \Sigma$							& R & R & N & N & N & N \\ \hline
+	$L(G) = R, R \in \mathcal{L}_3$			& R & R & N & N & N & N \\ \hline
+	$L(G_1) = L(G_2)$						& R & R & N & N & N & N \\ \hline
+	$L(G_1) \subseteq L(G_2)$				& R & N & N & N & N & N \\ \hline
+	$L(G_1) \in \mathcal{L}_3$				& A & R & N & N & N & N \\ \hline
+	$L(G_1) \cap L(G_2)$ je stejného typu?	& A & N & N & A & A & A \\ \hline
+	$L(G_1) \cup L(G_2)$ je stejného typu?	& A & N & A & A & A & A \\ \hline
+	Komplement $L(G)$ je stejného typu?		& A & A & N & A & A & N \\ \hline
+	$L(G_1) \cdot L(G_2)$ je stejného typu?	& A & N & A & A & A & A \\ \hline
+	$L(G)^*$ je stejného typu?				& A & N & A & A & A & A \\ \hline
+	Je $G$ víceznačná?						& R & N & N & N & N & N \\ \hline
+\end{tabular}
+
+\section{Riceova věta}
+\subsection{Riceova věta -- první část}
+\begin{veta}
+Každá netriviální vlastnost rekurzivně vyčíslitelných jazyků je nerozhodnutelná.
 \end{veta}
 
+\begin{mydef}
+Budiž dána abeceda $\Sigma$. Vlastnost rekurzivně vyčíslitelných množin je zobrazení $P : \{ \text{ rekurzivně vyčíslitelné podmnožiny množiny } \Sigma^* \} \to \{\perp, \top\}$, kde $\top$, resp. $\perp$ reprezentují pravdy resp. nepravdu.
+\end{mydef}
 
+\begin{mydef}
+Vlastnost rekurzivně vyčíslitelných množin je netriviální, pokud není vždy (pro všechny r.v. množiny) pravdivá ani vždy nepravdivá.
+\end{mydef}
 
+\subsection{Riceova věta -- druhá část}
+\begin{mydef}
+Vlastnost P r.v. množin nazveme monotónní, pokud každé r.v. množiny A, B takové, že $A \subseteq B$, platí $P(A) \Rightarrow P(B)$.
+\end{mydef}
 
+\begin{veta}
+Každá netriviální nemonotónní vlastnost rekurzivně vyčíslitelných jazyků není ani částečně rozhodnutelná.
+\end{veta}
 
+\section{Alternativy Turingova stroje}
+\subsection{Automaty s jednou frontou}
+Stroj s konečným řízením, (neomezenou) FIFO frontou a přechody, které dovolují načíst ze začátku fronty a zapsat na konec fronty symboly z frontové abecedy $\Gamma$. (Rotace fronty)
 
+\subsection{Zásobníkové automaty s dvěma a více frontami}
+(pomocí dvou zásobníků můžeme implementovat frontu)
+
+\subsection{Automaty s čítači (pro dva a více čítačů) a operacemi +1, -1 a test na 0}
+(pomocí čtyř čítačů je možné simulovat dva zásobníky)
+
+Dále také $\lambda$-kalkul či parciálně-rekurzivní funkce.
 
 
 
