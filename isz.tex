@@ -4858,11 +4858,69 @@ Dále také $\lambda$-kalkul či parciálně-rekurzivní funkce.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Parciální rekurzivní funkce.} \label{cha:24}
-1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
+1. semestr, TIN, \texttt{opora.pdf}, kapitola 6.8
+
+\section{Základy teorie rekurzivních funkcí}
+
+identifikace funkcí, které jsou \uv{spočitatelné}, tj. vyčíslitelné v obecném smyslu (bez ohledu na konkrétní výpočetní systém).
+
+Pouze funkce tvaru $f: \mathbb{N}^m \to \mathbb{N}^n$, kde $\mathbb{N} = \{1, 2, \dots\}, m,n \in \mathbb{N}$. n-tici $(x_1, x_2, \dots, x_n) \in \mathbb{N}$ budeme označovat jako $\overline{x}$.
+\begin{itemize}
+	\item Totální funkce nad množinou X -- definičním oborem je celá X (např sčítání)
+	\item Striktně parciální funkce nad množinou X -- alespoň pro jeden prvek $x \in X$ není definována funkční hodnota (např. dělení).
+\end{itemize}
+
+\subsection{Počáteční funkce}
+Stavební kameny vyšších funkcí
+\begin{enumerate}
+	\item \emph{Nulová funkce} (zero function): $\xi() = 0$ zobrazuje prázdnou n-tici $\mapsto 0$
+	\item \emph{Funkce následníka} (successor function): $\sigma: \mathbb{N} \to \mathbb{N} \quad \sigma(x) = x + 1$
+	\item \emph{Projekce} (projection): $\pi_k^n: \mathbb{N}^n \to \mathbb{N}$. Vybírá z n-tice k-tou složku: $\pi_2^3(7,6,4) = 6$.
+	
+	$\pi_0^n: \mathbb{N}^n \to \mathbb{N}^0$, tj. $\pi_0^3(1,2, 3) = ()$
+\end{enumerate}
+
+\subsection{Primitivně rekurzivní funkce}
+Funkce tvořené z počátečních pomocí těchto tří způsobů:
+\begin{enumerate}
+	\item \emph{Kombinace}: Kombinací dvou funkcí $f: \mathbb{N}^k \to \mathbb{N}^m$ a $g: \mathbb{N}^k \to \mathbb{N}^n$ získáme funkci, pro kterou
+	$f \times g: \mathbb{N}^k \to \mathbb{N}^{m+n}$, tedy $f \times g(\overline{x}) = (f(\overline{x}), g(\overline{x})), \overline{x} \in \mathbb{N}^k$
+	\item \emph{Kompozice} dvou funkcí $f: \mathbb{N}^k \to \mathbb{N}^m$ a $g: \mathbb{N}^m \to \mathbb{N}^n$ je funkce, pro kterou
+	$g \circ f : \mathbb{N}^k \to \mathbb{N}^n$, tedy $g \circ f(\overline{x}) = g(f(\overline{x})), \overline{x} \in \mathbb{N}^k$
+	\item \emph{Primitivní rekurze} je technika, která umožňuje vytvořit funkci $f: \mathbb{N}^{k+1} \to \mathbb{N}^m$ na základě jiných dvou funkcí $g: \mathbb{N}^k \to \mathbb{N}^m$ a $h: \mathbb{N}^{k+m+1} \to \mathbb{N}^n$ rovnicemi
+	$$f(\overline{x}, 0) = g(\overline{x})$$
+	$$f(\overline{x}, y+1) = h(\overline{x}, y, f(\overline{x}, y)), \overline{x} \in \mathbb{N}^k$$
+\end{enumerate}
+
+\begin{mydef}
+Třída primitivních rekurzivních funkcí obsahuje všechny funkce, které mohou být z počátečních funkcí vytvořeny:
+\begin{enumerate}
+	\item kombinací
+	\item kompozicí a 
+	\item primární rekurzí.
+\end{enumerate}
+\end{mydef}
+
+\begin{veta}
+Každá primitivně rekurzivní funkce je totální funkce.
+\end{veta}
+
+\subsection{Příklady primitivně rekurzivních funkcí}
+
+\emph{Konstantní funkce}: Zavedeme funkci $\kappa_m^n$, která libovolné n-tici $\overline{x} \in \mathbb{N}^n$ přiřadí konstantní hodnotu $m \in \mathbb{N}$.
+
+$$\kappa_m^0 = \underbrace{\sigma \circ \sigma \circ \dots \circ \sigma}_\text{m-krát}$$
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Časová a paměťová složitost (třídy složitosti, úplnost, SAT problém).} \label{cha:25}
+1. semestr, TIN, \texttt{opora.pdf}, ?. kapitola
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Ukazatele a zákony paralelního zpracování. Funkce konst. účinnosti a škálovatelnost.} \label{cha:26}
 \chapter{Paralelizace programů: vzory programových a datových struktur, podpůrné struktury.} \label{cha:27}
 \chapter{Paralelní zpracování v OpenMP, SPMD, smyčky, sekce a tasky. Synchronizační prostředky.} \label{cha:28}
