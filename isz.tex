@@ -4897,7 +4897,7 @@ Třída primitivních rekurzivních funkcí obsahuje všechny funkce, které moh
 \begin{enumerate}
 	\item kombinací
 	\item kompozicí a 
-	\item primární rekurzí.
+	\item primitivní rekurzí.
 \end{enumerate}
 \end{mydef}
 
@@ -4908,8 +4908,118 @@ Každá primitivně rekurzivní funkce je totální funkce.
 \subsection{Příklady primitivně rekurzivních funkcí}
 
 \emph{Konstantní funkce}: Zavedeme funkci $\kappa_m^n$, která libovolné n-tici $\overline{x} \in \mathbb{N}^n$ přiřadí konstantní hodnotu $m \in \mathbb{N}$.
-
 $$\kappa_m^0 = \underbrace{\sigma \circ \sigma \circ \dots \circ \sigma}_\text{m-krát}$$
+Pro $n > 0$ je $\kappa_m^n$ funkce rekurivně primitivní:
+$$\kappa_m^n(\overline{x}, 0) = \kappa_m^{n-1}(\overline{x})$$
+$$\kappa_m^n(\overline{x}, y+1) = \pi_{n+1}^{n+1}(\overline{x}, y, \kappa_m^n(\overline{x}, y))$$
+
+\emph{Funkce násobení}
+$$\text{mult}(x, 0) = \kappa_0^1(x)$$
+$$\text{mult}(x, y+1) = \text{plus}(x, \text{mult}(x, y))$$
+
+\emph{Funkce předchůdce}
+$$\text{pred}(0) = \xi()$$
+$$\text{pred}(y+1) = \pi_1^2(y, \text{pred}(y))$$
+
+\emph{Funkce monus}
+$$\text{monus}(x, 0) = \pi_1^1(x)$$
+$$\text{monus}(x, y+1) = \text{pred}(\text{monus}(x, y))$$
+
+\begin{mydef}
+$\text{eq}(x, y) = 1 \overset{\cdot}{-} ((y\overset{\cdot}{-}x) + (x\overset{\cdot}{-}y)$ nebo formálněji $eq \equiv \text{monus} \circ (\text{plus} \circ ((\text{monus} \circ (\pi_2^2 \times \pi_1^2)) \times \text{monus} \circ (\pi_1^2 \times \pi_2^2))))$
+\end{mydef}
+
+\subsection{Funkce mimo primitivně rekurzivní funkce}
+Funkce, které jsou vyčíslitelní a nejsou primitivně rekurzivními. Jsou to všechny striktně parciální funkce.
+
+Např. Ackermanova funkce:
+$$A(0, y) = y + 1$$
+$$A(x+1, 0) = A(x, 1)$$
+$$A(x+1, y+1) = A(x, A(x+1,y))$$
+
+\begin{veta}
+Existuje totální funkce z $\mathbb{N}$ do $\mathbb{N}$, která není primitivně rekurzivní.
+\end{veta}
+
+\begin{mydef}
+Třída totálních vyčíslitelných funkcí se nazývá $\pi$-rekurzivní funkce
+\end{mydef}
+
+Funkce: Počáteční $\subseteq$
+primitivně rekurzivní $\subseteq$
+$\pi$-rekurzivní $\subseteq$
+vyčíslitelné $\subseteq$
+
+\subsection{Parciální rekurzivní funkce}
+Minimalizace: Vytvoření funkce $f: \mathbb{N}^n \to \mathbb{N}$ z jiné funkce $g: \mathbb{N}^{n+1} \to \mathbb{N}$ předpisem, v němž $f(\overline{x})$ je nejmenší $y$ takové, že
+$$g(\overline{x}, y) = 0$$
+$$g(\overline{x}, z) \text{je definována pro } \forall z < y, z \in \mathbb{N}$$
+Tuto konstrukci zapisujeme notací
+$$f(\overline{x}) = \mu y [g(\overline{x}, y) = 0]$$
+Funkce definovaná minimalizací je skutečně vyčíslitelná. Výpočet hodnoty $f(\overline{x})$ zahrnuje výpočet $g(\overline{x}, 0), g(\overline{x}, 1), \dots$ tak dlouho, dokud nedostaneme
+\begin{itemize}
+	\item $g(\overline{x}, y) = 0$ \dots potom $f(\overline{x}) = y$
+	\item $g(\overline{x}, z) $ je nedefinována \dots potom $f(\overline{x})$ je nedefinována
+\end{itemize}
+
+\begin{mydef}
+Třída parciálně rekurzivních funkcí je třída parciálních funkcí, které mohou být vytvořeny z počátečních funkcí aplikací
+\begin{enumerate}
+	\item kombinace,
+	\item kompozice,
+	\item primitivní rekurze a
+	\item minimalizace.
+\end{enumerate}
+\end{mydef}
+
+\section{Vztah vyčíslitelných funkcí a Turingových strojů}
+
+\subsection{Turingovsky vyčíslitelné funkce}
+
+\begin{mydef}
+Turingův stroj $M=(Q, \Sigma, \Gamma, \delta, q_0, q_F)$ vyčísluje (počítá) parciální funkci $f: \Sigma^{*m} \to \Sigma_1^{*n}, \Sigma_1 \in \Gamma, \Delta \not\in \Sigma_1$, jestliže pro každé $(w_1, w_2, \dots w_m) \in \Sigma^{*m}$ a odpovídá konfiguraci $\underline{\Delta} w_1 \Delta w_2 \Delta \dots \Delta w_m \Delta \Delta \Delta$ stroj $M$:
+\begin{enumerate}
+	\item v případě, že $f(w_1, \dots, w_m)$ je definována, pak $M$ zastaví a páska obsahuje $\underline{\Delta} v_1 \Delta v_2 \Delta \dots \Delta v_n \Delta \Delta \Delta$, kde $(v_1, v_2, \dots v_n) = f(w_1, w_2, \dots, w_m)$
+	\item v případě, že $f(w_1, \dots, w_m)$ není definována, $M$ cykluje (nikdy nezastaví), nebo zastaví abnormálně.
+\end{enumerate}
+\end{mydef}
+(funkce Turingovsky vyčíslitelná)
+
+\subsection{Turinovská vyčíslitelnost parciálně rekurzivních funkcí}
+
+\begin{veta}
+Každá parciálně rekurzivní funkce je Turingovsky vyčíslitelná.
+\end{veta}
+
+\subsection{Reprezentace Turingova stroje parciálně rekurzivními funkcemi}
+\begin{veta}
+Každý výpočetní proces prováděný Turingovým strojem je procesem vyčíslení nějaké parciálně rekurzivní funkce.
+\end{veta}
+Pokud budeme interpretovat obsah pásky (vstup, po zastavení stroje) jako desítkové číslo, můžeme TS považovat za funkci $f: \mathbb{N} \to \mathbb{N}$.
+
+Pomocí parciálně rekurzivních funkcí lze vyjádřit součásti a události TS:
+\begin{itemize}
+	\item \emph{mov} = 2 jestliže $\delta(p, q) = (*, R)$, 1 jestliže $\delta(p, x) = (*, L)$, 0 jinak.
+	\item \emph{sym} = y jestliže $\delta(p, x) = (*, y)$, x jinak
+	\item \emph{state} = q jestliže $\delta(p, x) = (q, *)$, k jestliže $p=0$ nebo $\delta(p, x)$ není definována
+	\item \emph{cursym}
+\end{itemize}
+Konfigurace TS: $(w, p, n)$, kde $w$ je obsah pásky, $p$ je přítomný stav, $n$ je pozice hlavy.
+$$\text{cursym}(w, p, n) = quo(w, b^{n-1}) \overset{\cdot}{-} mult(b, quo(w, b))$$
+
+\begin{mydef}
+\end{mydef}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
