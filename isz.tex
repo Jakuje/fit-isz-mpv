@@ -284,16 +284,18 @@ X. semestr, XXX, ??
 
 \section{Specifikace systémů}
 
-\section{Syntéza systémů}
+\section{Syntéza systému}
 Klasický přístup nízkoúrovňový (obvody, RTL, snadno odhadnutelné parametry). Požadavek na pohled z vyšší úrovně (systém), porovnání alternativ (parametry nejsou známé, nutno odhadnout).
 
 Syntéza -- Rozdělení + Plánování -- Alokace + Přidělení + Plánování
 
-Alokace: Výběr výpočetních prostředků (z množin dostupných)\\
-Přidělení: Přiřazení alokovaných prostředků jednotlivým výpočetním úlohám
-Plánování: Vícenásobné využití prostředků pro dané úlohy (nemusí být potřeba, pokud počet úloh = počet prostředků).\\
-Rozdělení: Alokace + Přidělení: Hierarchická dekompozice na menší celky, snaha o minimalizaci počtu komunikačních kanálů mezi subsystémy.\\
-Mapování: Přidělen + Plánování využití prostředků v čase.
+\begin{itemize}
+	\item \emph{Alokace}: Výběr výpočetních prostředků (z množin dostupných)\\
+	\item \emph{Přidělení}: Přiřazení alokovaných prostředků jednotlivým výpočetním úlohám
+	\item \emph{Plánování}: Vícenásobné využití prostředků pro dané úlohy (nemusí být potřeba, pokud počet úloh = počet prostředků).\\
+	\item \emph{Rozdělení}: Alokace + Přidělení: Hierarchická dekompozice na menší celky, snaha o minimalizaci počtu komunikačních kanálů mezi subsystémy.\\
+	\item \emph{Mapování}: Přidělen + Plánování využití prostředků v čase.
+\end{itemize}
 
 Máme algoritmus, omezení (cena, latence), množinu výpočetních prostředků (platforma).
 
@@ -333,19 +335,300 @@ Metody optimalizace
 \end{itemize}
 
 
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Syntéza HW z vyšších programovacích jazyků (reprezentace, alokace, plánování, přiřazení) a jazyk Catapult C.} \label{cha:4}
-1. semestr, HSC, \texttt{03synteza\_obvodu\_20160118.pdf}
+1. semestr, HSC, \texttt{03synteza\_obvodu\_20160118.pdf}, \texttt{04catapultc\_20151110.pdf}
 
-\section{High Level Syntéza}
-Zvýšení produktivity návrhu: IP-cores (max. 5x), použití HLS (10x a více). Možnost vytvořit několik architektur a prozkoumat jejich vlastnosti podle potřeby
+Zvýšení produktivity návrhu: IP-cores (max. 5x), použití HLS (10x a více). Možnost vytvořit několik architektur a prozkoumat jejich vlastnosti podle potřeby.
 
-Interní reprezentace: Data Flow Graf (DFG) -- hrany označují datové závislosti, výška určuje počet kroků k dokončení výpočtu. Dále také řídící konstrukce (CFG). Spojení: Control Data Flow Graf.
+Jednodušší specifikace úlohy, Snazší realizace/integrace systému, efektivnější verifikace, ladění obvodu a průzkum prostoru možných architektur.
 
-Mohou být oddělené (CFG obsahuje odkazy na DFG), DeJong's graf (kontrolní informace uvnitř DFG) nebo SSIM graf (CFG je kopií DFG a ukazuje pořadí provádění operací).
+HLS:\\
+\emph{Vstup}: Popis algoritmu ve vyšším programovacím jazyce\\
+\emph{Výstup}: Maska obvodu ASIC nebo konfigurace obvodu FPGA\\
+\emph{Základní schéma}:
+\begin{enumerate}
+	\item Kompilace vstupního kódu a převodu do vhodné formální reprezentace (Control-Data Flow Graph)
+	\item Plánování, alokace a přiřazení prostředků
+	\item Generování RTL schématu
+	\item Logický syntéza pomocí konvenčních nástrojů
+\end{enumerate}
 
+\section{Reprezentace obvodu}
 
+Interní reprezentace: \emph{Data Flow Graf (DFG)} -- hrany označují datové závislosti, výška určuje počet kroků k dokončení výpočtu, paralelizace.
+
+Řídící konstrukce udržujeme v Control Flow Grafu (CFG).
+
+Spojení: Control Data Flow Graf. Mohou být
+\begin{itemize}
+	\item oddělené (CFG obsahuje odkazy na DFG)
+	\item DeJong's graf (kontrolní informace uvnitř DFG)
+	\item SSIM graf (CFG je kopií DFG a ukazuje pořadí provádění operací)
+\end{itemize}
+
+Optimalizace -- na úrovni kompilátoru, redukce výšky grafu
+
+Transformace CF do DF (flattening) -- promítnutí podmínek do Data Flow grafu.
+Všechny sekce se provádějí paralelně a výsledek se vybere pomocí multiplexoru, podmínka pro výběr se může počítat paralelně, ale zdroje nelze sdílet.
+
+\section{Plánování}
+
+Rozděluje vstupní CDFG do pod-grafů, které jsou vykonávaný v jednom kroku (taktu).\\
+Funkční jednotky lze sdílet mezi více kontrolními kroky.\\
+Ovlivňuje jak celkové množství potřebných funkčních jednotek, tak dobu výpočtu
+
+\subsection{Základní plánovací algoritmy}
+\begin{description}
+	\item[ASAP] (As Soon As Possible) -- při plánování operátoru vybere nejbližší možný kontrolní krok.
+	\begin{itemize}
+		\item Uzly, které nemají předka jsou naplánovány do prvního kroku.
+		\item Další uzly jsou plánovány, pokud uzel má všechny předky již naplánovány
+		\item dokud nejsou naplánovány všechny uzly.
+	\end{itemize}
+	\item[ALAP] (As Late As Possible) -- při plánování operátoru se vybere nejvzdálenější možný kontrolní krok.
+	\begin{itemize}
+		\item Do kroku $T$ jsou naplánovány všechny uzly, které nemají potomka
+		\item Postupně plánovány další uzly, které mají naplánovány všechny potomky
+		\item dokud nejsou naplánovány všechny uzly.
+	\end{itemize}
+\end{description}
+ALAP a ASAP se většinou používají jako pomocné algoritmy pro složitější výpočty -- určují horní a spodní hranici, kde mohou být jednotlivé operace naplánovány (mobilita operátoru).
+
+\subsection{Časově omezené plánování}
+Maximální počet kontrolních kroků, do kterých musí být DFG naplánován a musíme nalézt takový plán, který spotřebuje co nejméně výpočetních zdrojů.
+DSP (omezení vzorkovací frekvencí)
+NP-těžký problém -- exaktní řešení pomocí ILP, nebo přibližný výpočet (heuristiky).
+
+\subsubsection{Force-Directed Heuristic}
+Cílem je rovnoměrně rozprostřít operátory stejného typu do různých kontrolních kroků.
+\begin{itemize}
+	\item Výpočet mobility všech vrcholů
+	\item čím větší mobilita, tím menší pravděpodobnost umístění vrcholu do daného kroku.
+	\item Výpočet očekávané ceny realizace operace ve stavu s $EOC$.
+	\item Snahou je vyvážit $EOC$ přes všechny kontrolní kroky
+	\item Algoritmus se pokouší přesouvat doposud nenaplánovaný vrchol do všech možných pozic
+	\item Poté vybere takový posun s nejlepší cenou
+	\item Vybraný vrchol zafixuje a pokračuje obdobně, dokud nejsou naplánovány všechny vrcholy.
+\end{itemize}
+Nevýhoda: Jakmile je operace naplánována, nemůžeme toto rozhodnutí změnit. Existují varianty s výhledem několik kroků dopředu.
+
+\subsection{Prostorově omezené plánování}
+Zadán počet dostupných zdrojů. Cílem nalézt plán, který bude obsahovat co nejméně kontrolních kroků.
+Opět NP-těžký problém.\\
+Zdroje mohou být zadány jako počet funkčních jednotek (VLIW), nebo plochy čipu/počtu základních logických hradel.
+
+\subsubsection{List based scheduling}
+Zobecnění algoritmu ASAP
+\begin{itemize}
+	\item Udržujeme seznam operátorů, které je možné naplánovat v každém kroku (předchůdci naplánováni)
+	\item Uzly jsou uspořádány podle priority, podle které jsou plánovány (naplánování uzlu může přidat nové uzly do seznamu)
+	\item Výpočet opakujeme, dokud není celý graf naplánován.
+\end{itemize}
+
+Kvalita plánování závisí na zvolené prioritní funkci (v minulém podle velikosti mobility). Dále například podle nejdelší cesty ke konci grafu, nebo podle počtu následníků.
+
+\subsubsection{Plánování reálných obvodů}
+Některé operace (násobička) mohou zasahovat do více cyklů (multi-cycled), sdružovat do jednoho kroku (chained), nebo zřetězeny vnitřně (pipelined).
+
+Podmíněné sekce -- zdroje lze sdílet mezi větvemi.
+
+Plánování smyček může probíhat sekvenčně, smyčky lze rozbalit do superiterací (musíme znát počet iterací), nebo zřetězit (loop folding) -- Prolog, Fold, Epilog.
+
+IT = Iteration Time -- počet kontrolních kroků\\
+II = Inicialization Interval -- výpočet nové iterace začíná každých II kroků.
+
+Pro smyčky je vhodnější použít Graf závislostí (Dependency Graph).
+Naplánovaný potom jako složený graf závislostí (folded DG), který obsahuje zároveň prolog, fold i epilog a vzájemné závislosti.
+
+Omezující podmínky (datové závislosti).
+
+\begin{mydef}
+Graf obsahuje cyklus $C$ mezi operacemi $\{O_1, \dots, 0_n\}$, pokud v něm existují datové závislosti $O_i \to O_{i+1}$ pro $\forall i \in \{1, \dots, n\}$ a současně vazba $O_n \to O_1$.
+
+Stupeň cyklu je definován jako $\delta_c = \sum_{i=1}^n \delta_i$.\\
+Délka cyklu je definována jako $|c| = \sum_{O \in C} EXE_O$.
+\end{mydef}
+Pokud graf závislostí obsahuje cyklus $C$ pro který platí $|C| > \delta_c \times II$.
+
+\paragraph{Algoritmus $ASAP_p$ (pipelined)}
+Nalézt platný plán pro zadaný graf závislosti (DG) a inicializační interval (II).
+\begin{enumerate}
+	\item Ověří podmínku existence plánu pro zadaný II
+	\item Naplánuje všechny operace do prvního cyklu složeného grafu
+	\item Ověří, zda je pro všechny hrany složeného grafu splněna podmínka pro plánování
+	$$T_{O'} < T_O + EXE_O - \delta \times II$$
+	a pokud nikololiv, posune čas provádění operace do okamžiku 
+	$$T_{O'} = T_O + EXE_O - \delta \times II$$
+	\item Opakujeme bod (3), dokud není podmínka plánování splněna pro všechny hrany grafu.
+\end{enumerate}
+Časová složitost je $O(i \times m \times n)$ (doba iterace, počet hran, počet uzlú). Algoritmus nalezne pro zadaný DG a II platný plán s minimální dobou iterace (IT), pokud je zadaný II větší nebo roven jeho minimální hranici.
+Nezaručuje vytvořením plánu s minimálními nároku na zdroje.
+
+\subsubsection{Plánování (dokonale) vnořených smyček}
+Rozbalením získáme iterační prostor, přidáme datové závislosti.
+\begin{itemize}
+	\item Plánování -- rozdělení indexového prostoru na části, které mohou být prováděny parallelně.
+	\item Alokace/přiřazení funkčních jednotek -- rozdělení prostoru na části, které budou vykonávány na stejném procesoru.
+\end{itemize}
+Nejlépe, pokud jsou funkce lineární -- snadná paralelizace výsledného obvodu, maticový zápis
+
+Problém nalezení optimální plánovací a alokační funkce. Pro N rozměrný prostor rozdělení pro N-1 rozměrného prostoru funkčních jednotek a jednorozměrného prostoru odpovídajícímu času.
+Většinou nemáme tolik výpočetních jednotek a proto virtuální pole procesorů mapujeme na fyzické pole procesorů (1D, nebo 2D struktura).
+
+\emph{Lokálně paralelní globálně sekvenční (LPGS)} -- pole výpočetních jednotek zpracovává společně část indexového prostoru (předávání dat a komunikace)
+
+\emph{Lokálně sekvenční globálně paralelní (GSGP)} -- indexový prostor rozdělen na oddělené části, kde je každá zpracovávána jednou výpočetní jednotkou, všechny jednotky pak pracují paralelně (méně datových závislostí).
+
+Nalezení optimální velikosti dlaždice.
+
+\section{Přiřazení}
+Cílem přiřazení zdrojů je mapovat proměnné a operace naplánovaného CDFG grafu do funkčních jednotek, registrů a propojovacích sítí.
+\begin{enumerate}
+	\item Přiřazení funkčních jednotek -- pro jednu jednotku triviální, pro více jednotek je potřeba vybrat nejvhodnější kombinaci
+	\item Přiřazení paměťových elementů -- konstanty do ROM, proměnné do registrů nebo RAM, možnost sdílení registrů podle doby života, registrová pole (s více porty)
+	\item Přiřazení propojovacích sítí -- realizace datových přenosů, snaha o co největší sdílení, pokud přenosy neprobíhají současně.
+\end{enumerate}
+Vzájemné ovlivňování.
+
+Propojovací sítě: Multiplexované --- Sběrnicové (třístavové)
+
+Každý krok výpočtu: Načtení operandu z registru, výpočet, zápis výsledku do registru. Lze zrychlit přiřazení registru před a/nebo za ALU (pipeline).
+
+\subsubsection{Left-Edge algoritmus}
+pro optimalizaci sdílení počtu proměnných/registrů podle doby života.
+
+Seřazení do seznamu podle začátku jejich života (primární klíč) a konce jejich života (sekundární klíč).
+V každém kroku algoritmu se alokuje nový registr a vždy první nepřekrývající se výskyty proměnných se do tohoto registru namapují a odstraní ze seznamu.
+
+Rychlý a zaručuje optimální výsledky, ale nebere v potaz ostatní části úlohy alokace.
+
+\subsubsection{Rozdělení úlohy na kliky}
+Klika je úplný podgraf grafu $G(V, E)$. Rozdělení grafu na minimální počet klik.
+Obecně NP-těžký problém -- heuristika:
+\begin{itemize}
+	\item Cílem je změnit graf $G$ na super-graf $G'(S, E)$, kde $S$ jsou vrcholy odpovídající klikám grafu $G$.
+	\item Vychází se ze stavu, kdy $G'$ odpovídá $G$
+	\item V každém kroku pro všechny dvojice vypočteme množinu společných sousedů
+	\item Dva vrcholy, které mají nejvíce společných sousedů se spojí do jednoho vrcholu
+	\item Všechny hrany vycházející z těchto vrcholů se odstraní a vytvoří se hrany propojující zaniklý vrchol se všemi společnými sousedy
+\end{itemize}
+
+\paragraph{Aplikace na úlohu přiřazeni}
+\begin{description}
+	\item[Přiřazení funkčních jednotek] Vrcholy grafu jsou operace vstupního DFG a
+	hrany propojují takové vrcholy, které nejsou ve stejném kroku a mohou být zpracovány stejnou funkční jednotkou.
+
+	Ohodnocení hran je inkrementováno, pokud dvojice operací sdílí některou ze svých vstupních nebo výstupních proměnných. Rozdělení s ohledem na maximální ohodnocení hran.
+	\item[Přiřazení paměťových elementů] Vrcholy jsou proměnné a
+	hrany propojují ty proměnné, které mohou být uloženy ve stejném registru (podle doby života)
+
+	Ohodnocení hran je inkrementováno, pokud dvojice operací sdílí některou ze svých vstupních nebo výstupních portů, s ohledem na přiřazení operací k funkčním jednotkám. Rozdělení s ohledem na maximální ohodnocení hran.
+	\item[Přiřazení propojovací sítě] Vrcholy jsou vodiče mezi entitami (registry, funkční jednotky) a
+	hrany propojují pouze ty vrcholy, kde neprobíhá souběžný přenos dat.
+\end{description}
+
+\section{Alokace}
+Často součástí plánování.
+\begin{itemize}
+	\item Výběr funkčních jednotek -- zřetězené, více-cyklové, multifunkční, pipeline, latence vs. množství zdrojů.
+	\item Výběr paměťových elementů pro uložení proměnných -- Registr, Registrové pole, Víceportové RF, ROM, FIFO
+	\item Výběr a propojení sloužící pro datové přenosy -- Sdílená, multiplexovaná, segmentovaná sběrnice, specifický komunikační protokol
+\end{itemize}
+
+Procesy Alokace -- Plánování -- Přiřazení jsou na sobě závislé. Ideální by bylo plánovat vše dohromady, ale kvůli složitosti jednotlivých částí je to obtížné.
+
+Čas a prostor nejsou jedinými kritérii -- hodinová frekvence, spotřeba, propustnost paměti
+
+\section{Jazyk Catapult C}
+Postup při vytváření obvodů
+\begin{enumerate}
+	\item Příprava zdrojových kódů v jazyce C/C++ (ANSI)
+	
+	Nepodporované konstrukce: Dynamická alokace paměti, Union struktury, Datová typy float a double (ac\_fixed), rekurze s neznámou hloubkou zanoření
+	\item Sestavení hierarchie obvodu
+	\item Výběr cílové technologie, načtení knihovních bloků
+	
+	Výběr ASIC/FPGA, nástroje pro generování RTL, volitelné knihovny bloků
+	\item Mapování bloků na hierarchii
+	
+	Nastavení požadovaní hodinové frekvence, další vlastnosti hodinového signálu a signálu Reset.
+	\item Nastavení omezujících podmínek
+	
+	Latence x Plocha, Top-level funkce, Optimalizace smyček, Mapování rozhraní, Pamování proměnných
+	\item Plánování
+	
+	Na základě omezujících podmínek je naplánováno rozdělení do kontrolních kroků (C-steps). Výstupem je Gantův diagram.
+	
+	C-step -- odpovídá stavu konečného automatu, mohou tvořit hierarchii (smyčky). Obsahuje množinu naplánovaných operací + režii spojenou s implementací stavu automatu.
+	
+	Výběr komponent -- různé implementace z knihoven s různým poměrem plocha/zpoždění.
+	
+	Cíla plánování: Plocha, Latence, Plocha + omezení max. latence, Latence + omezení max. plochy.
+	\item Generován RTL
+	
+	Pokud plán vyhovuje, je vygenerováno RTL -- FSM, schémata, reporty o zdrojích, době výpočtu, kritické cesty. VHDL, Verilog, Netlist, atd) -- mikroarchitektura. Catapult uchovává historii  mezi kterými je možné přepínat.
+	\item Verifikace RTL
+	
+	Potřeba napsat testbench v C/C++. Aplikován na původní zdrojový kód a souběžně na RTL simulovaný v ModelSIM. Porovnání výsledků.
+\end{enumerate}
+
+\subsection{Datový typy s bitovou přesností}
+Potřebujeme využít každý bit (ne jako v CPU), celočíselné, pevná řádová čárka (\texttt{ac\_int<W,S>}, \texttt{ac\_fixed<W,I,S>}, nepovinné ošetření chování kvantizace a přetečení -- saturace/wrap).
+
+\subsection{Syntéza základních konstrukcí}
+\emph{Sekvence operací} je převedena do CDFG a naplánována do C-steps. Výstupy registrovány.
+
+\emph{Podmíněné příkazy} pomocí flatteningu -- paralelní výpočet a o výsledku rozhodne multiplexor (možnost vynutit opačné chování).
+
+\emph{Volání funkce} se chová jako inline kód (pozor v podmíněných sekcích). Ale lze realizovat také jako samostatnou komponentu.
+
+\subsection{Syntéza smyček}
+\emph{Nerozbalená smyčka} je výchozí chování -- sekvenční výpočet + 1 takt režie na začátku (inicializace) a na konci (uložení výstupu do registru)
+
+\emph{Main jako smyčka} vykonávaná donekonečna.
+
+\emph{Rozbalování smyček} nejefektivnější, ale velmi ovlivněné datovými závislostmi. Každá smyčka má své nastavení, kde určíme kolikrát rozbalit. Main lze rozbalit pouze částečně. Vhodné od vnitřních, musíme znát počet opakování (můžeme omezit na maximální počet opakování a přidat \texttt{break}).
+
+\emph{Zřetězení smyček} -- následující iterace se začne vykonávat před ukončením předchozí iterace. Můžeme nastavit počáteční interval pro různé výsledné latence a propustnosti.
+
+\emph{Zřetězení vnořených smyček} -- vnitřní smyčky převezmou zřetězení vnějších.
+
+Některé smyčky nelze zřetězit s požadovaným II (zpětné vazby), nebo omezený přístup do/z paměti.
+
+Zvyšuje propustnost dat skrze obvod a snižuje latenci. Zvýšení II vede k úspoře zdrojů (vyšší sdílení).
+
+\emph{Spojování smyček} paralelní výpočet dvou nezávislých smyček. Může vést k větším požadavkům na zdroje.
+
+\subsection{Mapování rozhraní}
+Parametry funkce main(), částečně rozeznatelný směr, přidání typů \texttt{wait} (handshake, druhá strana musí potvrdit přijetí), \texttt{wired} (bez pomocných signálů), \texttt{wired\_en} (pomocný enable signál, když obvod vyžaduje čtení/zápis).
+
+Parametry předané hodnotou jsou čteny pouze jednou a to na začátku. Reference jsou čteny pokaždé, když se využívají.
+
+\subsection{Práce s pamětí}
+
+\emph{Paměť} -- úspora zdrojů, sekvenční přístup (synchronní čtení i zápis)
+
+\emph{Registry} -- nákladné na zdroje, paralelní přístup (synchronní zápis, asynchronní čtení)
+
+Parametry lze definovat jako vnější paměť (sekvenční přístup), Catapult vytvoří další potřebné signály (\_data\_in, \_data\_out, \_addr, \_re, \_we). Pokud se nezvolí typ paměť, vytvoří se samostatné vodiče pro všechny prvky -- drahé.
+
+\emph{Vnitřní paměť} sekvenční (1 operace za C-step!). Není vytvářeno rozhraní, potřeba definovat jako static. Nulování pole pomocí \texttt{vinit} (automaticky), nebo nechat neinicializované.
+
+Více přístupů: Zvýšit datovou šířku, blokový přístup, prokládaný přístup
+
+\subsection{Verifikace}
+Porovnání originálního C programu s modifikovaným a poté s výsledku RTL schématu.
+
+Časování vstupů/výstupů pomocí \texttt{\_triosy\_lz} signálů
+
+\subsection{Hierarchický návrh}
+AC channel pro zasílání zpráv -- FIFO -- šablona v C++ (libovolná data). Přenos mezi komponentami s různou rychlostí zpracování. Může být neblokující -- nastavení velikosti a test na obsah.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Odhady (přesnost, věrnost, metriky, metody) a optimalizace vlastností systému (příkon, energie).} \label{cha:5}
