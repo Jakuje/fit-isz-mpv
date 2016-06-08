@@ -5245,12 +5245,116 @@ Nechť $\mathcal{R}$ je třída funkcí a $\mathcal{C}$ třída jazyků. Jazyk $
 Nechť $\mathcal{R}$ je třída funkcí a $\mathcal{C}$ třída jazyků. Jazyk $L_0$ nazveme $\mathcal{C}$-úplný ($\mathcal{C}$-complete) vzhledem k $\mathcal{R}$ redukovatelnosti, jestliže $L_0 \in \mathcal{C}$ a $L_0$ je $\mathcal{C}$-těžký ($\mathcal{C}$-hard) vzhledem k $\mathcal{R}$ redukovatelnosti.
 \end{mydef}
 
+\subsection{Nejběžnější typy $\mathcal{R}$ redukovatelnosti a úplnosti}
+
+\begin{itemize}
+	\item MP, PSPACE, EXP -- úplnost je definována vůči \emph{polynomiální redukovatelnosti} (redukovatelnosti pomocí DTS pracujících v polynomiálním čase).
+	\item P, NLOGSPACE -- úplnost definujeme vůči \emph{redukovatelnosti v deterministickém logaritmickém čase}.
+	\item NEXP -- úplnost definujeme vůči \emph{exponenciální redukovatelnosti} (tj. redukovatelnosti pomocí DTS pracujících v exponenciálním čase).
+\end{itemize}
+
+Důležitá je polynomiální redukce, protože podobně jako třída P vymezuje prakticky řešitelné problémy, polynomiální redukovatelnost odpovídá realizovatelné převoditelnosti problémů.
+
+\section{Příklady složitosti problémů}
+
+LOGSPACE -- existence cesty mezi dvěma uzly v neorientovaném grafu
+
+NLOGSPACE -- existence cesty mezi dvěma uzly v orientovaném grafu, 2-SAT (splnitelnost výrokových formulí tvaru konjunkce disjunkcí dvou literálů)
+
+P -- splnitelnost Hornových klauzulí (predikátová logika), náležitost řetězce do jazyka BKG, následnost uzlů při průchodu grafem do hloubky.
+
+NP -- 3-SAT, grafové problémy: existence kliky dané, Hamiltonovské kružnice v neorientovaném grafu, orientované Hamiltonovské kružnice v orientovaném grafu, barvitelnost, uzlové pokrytí neorientovaného gradu množinou uzlů o určité velikosti; problém obchodního cestujícího, knapsack
+
+co-NP -- ekvivalence regulárních výrazů bez iterace
+
+PSPACE -- ekvivalence regulárních výrazů, náležitost řetězce do kontextové gramatiky, model checking formulí temporální logiky (LTL -- výroková logika doplněná o operátory until, eventually, next-time s ohledem na velikost formule), nelepší tah ve hře Sokoban
+
+EXP -- nejlepší tah v šachu, model checking procesů s neomezeným zásobníkem, inkluze pro tzv. visibly push-down jazyky.
+
+EXPSPACE -- ekvivalence regulárních výrazů doplněných o operaci kvadrát $r^2$.
+
+k-EXP / k-EXPSPACE -- rozhodování splnitelnost formulí Presburgerovy aritmetiky
+
+mimo ELEMENTARY -- ekvivalence regulárních výrazů doplněných o negaci, rozhodování splnitelnost formulí logiky $WS1S$, verifikaci dosažitelnost v tzv. Lossy Channel Systems (procesy komunikující přes neomezenou, ale ztrátovou frontu).
+
+\section{SAT problém}
+Dokázaná NP-úplnost, lze použít pro důkaz NP-těžkosti.
+
+\subsection{Polynomiální redukce}
+
+\begin{mydef}
+Polynomiální redukce jazyka $L_1$ nad abecedou $\Sigma_1$ na jazyk $L_2$ nad abecedou $\Sigma_2$ je funkce $f: \Sigma_1^* \to \Sigma_2^*$, pro kterou platí:
+\begin{enumerate}
+	\item $\forall w \in \Sigma_1^* : w \in L_1 \leftrightarrow f(w) \in L_2$
+	\item $f$ je Turingovsky vyčíslitelná v polynomiálním čase
+\end{enumerate}
+Existuje-li polynomiální redukce jazyka $L_1$ na $L_2$, říkáme, že $L_1$ se redukuje na $L_2$ a píšeme $L_1 \leq _P^m L_2$.
+\end{mydef}
+
 \begin{veta}
+Je-li $L_1 \leq_P^m L_2$ a $L_2$ je ve třídě $P$, pak $L_1$ je ve třídě P.
 \end{veta}
 
+\subsection{Problém splnitelnosti -- SAT problém}
+Nechť $V = \{v_1, v_2, \dots, v_n\}$ je konečná množina Booleovských proměnných (prvotních formulí výrokového počtu). \emph{Literálem} nazveme každou proměnnou $v_i$ nebo její negaci $\overline{v_i}$. 
+\emph{Klauzulí} nazveme výorokou formuli obsahující pouze literály spojené výrokovou spojkou $\lor$ (nebo).
 
+\emph{SAT-problém} lze formulovat takto: Je dána množina proměnných V a množina klauzulí nad V. Je tato množina klauzulí splnitelná?
 
+Každý konkrétní SAT problém můžeme zakódovat jediným řetězcem takto. Nechť $V = \{v_1, v_2, \dots, v_n\}$, každý literál $v_i$ zakódujeme řetězcem délky $m$, který obsahuje samé 0 s výjimkou $i$-té pozice, která obsahuje symbol $p$, jde-li o literál $v_i$, nebo $n$, jde-li o literál $\overline{v_i}$. Klauzuli reprezentujeme seznamem zakódovaných literálů oddělených symbolem $/$. SAT problém bude seznam klauzulí uzavřených v aritmetických závorkách.
 
+Označme $L_{SAT}$ jazyk obsahující řetězce tohoto typu, které reprezentují splnitelné množiny klauzulí.
+
+Přiřazení pravdivostních hodnot budeme reprezentovat řetězcem z $\{p, n\}^+$, kde $p$ v $i$-té pozici představuje přiřazení $v_i \approx $ true a $n$ v $i$-té pozici představuje přiřazení $v_i \approx $ false.
+
+Pak test, zda určité hodnocení je modelem množiny klauzulí (množina klauzulí je pro toto ohodnocení splněna), je velmi jednoduchý. Můžeme jej přijímat pomocí 2-páskového TS, který:
+\begin{itemize}
+	\item začíná kontrolou, zda vstup reprezentuje množiny klauzulí
+	\item na 2. pásku vygeneruje řetězec z $\{n,p\}^m$ nedeterministickým způsobem.
+	\item posouvá hlavy na 1. pásce a testuje, zda pro dané ohodnocení (na 2 pásce) je množina klauzulí splnitelná.
+\end{itemize}
+Tento proces může být snadno implementován s polynomiální složitostí přijetí v závislosti na délce vstupního řetězce a tedy $L_{SAT} \in NP$.
+
+\begin{veta}
+Cookův teorém: Je-li $L$ libovolný jazyk z $NP$, pak $L \leq_P^m L_{SAT}$.
+\end{veta}
+
+\begin{veta}
+SAT je $NP$-úplný vzhledem k polynomiální redukci.
+\end{veta}
+
+\subsection{NP-úplné jazyky}
+\subsection{Význačné NP-úplné problémy}
+\begin{description}
+	\item[Satifiability] Je booleovský výraz splnitelný?
+	\item[Clique] Obsahuje neorientovaný graf kliku velikosti $k$?
+	\item[Vertex cover] Má neorientovaný graf dominantní množinu mohutnosti $k$?
+	\item[Hamilton circuit] Má neorientovaný graf Hamiltonovskou kružnici?
+	\item[Colorability] Má neorientovaný graf chromatické číslo $k$?
+	\item[Direct Hamilton circuit] Má neorientovaný graf Hamiltonovkský cyklus?
+	\item[Set cover]
+	\item[Exact cover] %% TODO not importatnt ...
+\end{description}
+
+\subsection{Použití redukcí k důkazu úplnosti}
+
+Dokažme, že problém 3SAT = $\{\psi | $ splnitelné formule $\psi$ v CNF obsahují v každé klauzuli nanejvýš 3 literály $\}$ je NP-úplný.
+Musíme ukázat:
+\begin{itemize}
+	\item 3SAT $\in$ NP
+	
+	NTS si nedeterministicky zvolí přiřazení jednotlivým proměnným v 3SAT formuli a v polynomiálním čase ověří, zda je splňující přiřazení.
+	
+	\item SAT $\leq_p$ 3SAT
+	
+	Zkonstruujeme polynomiálně vyčíslitelnou funkci $f$, pro kterou platí
+	$$A \in SAT \Leftrightarrow f(A) \in 3SAT$$
+	Funkce $f$ pracuje následovně:
+	
+	Nechť $K = (a_1, a_2, \dots a_n)$ je klauzule v SAT, která má víc neč 3 literály. Klauzuli K nahradíme klauzulemi $K_1 = (a_1, a_2, b)$ a $K_2 = (\not b, a_3, \dots, a_n)$, kde literál b se nevyskytuje v původní formuli. Je zřejmé, že platí:
+	$$K_1 \cup K_2 \text{ je splnitelná } \Leftrightarrow K \text{ je splnitelná}$$
+	a navíc klauzule $K_2$ má o jeden literál méně, než původní klauzule $K$. Analogicky postupujeme, dokud formule obsahuje klauzule obsahující více než 3 literály. Je zřejmé, že funkce $f$ je polynomiálně vyčíslitelná a navíc pro ni platí výše uvedený vztah.
+\end{itemize}
 
 
 
