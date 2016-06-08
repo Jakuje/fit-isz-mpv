@@ -116,15 +116,238 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Metodika návrhu HW/SW codesign, platformy, programovatelné obvody.} \label{cha:1}
-X. semestr, XXX, ??
+1. semestr, HSC, \texttt{uvod\_20150922.pdf}, \texttt{technologie\_20130923.pdf}
+
+Řešení problematiky efektivního (cena) návrhu složitých výpočetních systémů v rámci daném jak fyzikálními omezeními, tak často protichůdnými požadavky na jejich vlastnosti.
+
+Tradičně návrh HW předcházel návrh SW a integrace následovala. Souběžná práce umožňuje zkrácení doby návrhu.
+
+\paragraph{Hardware x Software}: Požadavky na výkonnost: Hardware (rychlé, drahé); Požadavky na flexibility, složitost a rychlost time-to-market: Software (levný, pomalé).
+
+\begin{tabular}{l | l | l |}
+					& HW						& SW \\ \hline
+	Návrhový vzor	& Dekompozice v prostoru	& Dekompozice v čase \\ \hline
+	Cena zdrojů		& Plocha (počet hradel)		& Čas (počet instrukcí) \\ \hline
+	Flexibilita		& Musí být součástí návrhu	& Implicitní \\ \hline
+	Paralelismus	& Implicitní				& Musí být součástí návrhu \\ \hline
+	Modelování		& Model $\not=$ implementace& Model $\sim$ implementace \\ \hline
+	Znovupoužítí	& Omezené					& Běžné \\ \hline
+\end{tabular}
+
+Modelování -- specifikuje co systém dělá (získávání hlubší znalosti o systému jeho imitací).
+
+Návrh (design) -- specifikuje jak systém pracuje (strukturovaná tvorba výrobku).
+
+Analýza -- specifikuje, proč systém dělá to, co dělá (získávání hlubší znalosti o systému jeho podrobným zkoumáním).
+
+\section{Metodika}
+\subsection{Návrh shora-dolů (top-down)}
+Optimální syntéza může být pokud zatím žádná část neexistuje.
+
+Popis chování lze modelovat s použitím vhodné abstrakce
+
+Obtížná automatizace -- v praxi ne moc používané
+
+\subsection{Návrh zdola-nahoru (bottom-up)}
+Systém bývá složen z již existujících komponent (ekonomické důvody, složitost)
+
+Nemusíme navrhovat od počátku, komponenty jsou již ověřené.
+
+Komponenty mohou přinést nějakou režii (nejsou plně využity, rozhraní, propojení) a systém nemusí být optimální.
+
+\subsection{Kombinace optimalizace shora-dolů a zdola-nahoru}
+Využití ověřených komponent a zohlednění možnosti technologie, kterou máme k dispozici.
+
+\subsection{Adaptivní (inkrementální, evoluční) metody návrhu}
+Reakce na waterfall, v softwarovém inženýrství jako agilní návrhové metody. Jednotlivé iterace jsou prováděny v krátkých časových intervalech. Mezi iteracemi zpětná vazba (ovlivnění návrhu na základě validace po každé iteraci), v každé iteraci návrh malých částí, které lze plně validovat.
+
+\subsection{Přehled problematiky}
+\paragraph{Specifikace}
+Předchází návrhu komplexních systémů. Snaha o zavedení hierarchie (omezení složitosti na každé úrovni), snaha o znovupoužití.
+
+\paragraph{Architektura}
+Výpočet (propustnost, latence), Data (typ, objem), Komunikace (zasílání zpráv, sdílená paměť), rozhraní (sběrnice), protokoly (TCP/IP), řízení, Synchronizace, Fyzikální vlastnosti.
+
+\paragraph{Modelování}
+Nezbytná na co nejvyšší úrovni abstrakce (velká složitost a heterogennost dnešních výpočetních platforem a systémů). Výpočetní a komunikačné modely.
+
+\paragraph{Syntéza -- rozdělení/mapování}
+Alokace (výběr výpočetních prostředků), Přidělování (přidělení výpočetních prostředků výpočtům), Plánování (sdílení prostředků mezi výpočty), Optimalizace (simulované žíhání, genetické algoritmy).
+
+\paragraph{Odhady a optimalizace}
+Pro co nejlepší rozdělení systému na části v SW a HW. Analýza jak vlastností jednotlivých částí a jejich interakce, tak chování výsledného systému. Optimalizace příkonu, výkonnosti, ceny. Odhady složitosti, rychlost, kapacity paměti, příkonu.
+
+\paragraph{Transformace}
+Syntéza HW (ze schématu či jazyka pro popis HW do netlistu. Kompilace SW z vyššího programovacího jazyka do assembleru. V současné době nejvíce propracované kroky návrhu.
+
+\paragraph{Integrace, Rozhraní}
+Volba rozhraní, komunikace. Hlavní pro zavedení abstrakce, izoluje různé technologie a umožňuje evoluci systému (RS232, Intel '86).
+
+\paragraph{Validace}
+Zjištění, ze produkt, či krok při návrhu odpovídá účelu, splňuje veškerá omezení a bude pracovat jak je vyžadováno. Součástí je verifikace, simulace, testování, emulace, prototypování a certifikace.
+
+\paragraph{Výpočetní platformy}
+Tradiční (osobní počítač), Systémy na čipu SoC, Programovatelný HW (FPGA), nasazení v praxi.
+
+\section{Technologie}
+
+Flexibilita x Efektivita:\\
+RISC -- FPGA -- DSP -- ASIP -- ASIC
+
+Souběžnost (Concurrency) -- schopnost vykonávat operace simultánně, protože tyto operace jsou na sobě úplně nezávislé (souvisí s úlohou)\\
+Paralelismus (Parallelism) -- schopnost vykonávat operace simultánně, protože tyto operace mohou být zpracovány na nezávislých výpočetních prostředcích (souvisí s výpočetní platformou)
+
+Paralelismus na úrovni Bitů (širší datové cesty), Slov (vektorové jednotky, 64 bitové registry), Instrukcí (zřetězení, VLIW), vlákno (vícevláknové procesory), Proces/Vlákno (vícejádrové procesory).
+
+Paměť: Potřeba velké kapacity a krátké přístupové doby -- hierarchie (cache, aplikačně nezávislé, složité), distribuovaná organizace, Scratchpad (plnění se plánuje v době návrhu aplikace, Cray, DSP, PS2, levnější, rychlejší).
+
+Procesory: CISC, RISC, VLIW, Superskalární (nadtřída RISC, CISC). Jednoinstrukční CPU.
+Instrukční sady: Zásobníková, Akumulátorová, Registrová, Load/Store; Adresovací režimy.
+
+\paragraph{Paralelismus} (zřetězení)
+In-order nebo řeešní konfliktů přeskládáním instrukcí
+
+Hazardy: Strukturní (přístup k HW z více stupňů pipeline -- není podporován), Datový (čeká se na výsledek předchozí operace), Řídicí (výjimky, skoky).
+
+Více instrukcí současně -- VLIW plánováno v době překladu, superkalární plánují během výpočtu.
+
+General-prupouse CPU: Nízká energetická účinnost, složitý HW, převážná část čipu nevyužita pro výpočty.
+
+DSP: Orientovaná na tok dat, vysoká propustnost, harwardská architektura, HW čítač smyček, speciální instrukce.
+
+ASIP: Application Specific Instruction Set processors -- konfigurovatelná architektura procesoru,, instrukční sada, specializované funkční jednotky, paměť podle aplikace. Automatické generování IP cores, simulátoru, překladače atd.
+
+\paragraph{Programovatelné logické obvody}:
+
+Nevolatilní -- konfigurace uchována i po odpojení (destrukce propojek, nebo ji lze měnit -- Flash). Pokud je potřeba, aby obvod fungoval ihned po připojení napájení.
+\begin{description}
+	\item[PAL] Programmable Array Logic -- Programovatelné AND pole, destrukce propojek. Nebo pevná OR pole
+	\item[GAL] Generic Array Logic -- podobné PAL, propojky ale elektricky programovatelné (např. EEPROM paměť).
+	\item[CPLD] Complex Programmable Logic Devices -- AND-OR pole a registry s elektricky programovatelnými křížovými přepínači.
+\end{description}
+
+Volatilní -- Field Programmable Gate Array (FPGA) -- monožost neomezeného programován HW. Konfigurace v SRAM, po každém připojení napájení potřeba konfiguraci zkopírovat z externí paměti. Výhodou je flexibilita a výkonnost.
+\begin{itemize}
+	\item Pole konfigurovatelných logických elementů:
+	\begin{itemize}
+		\item Configurable Logic Block (CLB) -- libovolná logická funkce N proměnných (vstupů)
+		\item Rychlé násobičky
+		\item DSP bloky
+		\item Hard a Soft procesorová jádra PowerPC, Nios.
+	\end{itemize}
+	\item Paměťi -- různé kapacity, rychlosti, tvorba hierarchie
+	\begin{itemize}
+		\item Registry v CLB
+		\item Pamět SRAM z LUT v CLB
+		\item BlockRAM (konfigurovatelná paměť SRAM -- FIFO, posuvný registr atd)
+		\item Externí paměť (DRAM, SRAM, a pod.)
+	\end{itemize}
+	Distribuovaná paměť: Problémem je konzistence dat.
+	\item I/O bloky
+	\item programovatelná propojovací síť -- co možno největší propojitelnost jednotlivých elementů. Hlavní zdroj zpoždění, většina plochy a dynamického příkonu
+	\item konfigurační pamět -- definuje funkci logických elementů -- Look-Up Table (LUT), Tokologie propojovací sítě, velká kapacita (MB)
+\end{itemize}
+
+Nejpokročilejší technologie, dobrá testovatelnost výrobního procesu, omezení využitelnosti propojením (60 -- 80\%). Miliardy tranzistorů, miliony vlastní logiky (ekvivalentních hradel NAND).
+
+IPC -- Intellectual Property Core -- předem navržené a otestované komponenty, usnadňuje integraci, platba za licenci. Hard (PowerPC procesor), Netlist (seznam komponent a spojů cílové technologie či VHDL, možnost modifikovat a přizpůsobit, ale potřeba rozmístit), Soft (HDL, nutno znovu syntetizovat, P\&R, verifikovat).
+
+Výhody: Rozmístěné a propojené na čipu, optimální využití a výkonnost.\\
+Nevýhody: Předem definované vývody -- komplikace propojení, omezená škála funkcí (pro většinu uživatelů)
+
+Rekonfigurace -- změna obsahu konfigurační paměti (za běhu), Parciální rekonfigurace (část obvodu pracuje), Diagonostika nebo ošetření chybových stavů, různé režimy činnosti systémů, Dynamická rekonfigurace -- zavádění konfigurace na základě probíhajícího výpočtu.
+
+Rekonfigurovatelné počítání -- úspora zdrojů, efektivní implementace výpočetních struktur, velmi obtížné programování
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Výpočetní modely} \label{cha:2}
 X. semestr, XXX, ??
 
 (StateCharts, Kahnova síť procesů, synchronní dataflow)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Specifikace (chování, struktura), syntéza (alokace, přidělení, plánování) a integrace systémů (rozhraní, synchronizace, komunikace).} \label{cha:3}
-X. semestr, XXX, ??
+1. semestr, HSC, \texttt{02synteza\_20140918.pdf}
+
+\section{Specifikace systémů}
+
+\section{Syntéza systémů}
+Klasický přístup nízkoúrovňový (obvody, RTL, snadno odhadnutelné parametry). Požadavek na pohled z vyšší úrovně (systém), porovnání alternativ (parametry nejsou známé, nutno odhadnout).
+
+Syntéza -- Rozdělení + Plánování -- Alokace + Přidělení + Plánování
+
+Alokace: Výběr výpočetních prostředků (z množin dostupných)\\
+Přidělení: Přiřazení alokovaných prostředků jednotlivým výpočetním úlohám
+Plánování: Vícenásobné využití prostředků pro dané úlohy (nemusí být potřeba, pokud počet úloh = počet prostředků).\\
+Rozdělení: Alokace + Přidělení: Hierarchická dekompozice na menší celky, snaha o minimalizaci počtu komunikačních kanálů mezi subsystémy.\\
+Mapování: Přidělen + Plánování využití prostředků v čase.
+
+Máme algoritmus, omezení (cena, latence), množinu výpočetních prostředků (platforma).
+
+Rozdělení -- počet všech možností pro větší obvody roste nad únosnou mez -- použití heuristik. Specifikace: Graf úlohy se závislostmi mezi výpočetními úlohami + Omezeni (doba výpočtu, plocha čipu).
+
+Alokace -- vychází z použité architektury (platforma, ověřené komponenty)
+
+Přidělení -- mapování úloh na dostupné prostředky
+
+Plánování -- Plán sdílení prostředků mezi jednotlivými úlohami v čase.
+
+Modely:
+\begin{itemize}
+	\item Control/Data Flow Graph a jejich kombinace DCFG: Uzly (úlohy, operace, vlákna), Hrany (závislosti -- datové, řídící, využití zdrojů).
+	\item Graf problému: Výpočetní a komunikační uzly a jejich závislosti
+	\item Graf architektury: Výpočetní a komunikační zdroje + orientované komunikační linky
+	\item Graf specifikace: graf problému + graf architektury + možné mapování
+\end{itemize}
+
+Strategie: Hledání kompromisu výkonnost/cena/příkon\\
+Výkonnost primární: Nejprve vše v HW a iterativní přesuny časově nekritických částí do SW (Vulcan, HardwareC, CPU + ASIC koprocesor + sdílená globální paměť)\\
+Cena primární: Nejprve vše v SW a přesun časově kritických částí do HW (jazyk $C^x$, definice omezení, elementární blok je sekvence bez skoků, ASIC + CPU \\
+Příkon je primární: Nejčastěji optimalizace cenově dostupného řešení s požadovanou výkonností.
+
+Metody optimalizace
+\begin{itemize}
+	\item Exaktní
+	\begin{itemize}
+		\item Enumerace
+		\item Celočíselné programování (ILP)
+	\end{itemize}
+	\item Heuristické
+	\begin{itemize}
+		\item Konstruktivní (náhodné, hierarchický klastering)
+		\item Iterativní (Migrace -- rychlé, nekvalitní, Simulování jevů -- pomalé)
+	\end{itemize}
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Syntéza HW z vyšších programovacích jazyků (reprezentace, alokace, plánování, přiřazení) a jazyk Catapult C.} \label{cha:4}
-X. semestr, XXX, ??
+1. semestr, HSC, \texttt{03synteza\_obvodu\_20160118.pdf}
+
+\section{High Level Syntéza}
+Zvýšení produktivity návrhu: IP-cores (max. 5x), použití HLS (10x a více). Možnost vytvořit několik architektur a prozkoumat jejich vlastnosti podle potřeby
+
+Interní reprezentace: Data Flow Graf (DFG) -- hrany označují datové závislosti, výška určuje počet kroků k dokončení výpočtu. Dále také řídící konstrukce (CFG). Spojení: Control Data Flow Graf.
+
+Mohou být oddělené (CFG obsahuje odkazy na DFG), DeJong's graf (kontrolní informace uvnitř DFG) nebo SSIM graf (CFG je kopií DFG a ukazuje pořadí provádění operací).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Odhady (přesnost, věrnost, metriky, metody) a optimalizace vlastností systému (příkon, energie).} \label{cha:5}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
