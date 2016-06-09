@@ -632,6 +632,207 @@ AC channel pro zasílání zpráv -- FIFO -- šablona v C++ (libovolná data). P
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Odhady (přesnost, věrnost, metriky, metody) a optimalizace vlastností systému (příkon, energie).} \label{cha:5}
+1. semestr, HSC, \texttt{05odhady\_20141026.pdf}, \texttt{06prikon\_20141109.pdf} ?
+
+\section{Odhady}
+Přesnost x Složitost:
+\begin{itemize}
+	\item High-level -- rychlé odhady, abstrakce od implementačních detailů, omezená přesnost, neznámé časování
+	\item Low-leve -- přesnější, mnoho implementačních detailů = pomalé
+\end{itemize}
+
+Metody získávání parametrů systému
+\begin{itemize}
+	\item Měření -- využití existující instance systémů
+	\item Simulace -- program implementující model systému a jeho evaluace
+	\item Statistika -- statistická abstrakce systému, analytické nebo simulační vyhodnocování
+	\item Formální analýza -- tvorba matematické abstrakce systému, výpočet výrazů
+\end{itemize}
+
+Přesnost: $A = + \frac{|E(D) - M(D)|}{M(D)}$ -- odhadovaná a přesná implementace systému D\\
+Věrnost: $F = 100 \cdot \frac{2}{n(n-1)} \cdot \sum\limits_{i=1}^n \sum\limits_{j=i+1}^n \mu_{i,j}$ -- pro několik odhadů a měření. $\mu_{i,j} = 1$ pokud jsou odhady a měření ve stejném poměru
+
+\subsection{Metriky: Hardware}
+Cena: Úměrná ploše čipu. Tranzistory, ekvivalentní hradla NAND, logické bloky FPGA, počet pinů\\
+FSM model: Datová cesta: registr, funkční jednotky, logika, spoje; Řadič: registr stavu, KLS následujícího stavu, výstupní KLS\\
+Příkon/Energie (CMOS): $P = P_{static} + P_{dynamic}$; $P_{dynamic} = P_{short} + P_{load}$. $P = C_{load} \times \alpha \times f \times V_{dd}^2$ ($\alpha \dots$ activity factor).
+
+Model architektury: Zpoždění datových cest, počet kroků řadiče, potřebná kapacita paměti.
+
+\emph{Nevyužitá doba (slack) periody hodin} -- hledání takové, při které dosáhneme maximálního využití = minimální slack.\\
+$avgslack(T) = \frac{\sum_{k=1}^{|V_T|} occ( v_k) \cdot slack(T, V_k)}{\sum_{k=1}^{|V_T|} occ(V_k)}$
+
+$util(T) = 1 - \frac{avgslack(T)}{T}$
+
+Odhad počtu kroků řadiče -- doba vykonání úlohy, složitost řadiče
+
+\subsection{Metriky -- Výkonnost: Software}
+\begin{itemize}
+	\item \emph{Změřená doba běhu programu} (potřeba instance implementace), jednoduché ke změření (čítač ticků CPU), ale nepřenositelné na jiné architektury.
+	\item \emph{Aplikační benchmark} -- sada programů pro danou aplikační oblast, méně reprezentativní, více přenositelné.\\
+	Standard Performance Evaluation Corporation (SPEC), musí být přeloženy se standardním nastavením kompilátorů
+	\item \emph{Benchmark algoritmu} -- Počet cyklů, velikost paměti, jednoduše použitelné, nemusí být přenositelné\\
+	\item \emph{Parametry architektury HW (platforma, CPU)} -- počet operací za jednotku času, problematické pro porovnání architektur.\\
+	MIPS (instructions per second), MFLOPS (floating point operations per second, MACS (multiply and accumulates per second, MOPS (operations per second)
+\end{itemize}
+
+Odhad pomocí procesorově specifického modelu, nebo generického.
+
+\emph{Doba výpočtu}:\\
+Sekvenční kód: $T_{EXE} = \frac{\text{\#sec}}{\text{program}} = \frac{\text{\#instrukcí}}{\text{program}} = \frac{\text{\#cyklů}}{\text{instrukce}} = \frac{\text{\#sekund}}{\text{cyklus}}$\\
+Kód se skoky: Odhad $T_{EXE}$ pro každý blok programu, graf toku řízení základních bloků a stanovení pravděpodobnosti průchodu jednotlivými uzly: $T_{EXE} = \sum_{b_j \in B}(b_i) \times freq(b_i)$.
+
+\subsection{Worst case execution Time (WCET)}
+Nejdelší doba vykonání úlohy. Funkce vstupních dat a prostředí, ve kterém je úloha vykonávána.
+
+(BCET = Best case execution time)
+
+WCET nelze stanovit profilací, odhad je vždy vyšší. Nelze nalézt vždy (nerozhodnutelný problém).\\
+Nutno prozkoumat všechny cesty v programu (exponenciální růst možností s větvením).\\
+Závisí na cílové architektuře (zřetězení, predikce skoků, cache).\\
+Důležité pro systémy reálného času (správnost -- včas?, výkonnost).
+
+Omezení pro výpočet -- jeden procesor bez přerušení a OS. Kompletní znalost mikroarchitektury (pipeline, cache, predikce skoků).
+
+Omezení pro program -- konečný počet iterací smyček, bez rekurze, nepřerušený výpočet, jedno vlákno, žádné ukazatele. Potřeba nalézt nejdelší cesty v programu, identifikace proveditelných cest a závislosti mezi různými fragmenty kódu.
+
+CFG (Control flow graf) -- uzly jsou základní bloky, hrany tokem řízení. Nalezení nejdelší cesty (s rozbalením smyček -- acyklický graf). $WCET = \max\{\sum_{i=1}^n c_i \cdot x_i\}$, kde $N$ jsou bloky kódu, $c_i$ je doba vykonání daného bloku, $x_i$ je kolikrát je daný blok vykonán. Počet vykonání zjistíme z rovnice toku mezi bloky: $x_i = \text{ vstupy } = \text{ výstupy }$ a funkčních omezení určených programátorem.
+
+Možnost vyhodnocení chování cache pro daný algoritmus. WCET více sekvenčních úloh nelze sčítat (stav cache může ovlivnit vykonání druhého algoritmu). Časově velmi náročné (obecně nerozhodnutelný problém). Výsledek platný pouze pro daný SW a HW.
+
+\subsection{Vestavěné systémy: Metriky}
+\begin{itemize}
+	\item Kapacita paměti -- využití cache, hlavní paměti, ROM.\\
+	Ovlivnění konfigurací SW, optimalizací kódu. Důležité pro návrh HW. Výrazně omezuje výkonnost
+	\begin{itemize}
+		\item Velikost paměti programu -- odhad $prog\_size = \sum_{j \in B_i} isntr\_size(j)$
+		\item Velikost datové paměti -- program obsahuje množinu deklarací: $data\_size = \sum_{d\in D} data\_size(d)$
+	\end{itemize}
+	\item Latence
+	\begin{itemize}
+		\item Latence přerušení -- zakázání při ochraně kritických sekcí kódu (nejhorší případ).\\
+		Nejlepší případ -- reakční doba HW + režie OS při zpracování přerušení.
+		\item Latence plánování úloh -- max( Latence plánování po přerušení + latence přepínání kontextu)
+	\end{itemize}
+	\item Propustnost -- počet transakcí za sekundu
+	\item Výkonnost OS (služby) -- minimální čas, který potřebuje OS pro dokončení volání systémových služeb
+\end{itemize}
+
+Klasické odhady zrychlení:
+
+$S$: Zrychlení, $s$: sekvenční část, $p$: paralelizovaná část úlohy, $N$: stupeň urychlení paralelizované části, $M$: počet stupňů zřetězené sekvenční části.
+
+\emph{Amdahlův zákon}: Akcelerace paralelním zpracováním části úlohy:
+$S_A = \frac{s + p}{s + \frac{p}{N}}$
+
+\emph{Gustafsonův zákon}: Zvýšíme množství práce, které bude zpracovávat paralelizovaná část úlohy:
+$S_G = s + N \cdot p$
+
+\emph{Gustafsonův zákon + zřetězená sekvenční linka}: Urychlení sekvenční části + předpoklad plné pipeline:
+$S_{GZ} = \frac{ \frac{s}{M} + N \cdot p }{ \frac{s}{M} + p}$
+
+
+
+
+\section{Optimalizace vlastností}
+\subsection{Příkon}
+
+Tradičně důraz kladen na cenu a výkonnost. V současnosti je také zohledněn příkon a energetická náročnost.
+
+\emph{Pollackovo pravidlo}: Efektivní využitelná výkonnost mikroprocesorů roste přibližně s druhou odmocninou jejich složitosti. Příkon roste úměrně složitosti!
+
+Problémy: Odvod tepla, hustota tepelného výkonu se blíží nukleárnímu reaktoru. Se snížením napětí je potřeba snižovat frekvenci.
+
+\emph{Landaerův limit}: Každý logický obvod má energetické ztráty -- minimální možné množství energie pro změnu jednoho bitu informace.
+
+Přenosná zařízení dominují trhu: Pro baterie neplatí obdoba Mooreova zákona -- kapacita se zvyšuje pomalu a tak je potřeba snižovat výkon.
+
+\subsection{Metriky}
+Příkon = ztráty -- teplo, které je potřeba odvést
+
+Energie (příkon za čas) -- pro mobilní zařízení určuje životnost baterie. Lze normalizovat na hodinovou frekvenci.
+
+Energie za čas -- pro zařízení pracující na max. frekvenci.
+
+CMOS: Příkon
+\begin{itemize}
+	\item Statický: na vstupech se nemění logické úrovně -- svodové proudy (leakage)
+	\item Dynamický: změny logických úrovní -- nabíjení a vybíjení parazitních kapacit a rychlost změn.
+	\begin{itemize}
+		\item Přechodový:
+		\begin{itemize}
+			\item Přepínací: Parazitní kapacity tranzistorů a frekvence změn jednotlivých vstupů
+			\item Zkratový: Při přechodu mohou být horní i dolní tranzistor oba krátce otevřeny -- zkrat.
+		\end{itemize}
+		\item Příkon zátěže: Nabíjení a vybíjení parazitních kapacit
+	\end{itemize}
+\end{itemize}
+Změna log. úrovně: $E = C \cdot V_{DD}^2$
+
+Dynamický příkon je dominantní: $P_D = \alpha \cdot f_{CLK} \cdot C \cdot V_{DD}^2$ (faktor aktivity -- dán pravděpodobností přechodů mezi úrovněmi: Pro CLK $\alpha = 1$, frekvence hodin)
+
+Př: Snížení napájecího napětí na polovinu $\rightarrow$ příkon klesne 4x, zpoždění vzroste 2x
+
+\subsection{Snížení příkonu}
+\begin{itemize}
+	\item Dynamický příkon
+	\begin{itemize}
+		\item Faktor aktivity $\alpha$: Hradlování hodin
+		\begin{itemize}
+			\item Reprezentace čísel -- přímý kód, jedničkový doplněk, dvojkový doplněk
+			\item Sdílení sběrnice v čase zvyšuje aktivitu
+			\item Více registrů s více porty, Selektivní write-back -- lepší ICP
+			\item Vyrovnávací paměti pro omezení přenášených dat po sběrnici
+		\end{itemize}
+		\item Parazitní kapacita $C$: Malé tranzistory, krátké spoje
+		\item Napájecí napětí $V_{DD}$ nejnižší možné
+		\item Pracovní frekvence $f$: nejnižší možná (pro danou úlohu)
+		\item Optimalizace příkonu činného systému:
+		\begin{itemize}
+			\item Dynamic Voltage and Frequency Scaling (DVFS)\\
+			Program pracuje po celou dobu s minimální frekvencí, než aby zůstal nevyužitý část kroku. Řízeno aplikací
+			\item Adaptive Voltage Scaling (AVS)\\
+			Pro daný čip určena optimální hodnota výkonnosti (Operating Performance Point). V závislosti na teplotě čipu se upravuje napájecí napětí v okolí OPP. Pracuje společně s DVFS (přesné doladění napětí)
+			\item Dynamic Power Switching (DPS)\\
+			Omezuje pouze příkon způsobený svody (leakage). Úloha je dokončena co nejrychleji a poté systém přejde do low-power módu s \uv{nulovým} statickým příkonem. Např. inicializace DMA přenosu.
+		\end{itemize}
+	\end{itemize}
+	\item Statický příkon
+	\begin{itemize}
+		\item Minimalizace příkonu nečinného systému
+		\begin{itemize}
+			\item Static Leakage Management (SLM)\\
+			Podobně jako DPS, jen pomalejší náběh (Displej se vypne po 10 s)
+			\item Low-power módy (standby, deep sleep)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+Snížení příkonu SoC: Rozdělení na subsystémy a domény: Hierarchicky
+
+\begin{itemize}
+	\item Hodinová doména -- společný hodinový signál subsystémů
+	\item Napájecí doména -- společné přepínatelní napájecí zdroje
+	\item Napěťová doména -- napájení stejným napětím
+\end{itemize}
+
+\paragraph{Synchronní obvody}
+Globální hodinový signál -- jednoduchá syntéza, bez hazardů. Vyšší příkon, drahý systém distribuce. Fyzikální limity: Omezení pracovní frekvence (clock skew, clock and variation margin) až 40\%.
+
+\paragraph{Asynchronní obvody}
+Možný vznik hazardů, není podpora návrhových nástrojů a ne často používaný způsob. Ale nižší příkon, lepší elektromagnetická kompatibilita, latence a propustnost. Řízeny tokem dat!
+
+\paragraph{Micropipeline}
+Jedny lokální hodiny pro každá stupeň -- řízené handshake protokolem 
+
+\paragraph{GALS obvody}
+Globálně asynchronní a lokálně synchronní obvody. Dekompozice složitých systémů. Vyšší rychlost.
+
+Snížení příkonu: Hradlování hodin.
+
+Popis konečným automatem, komunikujícími sekvenčními procesy, nebo Kahnovou sítí procesů (FIFO fronty)
+
+Alternativní zdroje energie -- vibrace, pohyb, rozptyl teplot, světlo, radiový signál.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
