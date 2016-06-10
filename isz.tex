@@ -5129,7 +5129,7 @@ Grafická reprezentace přechodu ($x$ -- co se čte, $s$ -- zápis/L/R):
 Grafická reprezentace počátečního a koncového stavu:
 \begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,on grid,auto]
 	\node[state,initial] (p)   {$p$};
-	\node[state,accepting] (qf) [above right=of s]  {$q_F$};
+	\node[state,accepting] (qf) [right=of s]  {$q_F$};
 \end{tikzpicture}
 
 \subsection{Modulární konstrukce TS}
@@ -6086,7 +6086,155 @@ Musíme ukázat:
 \chapter{Slovníkové metody (LZ77, LZ78, práce se slovníkem, pohyblivé okno, prodlužování položek).} \label{cha:36}
 \chapter{Informace a entropie, Shannova věta o kódování.} \label{cha:37}
 \chapter{Bezpečnostní kódy: lineární, Hammingovy, cyklické, konvoluční. Detekce a oprava chyb.} \label{cha:38}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Základní architektury přepínačů, algoritmy pro plánování, řešení blokování, vícestupňové přepínací sítě.} \label{cha:39}
+2. semestr, PDS, \texttt{pds-05-switching-16.pdf}
+
+Obecná architektura přepínače:
+\begin{itemize}
+	\item Line card
+	\begin{itemize}
+		\item Ingress Packet Processing -- vstup
+		\item Fabric Input Interface -- rozděluje příchozí packety na buňky pevné délky pro přepínání
+		\item Fabric Input Buffers -- ukládá data, pokud je není možné poslat do přepínací logiky
+		\item Engress Packet Processing -- výstup
+		\item Fabric Output Interface
+		\item Fabric Output Buffers
+	\end{itemize}
+	\item Switch Fabric card
+	\begin{itemize}
+		\item Switch Fabric -- dynamicky propojuje síťová rozhraní a přenáší data mezi nimi, pomocí přepínacích obvodů nebo sběrnic.
+		\item Scheduler -- plánuje přepínání dat ze vstupu na výstup.
+	\end{itemize}
+\end{itemize}
+
+\paragraph{Požadavky}: maximální přenos dat přepínací logikou, paralelní přenosy mezi různými síťovými rozhraními, spravedlivé přidělení přenosového pásma a zachování pořadí paketů.
+
+\paragraph{Problémy}: Vnitřní blokování, soutěžení o výstupní port, blokování fronty HOL (Head of Line) a přenos multicastu.
+
+\paragraph{Metriky pro měření činnosti přepínače}:
+\begin{itemize}
+	\item Propustnost -- množství dat přenesených za jednotku času
+	\item Latence -- doba přenosu paketu ze vstupního na výstupní rozhraní
+	\item Počet dostupných cest -- v přepínací logice, které propojí každou dvojici vstupních a výstupních portů.
+\end{itemize}
+
+\section{Základní architektury přepínačů}
+Klasifikace přepínačů: Propojovací deska:
+\begin{itemize}
+	\item Přepínače se sdílenou propojovací deskou (shared backplane)
+	\begin{itemize}
+		\item Přepínače se sběrnicí (shared bus)\\
+		Sdílené přenosové médium, přenosy řízeny Bus protokolem. Potřebná propustnost $R \times N$ (šířka $w = \frac{R \times N}{r}$\\
+		Pro zařízení s propustností do 1 Gb/s\\
+		Nativní implementace broadcast, multicast, pouze jeden port může v jeden okamžik komunikovat.
+	\end{itemize}
+	\item Přepínače s přepínanou propojovací deskou (switched backplane)\\
+	Paralelní přenos paketů, buňky pevné délky, potřeba plánovače (detekce buněk na vstupu, plánování přenosu, přenos buněk)\\
+	Plánovač: Párování portů, Vnitřní blokování a virtuální fronty
+	\begin{itemize}
+		\item Jednostupňové přepínání (single stage fabric)
+		\begin{itemize}
+			\item Přepínače se sdílenou pamětí (shared memory)\\
+			Centrální sdílená paměť, Fronty pro výstupní porty.\\
+			Potřebná rychlost přístupu do paměti: $W = 2 \times N \times R$, doba zápisu/čtení buňky: $t = \frac{C}{BW}$\\
+			přístupová doba SDRAM je 5 -- 10 ns (32 portů, 1 GB/s)
+			\item Křížový přepínač (crossbar switch)
+			$N^2$ propojení (on/off -- např. tranzistory, interně neblokující, nativní podpora multicastu, jednoduchá implementace, centrální plánovač propojení každé linky.\\
+			Problém rozšířitelnosti, kolize (různé vstupy požadují stejný výstup, obtížné QoS, redundance
+		\end{itemize}
+		\item Vícestupňové přepínání (multi stage fabric)
+		\begin{itemize}
+			\item Přepínací síť Clos (Clos network)
+			\item Přepínací síť Beneš (Beneš network)
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\section{Plánovací algoritmy}
+Algoritmy: Přidělení lístků, PIM, iSLIP
+
+Problém párování v crossbar switch: Bipartitní graf $G=(X\cup Y, E)$. Uzly: Vstupní porty $X$, Výstupní porty $Y$, Hrany: propojení (požadavky na přenos) $E$. Hledáme párování $M \subseteq E$, kde žádné dvě hrany nemají společný vrchol.
+\begin{description}
+	\item[Největší] (maximum matching): párování, které má největší počet hran.\\
+	Globální maximum s největší propustností, nebezpečí vyhladovění. Složitost $\mathcal{O}(N^\frac{5}{2})$ či $\mathcal{O}(N + E)$.
+	\item[Maximální] (maximal matching): Párování, k němuž nelze přidat další hranu.\\
+	Lokální maximum
+\end{description}
+
+\subsection{Algoritmus přidělení lístků}
+Výstupní port obsahuje frontu požadavků na propojení. Požadavek na vstupu dostane od $Q$ číslo $T_{QX}$ na obsloužení portu $Q$ s pořadím $X$. Výstupní porty jsou přiděleny žádostem s nižším $T_{QX}$.
+\begin{enumerate}
+	\item Žádost o lístek
+	\item Přidělení lístku
+	\item Propojení vstupů a výstupů, přenos (Connect \& Transfer)
+\end{enumerate}
+Asynchronní zpracování, přenos rámců různé délky, blokování na začátku fronty. Nezávislé přidělování lístků je problém u multicastu.
+
+Blokování začátku fronty -- řešení: Rozdělení vstupní fronty na více front podle cílových portů, virtuální fronty. ($N^2$ virtuálních front)
+
+\subsection{Algoritmus PIM (Parallel Iterative Matching)}
+
+Hledá párování pomocí náhodného výběru, virtuální fronty a soutěžení o porty (výstupní -- více žádostí na jeden výstup; vstupní -- více povolení pro data na jednom portu).
+\begin{enumerate}
+	\item Žádost o port -- vstupní port $p$ posílá žádosti ze všech front na všechny cílové porty
+	\item Udělení portu -- výstupní port $Q$ přidělí právo přenosu. V případě více žádostí o port $Q$, vybere náhodně jednu žádost.
+	\item Přijetí a přenos -- vstupní port zpracuje udělená povolení k přenosu. V případě udělení více povolení, náhodně vybere jedno a přenese data.
+\end{enumerate}
+Optimalizace pomocí více iterací. Problém generování náhodných čísel. Průměr $\mathcal{O}(\log_2 N)$. Obecně variabilní počet iterací, v praxi pevně dané.
+
+\subsection{Algoritmus iSLIP}
+Iterativní algoritmus pro hledání maximálního plánování. Při soupeření o port používá rotující ukazatele (vstupních $I_i$ a výstupních portů $O_j$), které se po každé iteraci inkrementují -- určují prioritu portů (po potvrzení žádosti)
+\begin{enumerate}
+	\item Žádost o port -- každý port pošle žádost na každý výstupní port
+	\item Udělení portu -- výstupní port $Y$ vybere žádost, která má číslo portu větší nebo rovno ukazateli $O_j$. V případě více žádostí se vybere to s nejmenší hodnotu
+	\item Přijetí -- Vstupní port $X$ vybere povolení od portu, které je větší nebo rovno ukazateli $I_j$. V případě více povolení se vybere to s nejmenší hodnotou.
+\end{enumerate}
+Více iterací. Deterministické plánování a velká propustnost.
+
+\section{Vícestupňové přepínání}
+
+\emph{Jednostupňové}: U křížového přepínače -- problémy s kvadratickým nárůstem portů. Problémy s vnitřním blokováním, HOL, algoritmy hledání maximálního párování.
+
+\emph{Vícestupňové}: Sítě Clos a Beneš: Vstup $\rightarrow$ více přepínaných obvodů $\rightarrow$ výstup. Obvody bez vstupního blokování, hledání interního bezkonfliktního propojení.
+
+\subsection{Síť Clos(m, n, r)}
+\begin{itemize}
+	\item První stupeň: Rozdělí $n$ vstupů na menší skupiny
+	\item Prostřední stupeň: propojí každý vstupní a výstupní přepínač
+	\item $m$ různých cest mezi daným vstupním a výstupním portem
+\end{itemize}
+
+(Closův teorém) Síť je neblokující: Pokud platí $m \geq 2n - 1$, pak lze přidat nové propojení vstupu a výstupu bez překládání sítě.
+
+Přepínač s $N$ porty potřebuje síť $(m, n, \lceil N/n \rceil)$. Pokud $n = \sqrt{N/2}$, pak minimální počet propojení je $5.76 \times N \times \sqrt{N}$. Počet propojení je stále lepší než křížový přepínač $N^2$.
+
+Neblokující přepínač o 256 portech vyžaduje síť $(31, 16, 16)$ (drahé), nebo využít $m \geq n$ -- redukce prostředních přepínačů -- levnější, ale blokující.
+Nebo provést přeskládání -- musí být rychlejší než přenos dat. Barvení hran v bipartitním multigrafu.
+
+Clos(16, 16, 16): Třístupňový přepínací modul o velikosti 256 portů (Juniper, T-series, Cisco AR 9000). Složený z 16 x 3 přepínačů 16 x 16.
+
+\subsection{Přepínací síť Beneš $BN_n$}
+Modifikovaná síť Clos(2, 2, 1) s překládáním. Hierarchicky-rekurzivní konstrukce: $N=2^n$ vstupů, blok $N/2$ vstupních přepínačů $2\times 2$, prostřední část rekurzivních bloků $BN_{n-1}$, blok $N/2$ výstupních přepínačů $2 \times 2$. $2 \log_2 N - 1$ stupňů (bloků).
+
+$BN_3$: $N = 8$ vstupů, 5 stupňů, Cisco CSR-1
+
+\subsection{Přepínací síť Torus}
+Decentralizované přímé přepínání -- každý uzel slouží jako vstup, výstup i přepínací uzel (přímá síť). $n$-dimenzionální síť uzlů $k_i$ s adresou $(a_1, a_2, \dots, a_n)$, každý uzel $k_i$ připojen dvěma cestami v každé dimenzi (2D torus). Použitelné pro rychlé sítě (nad 1 Tb/s). Existuje více cest mezi každými uzly.
+
+\paragraph{Směrování v síti Torus}:
+\begin{itemize}
+	\item Náhodné (využijeme náhodný uzel
+	\item Deterministické podle dimenze: Dimension-Order Routing (DOR)
+	\item Zdrojové směrování (source routing) -- cesta se předpočítá ve zdrojovém uzlu.
+\end{itemize}
+
+Avici Terabit Switch Router (TSR) -- 3D torus, max. $14 \times 8 \times 5 = 560$ uzlů, kanál 10 Gb/s. Distribuované přepínání v každém uzlu. Snadná, rozšiřitelnost (přídavné moduly).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Základní funkce směrovače, zpracování paketů ve směrovači, typy architektur.} \label{cha:40}
 \chapter{Sítě Peer-to-Peer (P2P), Milgramův problém malého světa, model sítě P2P, směrování v P2P sítích, strukturované a nestrukturované sítě.} \label{cha:41}
 \chapter{Základní principy softwarově definovaných sítí SDN, architektura, technologie OpenFlow.} \label{cha:42}
