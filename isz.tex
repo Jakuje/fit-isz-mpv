@@ -6238,7 +6238,172 @@ Avici Terabit Switch Router (TSR) -- 3D torus, max. $14 \times 8 \times 5 = 560$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Základní funkce směrovače, zpracování paketů ve směrovači, typy architektur.} \label{cha:40}
+2. semestr, PDS, \texttt{pds-06-routing-16.pdf}
+
+\section{Popis směrovače}
+Základní operace ve směrovači: Směrování (routing), Přeposílání paketů (packet forwarding).
+
+\paragraph{Směrovací tabulka} (routing table): IP adresa cílové sítě (prefix) x sousední uzel (next hop). Optimalizovaná pro výpočet dynamických změn v topologii.
+
+\paragraph{Přepínací tabulka} (forwarding table): IP adresa (prefix) x výstupní rozhraní x L2 adresa výstupního rozhraní (MAC). Optimalizovaná pro vyhledávání cílové adresy.
+
+Základní operace při přeposílání
+\begin{itemize}
+	\item Validace hlavičky (formát, verze, délka, checksum)
+	\item Kontrola TTL
+	\item Přepočítání kontrolního součtu (checksum -- jedničkový 16-bitový doplněk součtu všech polí v lavičce zapsaný v inverzním kódu)
+	\item Zpracování rozšířených voleb IP protokolu (timestamp, record route, strict source route)
+	\item Vyhledání cesty datagramu (lokální doručení, unicast, multicast)
+	\item Fragmentace (pokud je MTU výstupního portu menší než MTU vstupního
+\end{itemize}
+
+Pokročilé operace při přeposílání
+\begin{itemize}
+	\item Klasifikace datagramů -- třídění data
+	\item Překlad NAT -- přepis položek v hlavičce paketu, udržování tabulky spojení
+	\item Prioritizace provozu -- kontrola dalších hlaviček paketu
+	\item Směrování -- Implementace směrovacích protokolů, udržování sousedství, aktualizace směrovací a přepínací tabulky
+	\item Správa zařízení -- nastavení systémové konfigurace, vzdálená správa
+	\item Monitorování zařízení
+\end{itemize}
+
+Typu směrovačů:
+\begin{itemize}
+	\item Páteřní směrovač (Core Router)\\
+	součástí páteřní sítě ISP, vysoce agregovaný provoz -- tisíce menších sítí, vysoká rychlost přepínání, spolehlivost, 800 Gb/s -- 12,8 Tb/s
+	\item Hraniční směrovač (Edge Router)\\
+	na straně ISP připojuje zákaznické sítě -- velké přenosové pásmo (agregace zákaznického provozu z různých technologií -- kabel, xDSL, Ethernet, optika), podpora přístupových technologií, velké množství portů pro různé L2 technologie, 2 - 200 Gb/s
+	\item Podnikový směrovač (Enterprise Router)\\
+	Také L3 páteřní a distribuční přepínače, propojuje koncové systémy v podnikových sítích, množství portů, modularita, QoS, multicast a broadcast, bezpečnost (VPN, VLAN, filtrování). 40 Gb/s -- 12 Tb/s
+\end{itemize}
+
+Schéma směrovače:
+\begin{itemize}
+	\item Line cards\\
+	Přepínání, správa front a provozu, paměť, analýza IP hlavičky, vyhledání výstupního rozhraní, připojen k základní desce (backplane)
+	\begin{itemize}
+		\item Port Card\\
+		Implementace síťového rozhraní (Port Card), operace nad L2, statistiky o příchozím a odchozím provozu
+		\item Ingress Packet Processing\\
+		Input Network Interface, Forwarding Engine, Forwarding table
+		\item Egress Packet Processing\\
+		Queue Manager, Traffic Managed, Output Netowrk Interface
+		\item Buffer Memory
+	\end{itemize}
+	\item Switch Farbic Card -- Backplane\\
+	Propojuje síťová rozhraní -- sdílené nebo přepínané propojení, rychlost odpovídá přenosovému pásmu všech rozhraní. Páteřní přepínače obsahují více modulů
+	\item Router Processor Card (Procesor pro směrování)\\
+	Routing Table, Route Control Processor, Memory (Obecný CPU, specializovaný OS, velká paměť)
+	
+	Implementace směrování na obecném CPU, zpracování směrovací informace (aktualizace, udržování sousedství), obsluha směrovací tabulky, přenáší data do přepínací tabulky, zpracovává pakety, které nelze zpracovat v FIB (forwarding information base), vytváří chybové zprávy ICMP.
+\end{itemize}
+
+Funkční části:
+
+\emph{Síťové rozhraní} (Network Interface) -- více vstupních portů, odstraňuje zapouzdření L2, předává L3 hlavičku přepínacímu modulu, ukládá do paměti, zapouzdří odchozí pakety
+
+\emph{Přepínací modul} (Forwarding Engine) -- Podle L3 hlavičky a FIB určí výstupní síťové rozhraní, klasifikace pro podporu QoS.
+
+\emph{Správce Front} (Queue Manager) -- Ukládá pakety do fronty, pokud je výstupní port obsazen, různé typy front, při zaplnění zahazuje podle definované politiky.
+
+\emph{Správce Provozu} (Traffic Manager) -- Prioritizace a regulace výstupního provozu (omezuje a ořezává -- shaping, policing)
+
+\emph{Kontext paketu}: Datová struktura se vytvoří při vstupu do zařízení a doplňují se L2 a L3 informace. Předáván mezi moduly.
+
+Input NI -- Forwarding engine (+ Buffer memory) (+ Forwarding Table + Route Control Processor + Routing Table) -- Backplane -- Queue manager (+ Buffer memory) -- Traffic manager -- Output NI
+\begin{itemize}
+	\item Paket přijde na síťové rozhraní -- Zpracování L2 rámce, vytvoření kontextu paketu a doplnění informací do něj.
+	\item Zpracování v přepínacím modulu -- vyhledání cesty v přepínací tabulce: next hop + výstupní rozhraní; Doplnění informací do kontextu, uložení paketu do vyrovnávací paměti.
+	\item Přeposlání paketu propojovací deskou -- paket i kontext přeneseny na výstupní rozhraní
+	\item Zpracování správcem front -- podle priority uložen paket do příslušné fronty, obsluha fronty podle daného plánovacího algoritmu
+	\item Předání kontextu správci procesů -- kontrola omezení rychlosti (Shaping) dle kontextu. Při překročení zahození nebo sponalení.
+	\item Výstupní síťové rozhraní -- L3: aktualizace TTL, přepočítání kontrolního součtu; L2: přidání hlavičky, výpočet CRC; odeslání paketu
+\end{itemize}
+
+\paragraph{Rychlá cesta} (data plane) -- většina paketů, časově kritické operace, ASIC na síťovém modulu. Zpracování hlavičky, přeposlání paketu, klasifikace paketu, uložení do front, plánování
+
+\paragraph{Pomalá cesta} (control plane) -- částeční zpracování v HW, většina v SW. Zpracování ARP, Fragmentace a defragmentace (sestavení drahé), zdrojové směrování, Pokročilé zpracování IP paketu: zaznamenávání cesty, generování ICMP; Správa a monitoring sítě (SNMP), zpracování směrovacích informací.
+
+\section{Přeposílání paketů}
+Zjištění, zda cíl cesty je dosažitelný, vyhledání nejbližšího následujícího uzlu (next hop) a příslušného výstupního rozhraní, vyhledání informací pro vytvoření L2 hlavičky.
+
+\subsection{Softwarové přeposílání (Process Switching)}
+Pomalé, pro každý paket hledáme cestu ve směrovací tabulce
+\begin{enumerate}
+	\item IO procesor: Detekce paketu na vstupním médiu, přenos do vstupního bufferu
+	\item Přerušení procesoru, kopírování do centrální paměti
+	\item Centrální plánovač zjistí paket ve frontě, naplánuje jeho další zpracování
+	\item Proces zpracování vyhledá ve směrovací tabulce další uzel (next hop) a výstupní rozhraní
+	\item Přepíše L2 hlavičku paketu, umístí paket do výstupní fronty na výstupním portu
+	\item Výstupní fronta: prioritizace podle QoS, vložení do vysílací fronty na výstupním portu
+	\item IO procesor detekuje paket ve vysílací frontě. Zapíše na síťové médium
+\end{enumerate}
+(využití cache při vyhledávání stejných informací; vyvažování zátěže po paketech)
+
+\subsection{Přerušené přepínání kontextu (Interrupt Context Switching)}
+Pakety se přepínají na vyžádání po příchodu. Nečeká se na cyklus plánovače
+\begin{enumerate}
+	\item Detekce paketu a přenos do paměti
+	\item Vygenerování přerušení, CPU určí typ paketu a začne ho přeposílat
+	\item Paket zkopírován na výstupní rozhraní
+	\item Odeslání paketu
+\end{enumerate}
+
+\subsection{Rychlé přeposílání (Fast Switching)}
+
+Pro první paket toku se využije softwarové přepínání, další pakety toku procházejí rychlou cestou (Fast Cache). Hashovací tabulka -- kolize.
+
+Aktuálně pomocí 2-way radix tree (binární strom) -- neobsahuje masku -- problém překrývajících se prefixů různé délky -- pevná dílka prefixu pro každou destinaci -- hloubka až 32.
+
+Neexistuje synchronizace mezi ARP cache a Fast Cache, nepodporuje rekurivní směrování z Fast Cache (vyhodnocení před vložením do tabulky). Při zaplnění nad určitou mez se začnou záznamy náhodně zahazovat.
+
+Vyvažování zátěže podle cíle (destination based) na místo po paketech, jako v prvním případě. Vyvažování je nedeterministické!
+
+\subsection{Expresní přeposílání CEF (Cisco Express Forwarding)}
+Řeší problémy minulých mechanismů: Chybějící podpora překrývání záznamů, změny ARP zneplatňují Fast Cache, první paket je vždy zpracován v SW, nedostatečné vyvažování zátěže.
+
+Nevadí u podnikových, ale je kritické pro páteřní směrovače -- extrémně velké směrovací tabulky (sta tisíce záznamů), časté změny ve směrovacích tabulkách, velká režie softwarového přepínání.
+
+\paragraph{Tabulka CEF}: vytvoří se na základě směrovací tabulky, vyhledávání pomocí 256-ární struktury trie. Každý uzel má 256 potomků (IPv4), list obsahuje ukazatel do tabulky sousedů
+
+\paragraph{Tabulka sousedů} (Adjacency table) -- data pro vytvoření hlaviček pro přímo připojené sousedy. Obsahuje přepočítané hlavičky, nekompletní L2 hlavičky vyžadující ARP dotaz, softwarové zpracování.
+
+\begin{enumerate}
+	\item Předpočítání tabulky CEF a tabulky sousedů
+	\item V tabulce CEF se vyhledá cíl na ukazatel v tabulce sousedů
+	\item V tabulce sousedů se vyhledá předkompilovaná hlavička L2
+	\item Paket se předá na výstupní rozhraní
+\end{enumerate}
+
+Tabulky předpočítány před tím než přijde paket, oddělení směrovacích informací od L2 dat, změny ARP se okamžitě promítají v CEF a tabulce sousedů.
+
+Zátěž lze vyvažovat podle paketu, nebo dvojice zdroj/cíl -- Záznam v CEF tabulce ukazuje na tabulku \emph{Load Share} -- ukazatele na paralelní cesty v tabulce sousedů.
+
+\section{Architektury směrovačů}
+\subsection{Architektura se sdíleným procesorem (Shared CPU)}
+Softwarové přepínání, Cykly CPU rozděleny mezi přeposílání, směrování a další operace. Sdílená sběrnice a procesor. Pomalé a levné.
+
+Varianta s pamětí na kartě -- synchronizace přepínacích tabulek, FE na kartě. Rychlé přepínání -- první paket vs. další pakety.
+
+\subsection{Architektura s nezávislými moduly FE (Shared Forwarding Engine)}
+Přepínací moduly implementovány na speciálních kartách. Paralelní zpracování paketů.
+
+Varianta s přepínanou sběrnicí -- vyšší propustnost
+
+\subsection{Distribuovaná architektura (Shared Nothing)}
+Veškeré zpracování paketů přeneseno do síťového modulu, oddělení procesu směrování a přeposílání  -- přepínání CEF
+
+\subsection{Modulární architektura (Clusterd Architecture)}
+Nezávislé moduly připojené k centrálnímu přepínači: Více přepínacích modulů, směrovacích procesorů. Distribuované zpracování -- dCEF.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Sítě Peer-to-Peer (P2P), Milgramův problém malého světa, model sítě P2P, směrování v P2P sítích, strukturované a nestrukturované sítě.} \label{cha:41}
+2. semestr, PDS, \texttt{??}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Základní principy softwarově definovaných sítí SDN, architektura, technologie OpenFlow.} \label{cha:42}
 \chapter{Formální metody v počítačových sítích.} \label{cha:43}
 \chapter{Konflikty a závislosti při řetězovém zpracování instrukcí a jejich HW/SW ošetření.} \label{cha:44}
