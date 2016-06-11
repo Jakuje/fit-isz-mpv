@@ -6627,11 +6627,107 @@ Problémy: Zpoždění při vkládání nových toků (reaktivní režim), velik
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Formální metody v počítačových sítích.} \label{cha:43}
-2. semestr, PDS, \texttt{??}
+2. semestr, PDS, \texttt{pds-12-formalmethods-16.pdf}
+
+Formal methods:
+\begin{itemize}
+	\item Logical Raasoning (Datalog) -- for configuration verificatio
+	\item Constaint solving (SAT/SMT) -- for policy verification
+	\item Explicit Model Checking (SPIN, TLA, UPPAAL) -- for protocol verification
+\end{itemize}
+
+Logic structure:
+\begin{itemize}
+	\item Logic has Syntax, semantics, axioms and rules of inference.
+	\item Syntax -- well-formed formulas (wffs)
+	\item Model checking: Is the wff true in a given interpretation?
+	\item Model finding: Find interpretation in which a wff is true
+	\item Constrain solving: find a model that satisfies the given constrains
+	\item Proof: sequence of wffs starting with axioms, obtained by application of rues of inference
+\end{itemize}
+
+\section{Security Protocol Verification}
+
+\subsection{ProVerif}
+Automatic analysis of security protocols. Analysis of secrecy and authentication properties, privacy, traceability, and verifiability. Capable of attack reconstruction.
+
+Verify the program which interact using public communication channel. Assume that cryptography is perfect, attacker can read, modify, delete or inject any messages and decrypt, if have necessary keys.
+
+\paragraph{ProVerif input language}: Declarations (behavior of cryptographic primitives), process macros to define subprocess, protocol itself.
+
+Processes use finite set of types, free names and constructors. Private ones are not accessible by the attacker. Constructors create primitives (cryptographic hash functions, encryptions, digital signatures). Relationships between cryptographic primitives are captured by destructors (decryption, verify) used to manipulate terms formed by constructors.
+
+\paragraph{Processes} describe the behavior of a protocol, parallel composition, infinite composition, standard conditions and communications
+
+\paragraph{Reachability and secrecy}: basic capability, which terms are available to the attacker and the secrecy of the private ones.
+
+\paragraph{Correspondence assertions} -- possibility to make sure that for all occurrences of events M, there is a previous occurrence of event from N. \emph{Injective correspondence} is assertion that for every event from M, there is a distinct earlier occurrence of the event from N. Useful to ensure that the handshake was finished before running authentication from client.
+
+Possibility to describe events.
+
+\paragraph{Results}: True means there is no attach, False means there is an attack. It can also say that the query can not be proved. ProVerif didn't find an attack nor proved the query. Example: \texttt{query attacher(M)} returns \texttt{RESULT not attacker(M) is true} means that the secrecy of the \texttt{M} is preserved by the protocol.
+
+\paragraph{Attack derivation} is explanation of the actions that the attacker has to make to break the security property. The trace is then the semantics in $\pi$-calculus.
+
+\section{Theory of configuration}
+
+Configuration of complex enterprise network is difficult and error prone task (usually human errors).
+How to validate a multi-level enterprise collaboration network configuration?
+
+\subsection{Requirements}
+\begin{itemize}
+	\item Connectivity: Each site has a gateway router connected to the WAN, there is a full-mesh of GRE tunnels between gateway routers. Each gateway router is connected to an internal router at the same site.
+	\item Security: There is a full-mesh network of IPSec tunnels between all gateway routers, packet through every GRE tunnel are encrypted with an IPSec tunnel, no gateway router in a COI has a static route to a destination in a different COI, not cross-COI physical, GRE, BGP connectivity or reachability is permitted
+	\item Reliability: BGP is run on the GRE tunnel network to discover routes to destinations in different sites, OSPF is run within a site to discover routes to internal destinations, OSPF and BGP route redistribution is set up
+	\item Performance: MTU on all the interfaces are set to less than the expected packet size after taking into the account GRE and IPSec encapsulation. Alternatively, access control lists at eeach gateway router permit ICMP packets carrying MTU messages.
+\end{itemize}
+
+Need definition of IP addresses and masks of physical and GRE interfaces, IP addresses of the local and remote BGP session end points and the autonomous system number of the end point, names of GRE  interface and IP address of associated local and remote physical tunnel end points.
+
+Possible problems: Missing GRE configuration on both sides, Asymmetric configuration of GRE tunnel, no full-mesh of BGP sessions within COI, BGP session between routers in two distinct COIs
+
+\paragraph{Configuration today}: 12 files describing interfaces of routers.
+\paragraph{New practice}: Fault tolerant VPN: Definition of the whole network in single file: Host side router interfaces (subnet), GRE tunnels, OSPF domains, static routing. Web-based configuration service.
+
+\emph{Requirement library} captures design patterns and best practices. Administrator is using \emph{Specification language} with end-to-end requirements, close to natural language. The requirements are evaluated against the configuration by \emph{Requirement Evaluation system} and guide to repair possible problems.
+
+How to get configuration from a network devices? \emph{Configuration acquisition} can get the information from a file in device or in the repository, using SNMP (only partial) or using NETCONF protocol. Presented in vendor neutral form.
+
+\paragraph{Requirement library} is a collection of declarative rules and constraints that specify various class of standard requirements -- integrity, connectivity, reliability, security, performance, regulatory.
+
+\paragraph{Integrity requirements} specify different logical structures to be properly set: IP subnets, GRE tunnels, IP-Sec, MPLS, BGP peering, OSPF areas, HSRP clusters. For examples: Transform sets, peer addresses, and ACL must be set consistently on both sides.
+
+\paragraph{Connectivity Requirements} (also reachability): Fundamental requirement, existence of a path between two nodes in the network -- reachability in the presence of access control policies, connectivity for IP, VLAN, GRE, \dots. Methods are enumerating paths in a topology graph.
+
+\paragraph{Reliability Requirements}: ability to maintain connectivity in the presence of failures of nodes or links. Using backup resources, identification of such single-point failure. Also redundant resources at one layer (MPLS) must be mapped to redundant resources at lower layers (IP).
+
+\paragraph{Security Requirements}: Data confidentiality, data integrity, authentication (IPSec) and access control (ACL). Verification of access-control requirements.
+
+\paragraph{Performance Requirements}: DifServ: Policies for partitioning packets into different classes and specifying different performance treat. Requirement having all the policies identical on all the routers and being used (assigned with an interface), ICMP packets are not blocked
+
+\subsection{Configuration Synthesis}
+Logic-based techniques -- Prolog and Datalog, Arithmetic quantifier free forms, Constraint solver for first-order logic, the minimum SAT solver for Boolean logic, Ordered Binary Decision Diagrams.
+
+Integrity requirements: Configuration database is queried for existence (or non-existence) of integrity patterns.
+
+Model checking can simply validate configuration, but we can also create configuration based on the rules using model generation/finding (Prolog). But Prolog can not explain why the validation failed. We need a tool that provides proof of unsolvability (constraints solvers (Alloy, Formula) using SAT/SMT solver provide such proof.
+
+\subsection{Proof of unsolvability}
+If \texttt{(good, not(bad))} fails and we would like to know why and how to correct the configuration.
+We can compute Requirement Constraints, find what part of RC causes the validation fail and inject constraints variables to the configuration database that we suspect as possible incorrect.
+
+\subsection{Overview of other work}
+Focus on validating configuration against requirements expressed in terms of network policy, analyzing firewalls (validation, searching for conflicts, repair), Validation of routing configuration of BGP, extending to SDN (OpenFlow) and verification of SDN programs.
+
+Usually logic based methods.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Konflikty a závislosti při řetězovém zpracování instrukcí a jejich HW/SW ošetření.} \label{cha:44}
+2. semestr, PDS, \texttt{??}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Architektura superskalárních procesorů a algoritmy OOO zpracování instrukcí.} \label{cha:45}
 \chapter{Procesory VLIW a používané optimalizační techniky s HW podporou.} \label{cha:46}
 \chapter{Multivláknové procesory, hrubý, jemný a simultánní MT.} \label{cha:47}
