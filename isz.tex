@@ -6561,11 +6561,76 @@ Geometrie sítě, Potřeba implementovat připojení, odpojení, vyhledávání,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Základní principy softwarově definovaných sítí SDN, architektura, technologie OpenFlow.} \label{cha:42}
-2. semestr, PDS, \texttt{??}
+2. semestr, PDS, \texttt{pds-08-sdn-16.pdf}
+
+V síťových zařízeních je SW a HW pevně svázáno a uzavřeno inovacím. Složitý upgrade, miliony řádků OS. Závislost na standardizovaných protokolech. Potřeba vylepšení programovatelnosti sítě, rozšíření technologie.
+
+HW v síti: Požadavky na funkcionalitu a na rychlost.
+
+Hardwarová platforma: Rychlá, směrování, přepínání; Programovatelné prostředí (API): podpora síťových protokolů, řízení směrování, inovace, nové strategie; Jednoduchá tvorba aplikací.
+
+Aktivní sítě (Active networks): Uživatelé vkládají kód, který vykonávají aktivní prvky po cestě. Pakety -- Kapsule (data + kód).
+
+Řízení toků: Separace Data plane a control plane.
+
+\section{Software Defined Networks}
+Řídící vrstva (control plane) -- Kontroler SDN + Aplikace SDN\\
+Datová vrstva (data plane) -- síťová zařízení (rychlé přeposílání dat). Obecně Přepínač SDN (abstrakce od specifické činnosti (směrovač, přepínač, firewall). Řízeno kontrolérem.
+
+\paragraph{Kontrolér SDN}: Správa síťových uzlů (počítače, topologie), Správa toků, Statistiky, Směrování (algoritmy pro výpočet cesty).
+
+Vrchní rozhraní (northbound) -- REST, Plug-in, Proprietární
+Spodní rozhraní (southbound) -- OpenFlow, oneP, CLI/SNMP
+
+\section{OpenFlow}
+Binární protokol, Pravidla pro Prioritu, Porovníní, Akce a Statistiky. Dokáže emulovat různé síťové prvky (Firewall, Směrování, Přepínání, Multicast uvnitř VLAN.
+
+Chování OF přepínače:
+\begin{itemize}
+	\item reaktivní -- první paket je přeposlán do kontroléru, který vytvoří požadovaná pravidla. Režie komunikace (mikrotoky, získání detailnější informace o dění na síti)
+	\item proaktivní -- pravidla předinstalována kontrolerem, známé očekávané toky (agregace).
+\end{itemize}
+
+Tabulky OF -- hledání pravidla s nejvyšší prioritou, přiřazení akcí/metadat; volitelná aplikace akcí; volitelné pokračování do další tabulky.
+
+OpenFlow 1.1: Více tabulek, skupiny portů (multicast, multipath), Podpora MPLS a VLAN, Virtuální porty (Tunely), změna chování po přerušení spojení.
+
+OpenFlow 1.2: Rozšířené možnosti polí pravidel, přepisu polí, metadat, chybové zprávy, IPv6, odstranění specifikace parsování paketů.
+
+OpenFlow 1.3: Změna specifikace inzerování možností (capabilities), flexibilnější kontrola při nenalezení pravidla, rozšiřující hlavičky IPv6, vlastní čítače pro každý tok.
+
+OpenFlow 1.4: Podpora pro optické porty, podpora více kontrolérů, vylepšení ošetření přeplněných tabulek, kvaziatomické operace, změna portu na 6653
+
+OpenFlow 1.5: Tabulky pro výstupní porty, ne-Ethernoetové rámce (IP, PPP), rozšířená práce se statistikami toků, hledání pravidel podle příznaků TCP.
+
+Nástroj umožňující inovaci počítačových sítí, proaktivní/reaktivní přístup. Oddělení control plane od data plane.
+
+\section{Vrchní rozhraní (northbound}
+Aplikace nad SDN -- není standardizováno, aplikace nepřenositelné mezi kontroléry. Plug-in, REST (ODL).
+
+Distribuce aplikací: HP SDN App Store, Komunitní portály, součásti kontrolerů.
+
+\section{Využití SDN}
+Alternativní přístup ke správě sítě, programovatelnost aktivních prvků, snadnost inovací.
+
+Současně: Nasazení v data centrech (zkušenosti HP -- hybridní sítě, hybridní přepínače), Nejednotnost výrobců (hybridní režim u Cisco), podpora specifických zařízení.
+
+\subsection{Network Virtualization}
+Správa virtuálních strojů a virtální sítě mezi nimi.
+
+Programovatelná \uv{data plane} -- platformě a protokolově nezávislé programování síťových procesorů: CPU, GPU, síťový procesor, FPGA.
+
+Sovisející: Open Network Install Envorinmoent (ONIE), Open Network Linux, OpenStack
+
+Problémy: Zpoždění při vkládání nových toků (reaktivní režim), velikost tabulek, stabilita.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Formální metody v počítačových sítích.} \label{cha:43}
+2. semestr, PDS, \texttt{??}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Konflikty a závislosti při řetězovém zpracování instrukcí a jejich HW/SW ošetření.} \label{cha:44}
 \chapter{Architektura superskalárních procesorů a algoritmy OOO zpracování instrukcí.} \label{cha:45}
 \chapter{Procesory VLIW a používané optimalizační techniky s HW podporou.} \label{cha:46}
