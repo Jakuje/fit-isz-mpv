@@ -6400,11 +6400,171 @@ Nezávislé moduly připojené k centrálnímu přepínači: Více přepínacíc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Sítě Peer-to-Peer (P2P), Milgramův problém malého světa, model sítě P2P, směrování v P2P sítích, strukturované a nestrukturované sítě.} \label{cha:41}
-2. semestr, PDS, \texttt{??}
+2. semestr, PDS, \texttt{pds-07-p2p-16.pdf}
+
+\section{Milgramův problém malého světa}
+Pokud náhodně vybereme dva lidi na světě, jaká je pravděpodobnost, že se znají?
+
+Pokud se neznají osobně, přes kolik známých je možné je propojit? (jak dlouhý by byl řetězec X-a-b-\dots-y-Z pro propojení X a Z).
+
+Existuje nějaká matematická struktura ve společnosti? Hledání cesty pouze na základě lokálních znalostí.
+
+\subsection{Milgramův experiment}
+Doručit dopis příteli v jiném městě, 160 vybraných lidí odesílatelé, pouze osobní předání, odesílatelé mají dostatek informací o adresátovi (jméno, adresa, povolání, kde studoval), předávající posílají potvrzující dopisy pro sledování cesty.
+
+Ze 160 dopisů dorazilo 44. Nejkratší cesta přes 2 prostředníky, nejdelší přes 11. Zkracující se vzdálenost směrem k cíli, většina použila stejné poslední 3 články.
+
+\section{model sítě P2P}
+
+Rozdíly od klasických sítí: Odlišná role uzlů, adresování obsahem, směrování: lokální rozhodování. Decentralizované.
+
+Podobnosti: Postavené nad IP infrastrukturou, musí řešit adresování, směrování a zabezpečení.
+
+Základem je \emph{logická síť (overlay)}. Postavená nad existující síťovou architekturou, definuje způsob propojení uzlů, komunikaci, vyhledávání, atd.
+
+Příklady: Komunikace elektronických zařízení (Universal Plug-and-Play, Bluetooth), sdílení objektů (Napster, Gnutella, BitTorrent), komunikace mezi uživateli (Skype, IM), sdílení výpočetního prostředí (seti@home, PlanetLab)
+
+\begin{mydef}
+P2P síť: Dynamický soubor nezávislých uzlů (peers), které jsou propojeny a jejichž zdroje (objekty) jsou k dispozici ostatním uzlům v této síti.
+\end{mydef}
+Zdroje: Výpočetní výkon, síťová kapacita, disková kapacita, síťová zařízení. Uzly tyto zdroje nabízejí a používají. Také prostředky pro připojení uzlu k síti, s ostatními uzly, vyhledávání, vykonávání služby.
+
+\begin{itemize}
+	\item Pravé P2P (Pure) -- Odebrání libovolného uzlu ze sítě nemá vliv na ztrátu schopnosti sítě poskytovat služby
+	\item Hybridní sítě -- Potřeba centrálního uzlu pro autentizaci, indexování, inicializační data, apod.
+\end{itemize}
+
+Samo-organizující se síť: decentralizovaná, spolupráce na vytvoření a udržování sítě, každý uzel má zodpovědnost za svůj lokální stav a část informace, pouze částečný pohled na topologii sítě (směrování pouze na nejbližší sousedy).
+
+Autonomní chování uzlů: Uzly se chovají podle svého nejlepšího rozhodování (mohou se chovat zlomyslně), rozhodování má vliv na topologii, směrování, rozmístění objektů.
+
+Spolehlivost: Roste s redundancí uzlů a informací -- kopie informace umístěna na více nespolehlivých uzlech.
+
+Životnost uzlu: krátká a neodhadnutelná -- problém s garancí služby. Závisí na lokálním rozhodování, vliv na směrování a vyhledávání
+
+\begin{tabular}{l|c|c|c|}
+					& \textbf{Klient-server}& \textbf{Peer-to-peer}& \textbf{Výhody/nevýhody P2P} \\ \hline
+	Směr provozu	& Asymetrický			& Symetrický		& vs xDSL, kabelový modem \\ \hline
+	Topologie sítě	& Stabilní				& Dynamická			& Problém spolehlivosti \\ \hline
+	Robustnost		& Centrální bod			& Distribuce zdrojů	& Kritický počet účastníků \\ \hline
+	Rozšiřitelnost	& Náročné				& Součást návrhu	& Neomezený růst sítě \\ \hline
+	Bezpečnost		& Velký důraz			& Problematické		& Chybí odpovědná autorita \\ \hline
+	Správa a řízení	& Centralizovaná model	& Každý uživatel	& Samo-organizovaná síť \\ \hline
+	Poskytované zdroje & Omezené možnosti	& Dynamicky rostoucí & Sdílení výpočetního prostoru \\ \hline
+	Kvalita služeb	& Garantovaná			& Nelze zajistit	& Dynamicky se měnící \\ \hline
+\end{tabular}
+
+\subsection{Referenční model sítě P2P}
+\begin{itemize}
+	\item Jmenný prostor $\mathcal{I}$ (identifiers) \\
+	Obsahuje metriku blízkosti (closeness): $d: \mathcal{I} \times \mathcal{I} \mapsto R$, prostor $(\mathcal{I}, d)$ se nazývá metrický. Pokud neplatí symetrie a trojúhelníková nerovnost, pak je pseudo-metrický.\\
+	
+	Metrika slouží k lokalizaci a směrování požadavků, také sdružování do klastrů podle blízkosti.
+	\item množina uzlů $P$ (peers),
+	\item množina zdrojů $R$ (resources),
+	\item mapování zdrojů na identifikátory: $F_R: R \mapsto \mathcal{I}$\\
+	Identifikace zdrojů, kritický pro úspěšné vyhledání zdrojů -- sémantická blízkost zdrojů: společně využívané zdroje mají blízké identifikátory, rozložení má vliv na vytížení zdrojů; Hashovací funkce
+	\item mapování uzlů na identifikátory: $F_P: P \mapsto \mathcal{I}$\\
+	Identifikátor, zodpovědnost za část jmenného prostoru, např. odvozený z IP
+	\item struktura logické sítě.
+\end{itemize}
+
+Správa jmenného prostoru $\mathcal{I}$: Decentralizovaná správa $\mathcal{M}$: Funkce $\mathcal{M}: \mathcal{I} \mapsto 2^P$ definuje zodpovědnost uzlů za konkrétní identifikátory. Každému identifikátoru zdroje $i = F_R(r( \in \mathcal{I}$ je přidělena množina uzlů spravujících $r$. Každý uzel je zodpovědný za identifikátory $\mathcal{M}^{-1}(p)$.
+
+Lokalizace zdroje (vyhledávání uzlu, který jej spravuje: $\mathcal{M}(F_R(r)$.
+
+Správa $\mathcal{M}$ je úplná (parciální nemusí mít dočasně spojení mezi identifikátory a uzly), Kardinalita = stupeň replikace, Blízkost -- identifikátory jsou spojeny s nejbližšími uzly. Dynamicky se mění, jak se mění uzly.
+
+Geometrie (struktura) -- orientovaný graf $G=(P, E)$. Dynamické chování reprezentování posloupností grafů $G_i(P_i, E_i), G_{i+1}(P_{i+1}, E_{i+1}), \dots$. Operace join (připojení uzlu) a leave (odpojení uzlu).
+
+\section{směrování v P2P sítích}
+
+Směrovací tabulka: Lokální v každém uzlu $R_P(V_P, E_P) \subseteq G$, která je součástí globální konfigurace sítě popsané grafem $G$. Tabulka obsahuje množinu sousedních uzlů a hran k nim.
+
+Relace sousedství: $\mathcal{N}: P \mapsto 2^P$. Výsledkem množina sousedů $\mathcal{N}(p)$.
+
+Topologie:
+\begin{tabular}{l|c|c|}
+Topologie		& Stupeň uzlu		& Poloměr \\ \hline
+de Bruijin		& $k$				& $\log_k N$ \\ \hline
+Trie			& $k+1$				& $2 \log_k N$ \\ \hline
+Chord			& $\log_2 N$		& $2 \log_2 N$ \\ \hline
+CAN				& $2d$				& $\frac{1}{2} d N \frac{1}{d}$ \\ \hline
+Pastry			& $(b-1) \log_b N$	& $\log_b N$ \\ \hline
+Classic buterfly& $k$				& $2 \log_k N(1-o(1))$ \\ \hline
+\end{tabular}
+
+Směrovací strategie: předávání zprávy $m$ do uzlu $p$, který spravuje objekt $i$. Směrovací funkce $R: P \times I \mapsto 2^P$. V každém uzlu vybere z množiny sousedů $\mathcal{N}(p)$ takový uzel $q$, které je nejblíže uzlu obsahující objekt $i$. Mohou vznikat lokální nekonzistence.
+
+Vzdálenost v P2P nemusí odpovídat vzdálenosti fyzické, efektivnější P2P síť využívá údaje o fyzické blízkosti.
+
+\section{Strukturované a nestrukturované sítě}
+\subsection{Nestrukturované sítě P2P}
+Využívají poznatků ze sociálních sítí a malého světa -- vyhledávání kontaktuje okolí, které ví, kde informace je, nebo zná někoho kdo tuto informaci zná. Ukládání objektů závisí na propojení uzlů -- každý uzel má sousedy -- využití tranzitivity (Napster, Gnutella, FastTrack).
+
+\textbf{Neexistuje struktura uložení informace} (v náhodně vybraném uzlu). Uzel si vyměňuje zprávy se sousedy (vyhledávání konkrétního objektu, podle klíčového slova, názvu souboru).
+
+Principy vyhledání:
+\begin{enumerate}
+	\item Záplava (Flooding) -- uzel pošle dotaz všem svým sousedům.\\
+	Pokud uzel obsahuje objekt, pošle zpět odpověď, jinak pošle zprávy svým sousedům (tranzitivita). Obrana před zacyklením -- TTL zprávy, identifikátor zprávy (Gnutella)
+	
+	Jednoduchá implementace, minimální výpočetní nároky, neefektivní a špatně rozšířitelná
+	\item Rozšiřující se kruh -- podobně jako záplava, jen s malým TTL\\
+	Pokud objekt najdu, hledání skončí, jinak pošlu zprávu s větším TTL (redukce zpráv v síti)
+	\item Náhodný průchod -- zpráva poslána náhodným sousedům. Neposílat dotaz zpět
+	
+	Hledání bez znalosti umístění objektu, může trvat dlouho
+	\item Hledání lokálního minima (Local Minimum Sarch, LMS) -- mnužina uzlů identifikovaných hodnotou x, množina objektů s identifikátorem w (hash jména). Jméno uzlu by mělo být co nejblíže jménu ukládaného objektu w.\\
+	V nestrukturovaných sítích nelze najít globální minimum, tak hledáme lokální. Používáme metriku vzdálenosti uzlu x od objektu w: $d(x, w)$.\\
+	Uložení objektu $w$: Pokud je uzel $v$ lokálním minimem, uložíme, jinak hledáme nejlepšího souseda $v'$ dle metriky $d(w, v')$\\
+	Vyhledání objektu: Dotazujeme se náhodně vyhledaných lokálních minim, jestli neobsahují objekt -- čím více kopií, tím jednodušší.
+	
+	Směrování podle jména objektu, metrika, vyžaduje režii při hledání lokálních minim.
+\end{enumerate}
+
+\subsection{Strukturované sítě P2P}
+
+Kombinují geometrické struktury a směrování, využití distribuovaných směrovacích algoritmů. Metriky: shoda prefixu, eukleidovská či lineární vzdálenost, XOR; Velikost směrovací tabulky je ovlivněna stupněm uzlu.
+
+\paragraph{Pastry}: Decentralizovaná, rozšiřitelná, samo-organizující se síť, sdílení souborů (PAST, klíčem hash souboru), komunikace (SCRIBE, klíčem jméno tématu), složitost vyhledání $\mathcal{O}(\log N)$, kde $N$ je počet uzlů sítě.
+Jmenný prostor tvoří identifikátory uzlů (NodeId) a identifikátory objektů (Key).
+
+Uzel sítě obsahuje náhodný identifikátor NodeId, tabulku listů $L$ (numericky nejbližších) pro směrování, tabulku sousedů $M$ (vzdálenostně nejbližší sousedy) pro lokalizaci, směrovací tabulku $R$ pro hledání cesty.
+
+Směrování zprávy s klíčem $D$ v uzlu $A$:
+\begin{enumerate}
+	\item Pokud je klíč $D = NodeID$, uzel A je cílový
+	\item Pokud je klíč $D$ v rozmezí NodeId v seznamu listů, pošli zprávu do uzlu $L_i$, kde vzdálenost $|D-L_i|$ je nejmenší.
+	\item Jinak najdi ve směrovací tabulce řádek s nejdelším společným prefixem. Pokud je hodnota ve sloupci neprázdná, pošli tam zprávu
+	\item Jinak vyber takový uzel $T \in (L \cup R \cup M)$, který má nejdelší společný prefix s $D$ a lepší numerickou vzdálenost než k $A$, tj. $|T-D| < |A-D|$.
+\end{enumerate}
+Připojení nového uzlu $X$:
+\begin{itemize}
+	\item Uzel se dozví o nejbližším uzlu $A$ (multicast, rozšiřující se kruh). Pošle mu zprávu join(X)
+	\item $A$ ji přepošle k $Z$, který je numericky nejblíže
+	\item Uzly po cestě pošlou své tabulky k inicializaci směrovací tabulku $X$
+	\item $X$ si inicializuje tabulky takto: $L_X = L_Z, M_X = M_A$
+	\item Po dokončení pošle své tabulky okolním uzlům
+\end{itemize}
+Odpojení uzlu $X$:
+\begin{itemize}
+	\item Tabulky Listů $L$: Uzel $Y$ kontaktuje list s numericky největším NodeId, požádá o tabulku listů, ze kterých si vybere náhrady za $X$.
+	\item Směrovací tabulka $R$: Uzel $Y$ vyhledá další záznam na řádku, kde byl $X$. Požádá daný uzel o záznam ze své tabulky ve sloupci $d$
+	\item Tabulka sousedů $M$: Uzel Y požádá ostatní své sousedy o zaslání tabulek sousedů a z nich vybere náhradu podle vzdálenosti.
+\end{itemize}
+Průměrný počet kroků hledání: $log(N)$, $N$ počet uzlů, průměrná délka cesty blízká k optimální. Výpadky mají vliv na počet směrovacích kroků. S opravou směrovacích tabulek zanedbatelné.
+
+Geometrie sítě, Potřeba implementovat připojení, odpojení, vyhledávání, směrovací algoritmus konverguje k cíli, nutné sledovat stav sousedů a aktualizovat tabulky (BitTorrent, Skype).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Základní principy softwarově definovaných sítí SDN, architektura, technologie OpenFlow.} \label{cha:42}
+2. semestr, PDS, \texttt{??}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Formální metody v počítačových sítích.} \label{cha:43}
 \chapter{Konflikty a závislosti při řetězovém zpracování instrukcí a jejich HW/SW ošetření.} \label{cha:44}
 \chapter{Architektura superskalárních procesorů a algoritmy OOO zpracování instrukcí.} \label{cha:45}
