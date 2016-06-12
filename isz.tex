@@ -6741,14 +6741,222 @@ Usually logic based methods.
 \chapter{Aplikace omezujících podmínek (časová a fyzická omezení).} \label{cha:55}
 \chapter{Verifikace číslicových obvodů (metodologie OVM).} \label{cha:56}
 \chapter{Technologie programovatelného hardware (architektura FPGA, struktura konfigurovatelných bloků a vestavěných bloků, propojovací sít, způsoby konfigurace, srovnání s technologií ASIC).} \label{cha:57}
-\chapter{Vestavěný počítačový systém (shody a odlišnosti s běžným univerzálním počítačovým systémem).} \label{cha:58}
-\chapter{Implementace funkcí vestavěného systému SW a HW prostředky (výhody a nevýhody - dopady SW a HW implementace konkrétní funkce na vlastnosti systému, příklad).} \label{cha:59}
-\chapter{Číslicové vstupy a výstupy vestavěných systémů (problémy a jejich řešení, přizpůsobení napěťových úrovní, snímání stavu mechanického kontaktu, ovládání zátěže, posílení výstupu, H-můstek).} \label{cha:60}
-\chapter{Architektura SW pro vestavěné systémy (hlavní smyčka, implementace stavového automatu, obsluha přerušení).} \label{cha:61}
-\chapter{Konstrukce adaptéru systémové sběrnice: návrh adresového dekodérů, obsluha čtecí a zápisové transakce.} \label{cha:62}
-\chapter{Architektura sběrnice PCI-Express a USB: typy transakcí, způsob komunikace a směrování transakcí, detekce chyb a způsob zotavení.} \label{cha:63}
+\chapter{Vestavěný počítačový systém} \label{cha:58}
+4. semestr, NAV, \texttt{NVS1.pdf} - \texttt{NVS6.pdf}
 
-% 2. semestr, IPR, zdroje % XXX
+(shody a odlišnosti s běžným univerzálním počítačovým systémem)
+
+\section{Rozdíly vestavěného a univerzálního počítače}
+\paragraph{Vestavěný systém} je počítačový systém vestavný do aplikace. Obsahuje jeden program po celý život, uživatel by neměl tušit, že pracuje s počítačem, hlavní interakce nemusí být s člověkem (čidla pro snímání prostředí, ovládání akčních členů), startuje bez lidského zásahu.
+
+\paragraph{Univerzální systém}: Uživatel spouští různé programy, periferie hlavně pro komunikaci s uživatelem, nutnost OS, souborů, ukládání dat.
+
+\paragraph{Společné pro oba} jsou procesor (ALU, řadič, registry), paměť (program, data), vstupy, výstupy a periferie.
+
+Enbedded engineer -- částečně programátor, návrhář číslicové elektroniky, vyzná se v analogových obvodech.
+
+\section{Návrh vestavěných systémů}
+\subsection{Specifikace požadavků}
+Zásadní, dostatek RAM pro běžící aplikaci, výpočetní výkon, IO porty, Normy, spolehlivost, rychlost reakce, rozhraní člověk/stroj, napájení/spotřeba, ošetření chyb, hmotnost/rozměry, bezpečnost
+
+Požadavky na produkt: čím produkt bude (vstupy, uživatelské rozhraní); Požadavky na funkci: co musí produkt dělat\\
+
+Mikrokontrolér -- DSP -- ASIC (roste cena a výkon)?
+
+Existuje integrovaný obvod k řešení daného problému (konvertor rozhraní USB/RS232)? Složité rozhraní člověk/stroj (vestavět univerzální počítač)? Bude potřeba produkt dále vyvíjet a přizpůsobovat?
+
+\subsection{Výběr vhodné platformy}
+\begin{itemize}
+	\item Počet IO portů (piny mohou být sdílené)
+	\item rozhraní (RS-232, CAN, Ethernet)
+	\item velikost paměti (program, konstanty, tabulky, buffery zásobník, adresování)
+	\item přerušení (počet, obsluha)
+	\item reálný čas? (pokud nestihneme v SW, je potřeba speciální HW -- PWM, DMA)
+	\item rychlost MCU (instrukční sada, dělení hodinového signálu)
+	\item ROM (levnější pro velké série)
+	\item architektura paměti (von Neumann x Harwardská)
+	\item napájení (baterie a spotřeba)
+	\item typ prostředí (teplota, vlhkost)
+	\item životní cyklus (levný MCU + SW pro velké série bez upgrade, pro malé série s aktualizacemi důležité vybrat perspektivní MCU)
+	\item Schopnosti operátora (použité rozhraní člověk/stroj -- pro laika složitější rozhraní), \uv{skutečné požadavky}
+\end{itemize}
+
+\subsection{rozdělení SW/HW}
+software zvyšuje náklady na vývoj, hardware zvýší cenu na výrobek. Čím složitější systém, tím náročnější rozhodování.
+
+\subsection{Návrh HW}
+Signle chip (komponenty zapojeny výrobcem), nebo pouze MCU s externí pamětí (potřeba propojit součásti).
+
+\emph{Reset} po připojení napájení nebo obvod power-on-reset již vestavěný. RC článek, kombinace s reset tlačítkem. Pro vysokou spolehlivost \uv{processor supervisory chips}, které hlídají napájení a v přápadě problémů spolehlivě resetují.
+
+\emph{Oscilátor} -- krystal pro stabilní rezonanční kmitočet, ve zpětné vazbě zesilovače, kondenzátory pro snadný rozběh. Pro levější (10 horší přesnost) lze použít keramické. Pro větší přesnost lze připojit externí oscilátor.
+
+\emph{Číslicové vstupy} -- logická 1 je napětí blízko napájecímu a proud teče směrem z výstupu. Pro logickou 0 je napětí blízko zemi a proud teče do výstupu. Tolerance logické úrovně závisí na technologii (CMOS, TTL). Pokud výstup TTL je použít pro CMOS, můžeme se dostat do \uv{neurčitého stavu} a vzniknout těžko laditelné chyby.
+
+Viz kapitola \ref{cha:60}.
+
+\subsection{Návrh SW}
+Viz kapitola \ref{cha:61}.
+
+\subsection{Verifikace, testování}
+Můžeme přidat speciální HW nebo SW pro ladící účely (ne všechny MCU mají takovou podporu automaticky).
+
+Používat malé funkce, každý krok ověřit, otestovat. Pečlivost při použití ukazatelů (neinicializovaný ukazatel může  napáchat škody v paměti), dobře komentujte, vyvarujte se magických čísel.
+
+Ladící kódy pro vstup do přerušovací rutiny, návrat z přerušovací rutiny, provedení hlavní funkce, vyslání zprávy či příkazu k periferiím. Lze posílat přes vyhrazený port, zapisovat do paměti/logu a později prohlédnout.
+
+Lze použít simulátor v PC (používá model $\mu$C -- levné, jednoduché ladění, nehrozí poškození systému. Neběží v reálném čase, potřeba simulovat periferie, nemusí být zcela věrné.
+
+\emph{Simulace periferií} je možná (běžných -- diody, segmentové displeje, klávesnice).
+
+\emph{Obvodový simulátor} -- hardware, který se chová jako $\mu$C, připojuje se k vestavěnému systému. Provádí kromě funkcí $\mu$C také breakpointy, debuger, změny stavu a další podpůrné funkce.\\
+(+)Přesná emulace v reálném čase, komfortní ladění přímo cílové aplikace. (-) Drahé, vazba na pracoviště, specifický pro typ MCU, vyplatí se pro vývoj více systémů.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Implementace funkcí vestavěného systému SW a HW prostředky} \label{cha:59}
+4. semestr, NAV, \texttt{NVS3.pdf}
+
+(výhody a nevýhody - dopady SW a HW implementace konkrétní funkce na vlastnosti systému, příklad)
+
+\paragraph{Realizace funkce: zobrazení na sedmisegmentovém display}
+\begin{itemize}
+	\item Hardwarová realizace
+	\begin{itemize}
+		\item triviální a rychlá obsluha
+		\item stačí 4 bity výstupního portu
+		\item nelze zobrazovat co dekodér neumí (většinou pouze čísla)
+		\item edná se o další spotřebič
+		\item Zpravidla větší výkon (HW pracuje "paralelně)
+		\item menší riziko vzniku chyby
+		\item výhodnější pro kusově vyráběný HW
+		\item Pokud nastane chyba, obtížněji se opravuje.
+	\end{itemize}
+	\item Softwarová realizace
+	\begin{itemize}
+		\item Není potřeba externí součástky (levnější), pokud není potřeba posílit výstupy
+		\item Tabulka zabírá paměť a SW dekódování trvá nějakou dobu.
+		\item Levnější ve velkých sériích (náklady na vývoj jednorázové)
+		\item vhodné pro minimalistické a jednoduché konstrukce
+		\item Větší možnost upgrade
+		\item větší nároky na výkon CPU a paměť
+		\item větší riziko vzniku chyby.
+	\end{itemize}
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Číslicové vstupy a výstupy vestavěných systémů} \label{cha:60}
+4. semestr, NAV, \texttt{NVS4.pdf}, \texttt{NAV1.pdf}
+
+(problémy a jejich řešení, přizpůsobení napěťových úrovní, snímání stavu mechanického kontaktu, ovládání zátěže, posílení výstupu, H-můstek)
+
+\subsection{Vstup a výstup MCU (NMOS)}
+Většinou je na jednom pinu vstup a výstup. Pro výstup v log. 1 je zdrojem proudu rezistor, v log. 0 tranzistor svádí proud na zem.
+
+Vstup: koncový tranzistor uzavřen, stav čten přes vstupní zesilovač.
+
+\emph{Výhoda} Tlačítko lze připojit jednoduše, že se jeden konec uzemní a druhý se připojí k pinu. Rozepnuté je čteno jako log. 1 a sepnuté jako log. 0. Není třeba žádný vnější pull-up registr.
+
+\subsection{IO porty HC(S)08 (CMOS)}
+Místo jednoho tranzistoru a pull-up rezistoru je zde budič, který se odpojuje, pokud je port vstupní (speciální registr). Pull-up rezistor se připojuje v případě potřeby speciálním registrem.
+
+Nastavení drive-strength a slew-rate (méně strmá hrana, méně rušení).
+
+\uv{Gangaed outputs} slučuje několik pinů pro posílení vstupu (nelze u všech portů, protože změna stavu nemusí být atomická na několika portech).
+
+\subsection{Prostý číslicový výstup}
+\begin{itemize}
+	\item LED svítí pro log. 1: LED připojena k zemi (ve směru od MCU)
+	\item LED svítí pro log. 0: LED připojena k napětí (ve směru k MCU)
+	\item kombinace: Obě jsou zhasnuté, pokud nastavíme port jako vstupní.
+\end{itemize}
+
+\subsection{Posílený číslicový výstup}
+Jednoduchým obvodem s tranzistory (či integrovaným budičem).\\
+NPN tranzistor spíná zátěž připojenou proti + pólu zdroje. Zdroj může být jiný, ale musí mít společnou zem.\\
+PNP tranzistor spíná zátěž proti zemi. Rezistor v bázi omezuje proud, které může být větší než v případě NPN -- stačí nižší zesílení pro dosažení stejného proudu do zátěže.
+
+\emph{Relé} výhodou je možnost použití vyššího napětí než MCU. Ochranná dioda chrání tranzistor před zápornými špičkami od cívky relé.
+
+\paragraph{Posílení výstupu s IO} Otevřený kolektor (budí zátěž proti napětí) x Otevřený emitor (budí zátěž proti zemi)
+
+\paragraph{Integrované budiče} -- Darlingtonová páry, push-pull. Potřeba pro ovládání motorů -- směr je určen polaritou.
+
+Dva budiče pro ovládání směru. Řízeno jedním výstupem MCU (možno řídit otáčku pomocí PWM).
+
+\subsection{H-můstek}
+Slouží k ovládání SS motoru. Vstup enable, forward a reverse.
+
+\subsection{Jednoduchý vstup -- kontakt}
+Spíná buď (+) nebo zem (častější), definice klidové polohy pomocí pull-up/push-down rezistoru.
+
+Problémy mechanického kontaktu: Zákmity -- z pohledu MCU několikeré rychlé sepnutí a rozepnutí. Řešení:
+\begin{itemize}
+	\item Softwarové: Při první detekci změny stavu kontaktu se chvíli stav kontaktu ignoruje, dokud se neustálí
+	\item Kontakt se řeší jako přepínací a klopným obvodem se zachytí a podrží úroveň nebo použití RC filtru a hysterze (než se kapacita nabije)
+\end{itemize}
+
+\subsection{Výstup signálu s vyšším napětím}
+Napěťový dělič (dva odpory, jeden mezi MCU a vstupem, druhý mezi MCU a zemí) vypočtený pro konkrétní vstupní napětí. Nebo ochranné diody uvnitř MCU (ne všechny MCU mají).
+
+Ochrana pinu Varistorem nebo transistorem, popřípadě optočlenem, ale ten by měl být také chráněn odporem.
+
+\subsection{Maticové uspořádání kláves}
+Sloupce a řádky, v průsečících kontakty. Sepnutý kontakt je jednoznačně určen souřadnicí řádek-sloupec.
+
+Postupně se budí řádek po řádku (např. log. 0) a čtou se sloupcové vodiče. pokud je na některém sloupcovém vodiči detekována log. 0, pak právě na tomto řádku je sepnut příslušný kontakt.
+
+Potřeba pouze 8 pinů pro 16 kláves. Obtížně se detekuje současné sepnutí více kontaktů. Použitím kodérů a dekodérů můžeme snížit počet pinů na 4.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Architektura SW pro vestavěné systémy} \label{cha:61}
+4. semestr, NAV, \texttt{NVS6.pdf}
+
+(hlavní smyčka, implementace stavového automatu, obsluha přerušení)
+
+Odlišnosti SW pro MCU od SW pro PC: Běží v reálném čas -- často je důležité jak dlouho něco trvá. Vždy pracuje na konkrétním HW a musí si s ním vystačit. Programátor většinou nemá podporu OS a musí umět procesor vždy zaměstnat.
+
+\section{Hlavní smyčka}
+idle-loop, background-loop, super-loop, polling loop. Minimální je skok na sebe sama (čekání na přerušení). Obecně zpracovává věci, co nevyžadují okamžitou pozornost.
+
+Nejčastější typy architektur:
+\begin{itemize}
+	\item Vše v jedné hlavní smyčce -- testují se vstupy od přerušení a v nich se volají podprogramy implementující veškeré funkce. Vhodné, pokud mají být všechny funkce dostupné stále.
+	\item Stavový automat -- v daném stavu jsou aktivní pouze některé funkce a sledovány pouze některé vstupy, které jsou pro daný stav podstatné. Nevýhodou je redundance.
+	\begin{itemize}
+		\item Více stavových automatů -- každý proces či funkce má svoje unikátní stavy. Hlavní smyčka vstupuje do jednotlivých procesů a v nich se větví podle lokálních stavů
+		\item Inkrementální stavový automat -- každý proces provede několik instrukcí toho stavu, který je zrovna aktivní a pak předá řízení dalšímu procesu. Každý proces udržuje také informace o tom, kde zrovna je jeho vykonávání. Zdá se, že běží všechny současně, ale pomaleji, Obtížné pro ladění.
+		\item RTOS
+	\end{itemize}
+\end{itemize}
+
+Obsluha asynchronních událostí
+\begin{itemize}
+	\item Polling -- ve smyčce se neustále testuje, zda došlo k událost (bitový příznak). Pokud je výsledek kladný, provede se obsluha události
+	\item Přerušení -- reakce v reálném čase. S přerušením je spojena obslužná rutina (software, který popisuje reakci na událost). Provede uložení kontextu (IP, a další) na zásobník. Lze zakázat, nebo také vnořovat (přerušení obslužné rutiny).
+\end{itemize}
+
+Vektor přerušení: Nese informaci o tom, kde se nachází obslužná rutina právě vzniklého přerušení. Odkaz do tabulky adres, nebo adresa na první instrukci přerušovací rutiny. Často přiřazená priorita, někdy ji lze nastavit.
+
+\begin{itemize}
+	\item Přerušení citlivé na úroveň signálu (level-sensitive): Když je na vstupu aktivní úroveň. Potřeba potvrzení o zpracování (přečtení, zápis, signalizace periferii). Může se stát, že úroveň zmizí, dříve než je přerušení zpracováno (probíhá obsluha přerušení s vyšší prioritou).\\
+	Pokud úroveň \uv{visí} i po vyřízení přerušení, v hlavní smyčce se nastaví příznak, který přerušení nuluje a před spouštěním testuje. Pokud je příznak není nastaven, hlavní smyčka neproběhla a přerušení se přeskočí. Alternativně je možné použít čítač.
+	\item Přerušení citlivé na hranu (edge-sensitive): Když se objeví hrana signálu. Periferie potřebuje vyvolat přerušení, aniž by čekala na potvrzení.\\
+	Problém je se sdílením přerušovací linky, pokud dvě periferie požádají brzy po sobě, je pravděpodobné, že to druhé nebude obslouženo.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Konstrukce adaptéru systémové sběrnice: návrh adresového dekodérů, obsluha čtecí a zápisové transakce.} \label{cha:62}
+4. semestr, NAV, \texttt{?.pdf}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Architektura sběrnice PCI-Express a USB: typy transakcí, způsob komunikace a směrování transakcí, detekce chyb a způsob zotavení.} \label{cha:63}
+4. semestr, NAV, \texttt{??}
+
 
 
 \end{document}
