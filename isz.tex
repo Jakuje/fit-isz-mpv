@@ -7027,6 +7027,91 @@ Aliasing paměťového prostoru: Pokud adresový dekodér reaguje jenom na spodn
 \chapter{Architektura sběrnice PCI-Express a USB: typy transakcí, způsob komunikace a směrování transakcí, detekce chyb a způsob zotavení.} \label{cha:63}
 4. semestr, NAV, \texttt{??}
 
+\section{Vývoj sběrnic typu PCI}
+
+(paralelní sběrnice) PCI -- PCI-X -- PCI Express (plně duplexní sériové linky, paketová komunikace)
+
+\section{PCI-X}
+Komunikační protokol: Mezi vystavení adresy a dat, je ještě jedná fáze ATTRIB (vložneí atributu), kde se obvykle posílá velikost dat. Cílové zařízení zná velikost -- lepší správa bufferů v PCI zařízeni. 
+
+Nepodporuje čekací stavy, pokud se již začaly přenášet data, minimální velikost bloku je 128 bajtů -- efektivita využití sběrnice až 85\%.
+
+\paragraph{Model rozložené transakce}: nelze vkládat čekací stavy a tak je potřeba rozpojit transakci, dokud nejsou data připravena:
+\begin{enumerate}
+	\item Requester inicializuje čtecí operaci
+	\item Completer detekuje svou adres a potvrzuje transakci. Zjistí ale, že není schopný poskytnout data okamžitě a tak rozpojí transakci.
+	\item Completer připraví požadovaná data do vnitřního bufferu (zná velikost)
+	\item Completer zahájí jednu nebo více zápisových operací, ve kterých pošel požadovaná data Requesteru
+\end{enumerate}
+Nedochází o opakovanému vyzývání ze strany Requesteru, pro načtení dat je potřeba max. dvě operace na PCI-X.
+
+\paragraph{Obsluha přerušení}: PCI-X zařízení musí podporovat MIS (Message Signaled Interrupt). Přerušení je generováno pomocí běžné zápisové operace do prostoru MSI kontroléru (místo INTx signálu).
+\dots
+
+\section{PCI-Express}
+Rychlé, plně duplexní sériové linky s kapacitou 2,5 Gb/s, 5 Gb/s nebo 8 Gb/s. Pro jeden kanál lze takto propojit až 32  těchto linek s přenosovou kapacitou až 16 GB/s (se zahrnutím kódování 8/10 -- 20\% režie pro PCI-e v1).
+
+Transakce probíhají přes paketovou komunikaci. Data jsou rozdělována rovnoměrně do jednotlivých linek. Při propojení linek se obě komunikující strany musí dohodnout na komunikační rychlosti a počtu linek.
+
+\paragraph{Přerušení} jsou odesílána podobně jako u PCI-X pomocí MSI. Součástí je informace o zařízení, které přerušení vyvolalo.
+
+\paragraph{Řízení spotřeby}: lze individuálně řídit skrze SW pomocí zasílání zpráv, popřípadě linky se mohou samy uspávat, v době snížené aktivity. Stavy pro zařízení D0, D1, D2, D3-Hot, D3-Cold, pro linku L0, L1, L2, L3.
+
+\paragraph{Správa chyb} každý paket je zabezpečen pomocí CRC. Vzniklé chyby se zapisují do logu a ošetřují na různých úrovních.
+
+\paragraph{Hot Plug}: v průběhu činnosti systému lze připojovat/odpojovat nové PCI zařízení. Na desce speciální tlačítko a dvojice LED pro signalizaci stavu napájení. Důležité pro senzory a zařízení s nepřetržitým provozem.
+
+\paragraph{Konektory}: Základní verze je pro PCI-e x1, pro další se konektor rozšiřuje. Pouze jedna pevná zarážka oddělující společné signály od datových vodičů. Do většího konektoru lze zapojit zařízení s menším konektorem. Dále Mini PCI Express.
+
+\paragraph{Topologie PCI Express}
+Stromová topologie.
+\begin{itemize}
+	\item Root Complex -- centrální bridge mezi CPU, pamětí a PCIe sběrnící (Bus 0)
+	\item Endpoints -- koncová zařízeni
+	\item Switch -- přepínač mezi více linkami
+\end{itemize}
+Každé zařízení je jednoznačně identifikováno pomocí Bus Number, Device Number, Funciton Number.
+
+Linky jsou číslovány od 0 (Root, virtuální), ostatní do hloubky. Uvnitř přepínače je také číslovaná pomyslná sběrnice propojující jednotlivé porty (3). Na každé lince jsou pouze dvě zařízení, číslovaná 0 a 1 (0 je ve směru dolů). Každé zařízení může mít až 8 funkcí.
+
+\paragraph{Transakce} reprezentuje tok dat složený z jednoho nebo více paketů (max 4 kB). V každé transakci vystupuje Requester (inicializace transakce) a Completer (cílové zařízení dokončující transakci). Komunikace může probíhat mezi kořenem a koncovým zařízením, nebo mezi zařízeními navzájem.
+
+Typy transakcí:
+\begin{itemize}
+	\item Posted (bez odpovědi) -- pokud Completer nemůže data přijmout, Requester se o tom nedozví.
+	\begin{itemize}
+		\item Memory Write
+		\item Message -- pro přerušení, hlášení chyb, řízení spotřeby -- omezení mnoha řídicích signálů na sběrnici.
+	\end{itemize}
+	\item Non-Posted (s odpovědí) -- Completer vždy odpovídá (s daty nebo bez dat)
+	\begin{itemize}
+		\item Memory Read
+		\item IO Read/Write
+		\item Configuration Read/Write
+	\end{itemize}
+\end{itemize}
+
+\paragraph{Vrstvový model}
+\begin{description}
+	\item[Transakční vrstva] přenos paketů mezi libovolnými uzly, řeší i směrování přes přepínače.\\
+	Sestavuje hlavičku paketu, připojuje data a vypočítá volitelné CRC. Obsahuje buffery pro příchozí a odchozí pakety, rozhoduje o prioritě zpracování (QoS), výměnu informací o velikosti volného místa (Flow Control), zahrnuje řízení spotřeby bez účasti SW nebo PCI kořene -- ACPI/PCI, řeší konfiguraci PCI zařízení.
+	\item[Linková vrstva] přenos paketů mezi sousedními uzly, integrita dat přenesených jednou linkou.\\
+	Ke hlavičce přidává sekvenční číslo a je vypočítán CRC kód pro zabezpečení dat. Paket je odeslán na fyzickou vrstvu a uložen do Reply bufferu. Přijímající strana paket přijme, zkontroluje CRC a sekvenční číslo (musí dorazit v pořadí) a odešle potvrzení ACK. Pokud je identifikována chyba, odpověď je NACK a paket je přeposlán z Reply Bufferu (max. 4, potom je propagována chybová zpráva a do log. registru je uložena informace o chybě). DLLP
+	\item[Fyzická vrstva] přenos dat na nejnižší úrovni (digitální i analogové).\\
+	Ke každému paketu jsou připojeny řídicí značky Start a End, paket rozdělen po 8 bitech na jednotlivé linky, provede se kódování 8/10 (aby byl zachován vhodný počet přechodů 0/1 pro obnovení hodinového signálu na přijímající straně), serializace a odeslání diferenciálním spojem. Přijímající strana obnoví hodinový signál, deserializuje data, vyrovnáno zpoždění, dekódována 8/10.\\
+	Součástí inicializace a trénování linky: Detekce počtu linek, detekce přenosové rychlosti a detekce polarity diferenciálního spoje (automaticky bez účasti SW)
+\end{description}
+
+\paragraph{Formát paketu}: Hlavička: Typ (Memory/IO/Config Read/Write), TC (Traffic Class), Fmt (délka hlavičky 3/4DW), Length (délka paketu v DWORD), BE (zarovnání prvního a posledního DWORD)
+
+\paragraph{Quality of Services (QoS)} Traffic class (TC0 - TC7 -- největší) určuje prioritu (videokamera x SCSI disk).
+Přenos poté probíhá přes Virtual Channels (VC) -- v rámci jedné fyzické linky může být až 8 virtuálních s různou prioritou. Více TC může být namapováno do jednoho VC, ale ne naopak. Zařízení musí implementovat alespoň jeden VC.
+
+Switch vyhodnocuje prioritu na základě portů (pro pakety se stejným VC) a čísla VC. Vyhodnocení priority může být nastaveno skrze konfigurační registr (statická, Round-Robin, váhovaný Round-Robin, časovaný Round-Robin).
+
+\paragraph{Flow control} slouží k výměně informací o volném místě v přijímacích bufferech mezi zařízeními. Vysílací zařízení nesmí odeslat paket, pokud přijímající zařízení nemá dostatek místa, nebo neví kolik volného místa má. Informace se předávají pomocí paketu DLLP v datové vrstvě, plně automaticky bez účasti SW nebo jádra PCI.
+
+\paragraph{LDDP (Data Link Layer Packet)} používaný pro potvrzení ACK/NACK, Flow Control a Power Management (uvádí linku do různých režimů spotřeby). Pakety platí pouze v rámci linky, generovány automaticky bez účasti SW nebo jádra PCI.
 
 
 \end{document}
