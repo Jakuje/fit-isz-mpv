@@ -6950,7 +6950,77 @@ Vektor přerušení: Nese informaci o tom, kde se nachází obslužná rutina pr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Konstrukce adaptéru systémové sběrnice: návrh adresového dekodérů, obsluha čtecí a zápisové transakce.} \label{cha:62}
-4. semestr, NAV, \texttt{?.pdf}
+4. semestr, NAV, \texttt{nav\_principy-komunikace.pdf}
+
+Návrh adaptérů -- komoditní hardware nemá potřebné vlastnosti (výko, latence, propustnost), potřeba speciálního rozhraní a funkcí.
+
+Pro speciální akcelerační adaptéry (síťová zařízení, měřící přístroje, urychlení vědeckých výpočtů), řízení výrobních procesů (reálný čas), vytváření standardních nebo proprietárních rozhraní (USB, síťové karty).
+
+Požadavky (propustnost, výkon, paměť, spotřeba, reakce v reálném čase) $\Rightarrow$ Existuje takový adaptér? Návrh nového adaptéru.
+
+Součásti adaptéru:
+\begin{itemize}
+	\item Bus Interface Unit -- Komunikace se sběrnicí
+	\item Address Decoder -- Dekodér adresy pro ovládání paměti a registrů
+	\item Paměťový prostor karty -- sdílené informace mezi procesorem a jinými zařízeními na sběrnici; čtení a zápis ze strany adaptéru a zařízení na sběrnici.
+	\item Adapter Logic
+\end{itemize}
+
+Komunikace s adaptérem -- sběrnice je jediný prostředek komunikace (sdílení komunikačních linek mezi adaptéry, různé topologie propojení adaptérů, procesoru a paměti.
+
+Způsoby komunikace na sběrnici:
+\begin{itemize}
+	\item SW řízení -- přenos inicializovaný instrukcemi procesoru (zátěž na procesor, malý blok dat v transakci). Nejčastěji mapování paměti adaptéru do adresového prostoru procesoru. Velká režie, vhodné pro čtení/zápis jednotlivých registrů.\\
+	Čekání na změnu stavu na adaptéru -- aktivní čekání (polling) -- zatížení procesoru, blokování sběrnice
+	\item Přerušení -- signalizace události ze strany adaptéru -- lepší využití přenosového pásma systémové sběrnice. Obslužná rutina spotřebuje čas procesoru, s větším počtem se snižuje výkon procesoru běžícím aplikacím\\
+	Interrupt storm -- zahlcení přerušením -- obsluha přerušení spotřebovává většinu výpočetního času. Pokud  je spotřebován všechen, dochází k tzv. Live-lock. Lze hardwarově omezit počet přerušení za sekundu.\\
+	Ideálně při velkém počtu přerušení přepnout na polling.
+	\item Blokové přenosy (DMA) -- blok dat v jedné transakci (adaptér -- paměť, adaptér -- adaptér, paměť -- adaptér). Bus master inicializuje přenos a po dobu transakce přebírá kontrolu nad sběrnicí.\\
+	Používají DMA deskriptory -- zdrojová adresa, cílová adresa, délka. Stránky nesmí být odsunuty na disk (swap).\\
+	Dlouhé přenosy: Snižuje režii komunikace, ale blokuje sběrnici pro ostatní zařízení. Procesor není zatížen přenosem, Bus Master na adaptéru je optimalizován pro tento úkol.
+\end{itemize}
+
+Adaptér PCI, PCI-X a PCI-Express sběrnice -- komplexní norma, časová a elektronická omezení. Nutné konfigurační oblasti paměti, rozdíl časové domény adaptéru a PCI.
+
+PLX čip -- zjednodušuje komunikaci přes PCI sběrnici -- čtecí a zápisové FIFO, PCI konfigurační registry.
+
+Combo-PTM -- PCI 32/33 MHz adaptér, PLX čip pro komunikaci přes PCI, FPGA Spartan 3. Bridge převádí PCI sběrnici na lokální sběrnici dostupnou z FPGA.
+
+\subsection{Adresový dekodér}
+Rozhraní adresového dekodéru:
+\begin{itemize}
+	\item \texttt{DO[31:0]} -- data z adresového dekodéru
+	\item \texttt{DI[31:0]} -- data do adresového dekodéru
+	\item \texttt{ADDR[31:0]} -- adresa registru nebo paměti
+	\item \texttt{RD} -- Signalizace čtecí transakce
+	\item \texttt{WR} -- Signalizace zápisové transakce
+	\item \texttt{DRDY} -- Signalizace připravenosti dat
+\end{itemize}
+
+\paragraph{Zápisová transakce}: Na ADDR vystavena adresa kam se mají zapsat data, DI obsahuje data, WR=1 signalizuje zápisovou transakci. Při náběžné hraně CLK se provede zápis do registru/paměti na kartě.
+
+\paragraph{Čtecí transakce}: Na ADDR vystavena adresa odkud se mají číst data, RD=1 signalizuje čtecí transakci. Po náběžné hraně CLK musí uživatelská komponenta vystavit na sběrnici DO data z registru/paměti a potvrdit platnost signálem DRDY.
+
+\paragraph{Blokové transakce}
+Při přenosu bloku je automaticky inkrementována adresa a v každém blokovém cykly je proveden jedna operace čtení nebo zápisu
+
+Pro správné dekódování adresy a řízení zápisu/čtení do/z paměti nebo registru je potřeba tzv. adresový dekodér. Jednou operací musí být vždy adresován právě jeden registr nebo paměť.
+\begin{itemize}
+	\item Zápisová operace: Podle adresy a WR potřeba přivést WE signál k příslušnému registru, nebo paměti (Chip select)
+	\item Čtecí operace: Z paměti opět signál RD.\\
+	Pro připojení výstupních dat se používá výstupní datový multiplexor nebo třístavová sběrnice (povolovací signály \_rd). Data musí být vystavena až v dalším hodinovém cyklu!\\
+	Multiplexor: 
+	\begin{itemize}
+		\item Asynchronní paměť -- čtení nečeká na hranu hodin (zpožovací registr)
+		\item Synchronní paměť -- čtení proběhne až s nástupní hranou hodin, data k dispozici v dalším cyklu.
+	\end{itemize}
+\end{itemize}
+
+Pokud není komponenta schopná vydat požadovaná data ihned v následujícím taktu, vkládají se čekací takty. Zde řešíme odložení DRDY signálu.
+
+Aliasing paměťového prostoru: Pokud adresový dekodér reaguje jenom na spodní bity adresy a některé vyšší zůstanou neošetřeny -- mohou nabývat libovolné hodnoty. Adresy jsou tak namapovány do více míst v adresovém prostoru!
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
