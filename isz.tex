@@ -131,7 +131,7 @@ Tradičně návrh HW předcházel návrh SW a integrace následovala. Souběžn�
 	Flexibilita		& Musí být součástí návrhu	& Implicitní \\ \hline
 	Paralelismus	& Implicitní				& Musí být součástí návrhu \\ \hline
 	Modelování		& Model $\not=$ implementace& Model $\sim$ implementace \\ \hline
-	Znovupoužítí	& Omezené					& Běžné \\ \hline
+	Znovupoužití	& Omezené					& Běžné \\ \hline
 \end{tabular}
 
 Modelování -- specifikuje co systém dělá (získávání hlubší znalosti o systému jeho imitací).
@@ -169,7 +169,7 @@ Předchází návrhu komplexních systémů. Snaha o zavedení hierarchie (omeze
 Výpočet (propustnost, latence), Data (typ, objem), Komunikace (zasílání zpráv, sdílená paměť), rozhraní (sběrnice), protokoly (TCP/IP), řízení, Synchronizace, Fyzikální vlastnosti.
 
 \paragraph{Modelování}
-Nezbytná na co nejvyšší úrovni abstrakce (velká složitost a heterogennost dnešních výpočetních platforem a systémů). Výpočetní a komunikačné modely.
+Nezbytná na co nejvyšší úrovni abstrakce (velká složitost a heterogennost dnešních výpočetních platforem a systémů). Výpočetní a komunikační modely.
 
 \paragraph{Syntéza -- rozdělení/mapování}
 Alokace (výběr výpočetních prostředků), Přidělování (přidělení výpočetních prostředků výpočtům), Plánování (sdílení prostředků mezi výpočty), Optimalizace (simulované žíhání, genetické algoritmy).
@@ -178,7 +178,7 @@ Alokace (výběr výpočetních prostředků), Přidělování (přidělení vý
 Pro co nejlepší rozdělení systému na části v SW a HW. Analýza jak vlastností jednotlivých částí a jejich interakce, tak chování výsledného systému. Optimalizace příkonu, výkonnosti, ceny. Odhady složitosti, rychlost, kapacity paměti, příkonu.
 
 \paragraph{Transformace}
-Syntéza HW (ze schématu či jazyka pro popis HW do netlistu. Kompilace SW z vyššího programovacího jazyka do assembleru. V současné době nejvíce propracované kroky návrhu.
+Syntéza HW (ze schématu či jazyka pro popis HW do netlistu). Kompilace SW z vyššího programovacího jazyka do assembleru. V současné době nejvíce propracované kroky návrhu.
 
 \paragraph{Integrace, Rozhraní}
 Volba rozhraní, komunikace. Hlavní pro zavedení abstrakce, izoluje různé technologie a umožňuje evoluci systému (RS232, Intel '86).
@@ -201,19 +201,19 @@ Paralelismus na úrovni Bitů (širší datové cesty), Slov (vektorové jednotk
 
 Paměť: Potřeba velké kapacity a krátké přístupové doby -- hierarchie (cache, aplikačně nezávislé, složité), distribuovaná organizace, Scratchpad (plnění se plánuje v době návrhu aplikace, Cray, DSP, PS2, levnější, rychlejší).
 
-Procesory: CISC, RISC, VLIW, Superskalární (nadtřída RISC, CISC). Jednoinstrukční CPU.
+Procesory: CISC, RISC, VLIW, Superskalární (nadtřída RISC, CISC). Jedno-instrukční CPU.
 Instrukční sady: Zásobníková, Akumulátorová, Registrová, Load/Store; Adresovací režimy.
 
 \paragraph{Paralelismus} (zřetězení)
-In-order nebo řeešní konfliktů přeskládáním instrukcí
+In-order nebo řešení konfliktů přeskládáním instrukcí
 
 Hazardy: Strukturní (přístup k HW z více stupňů pipeline -- není podporován), Datový (čeká se na výsledek předchozí operace), Řídicí (výjimky, skoky).
 
-Více instrukcí současně -- VLIW plánováno v době překladu, superkalární plánují během výpočtu.
+Více instrukcí současně -- VLIW plánováno v době překladu, superskalární plánují během výpočtu.
 
-General-prupouse CPU: Nízká energetická účinnost, složitý HW, převážná část čipu nevyužita pro výpočty.
+General-purpouse CPU: Nízká energetická účinnost, složitý HW, převážná část čipu nevyužita pro výpočty.
 
-DSP: Orientovaná na tok dat, vysoká propustnost, harwardská architektura, HW čítač smyček, speciální instrukce.
+DSP: Orientovaná na tok dat, vysoká propustnost, Harwardská architektura, HW čítač smyček, speciální instrukce.
 
 ASIP: Application Specific Instruction Set processors -- konfigurovatelná architektura procesoru,, instrukční sada, specializované funkční jednotky, paměť podle aplikace. Automatické generování IP cores, simulátoru, překladače atd.
 
@@ -226,7 +226,7 @@ Nevolatilní -- konfigurace uchována i po odpojení (destrukce propojek, nebo j
 	\item[CPLD] Complex Programmable Logic Devices -- AND-OR pole a registry s elektricky programovatelnými křížovými přepínači.
 \end{description}
 
-Volatilní -- Field Programmable Gate Array (FPGA) -- monožost neomezeného programován HW. Konfigurace v SRAM, po každém připojení napájení potřeba konfiguraci zkopírovat z externí paměti. Výhodou je flexibilita a výkonnost.
+Volatilní -- Field Programmable Gate Array (FPGA) -- možnost neomezeného programován HW. Konfigurace v SRAM, po každém připojení napájení potřeba konfiguraci zkopírovat z externí paměti. Výhodou je flexibilita a výkonnost.
 \begin{itemize}
 	\item Pole konfigurovatelných logických elementů:
 	\begin{itemize}
@@ -245,7 +245,7 @@ Volatilní -- Field Programmable Gate Array (FPGA) -- monožost neomezeného pro
 	Distribuovaná paměť: Problémem je konzistence dat.
 	\item I/O bloky
 	\item programovatelná propojovací síť -- co možno největší propojitelnost jednotlivých elementů. Hlavní zdroj zpoždění, většina plochy a dynamického příkonu
-	\item konfigurační pamět -- definuje funkci logických elementů -- Look-Up Table (LUT), Tokologie propojovací sítě, velká kapacita (MB)
+	\item konfigurační paměť -- definuje funkci logických elementů -- Look-Up Table (LUT), Topologie propojovací sítě, velká kapacita (MB)
 \end{itemize}
 
 Nejpokročilejší technologie, dobrá testovatelnost výrobního procesu, omezení využitelnosti propojením (60 -- 80\%). Miliardy tranzistorů, miliony vlastní logiky (ekvivalentních hradel NAND).
@@ -255,7 +255,7 @@ IPC -- Intellectual Property Core -- předem navržené a otestované komponenty
 Výhody: Rozmístěné a propojené na čipu, optimální využití a výkonnost.\\
 Nevýhody: Předem definované vývody -- komplikace propojení, omezená škála funkcí (pro většinu uživatelů)
 
-Rekonfigurace -- změna obsahu konfigurační paměti (za běhu), Parciální rekonfigurace (část obvodu pracuje), Diagonostika nebo ošetření chybových stavů, různé režimy činnosti systémů, Dynamická rekonfigurace -- zavádění konfigurace na základě probíhajícího výpočtu.
+Rekonfigurace -- změna obsahu konfigurační paměti (za běhu), Parciální rekonfigurace (část obvodu pracuje), Diagnostika nebo ošetření chybových stavů, různé režimy činnosti systémů, Dynamická rekonfigurace -- zavádění konfigurace na základě probíhajícího výpočtu.
 
 Rekonfigurovatelné počítání -- úspora zdrojů, efektivní implementace výpočetních struktur, velmi obtížné programování
 
