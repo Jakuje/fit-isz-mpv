@@ -7025,7 +7025,7 @@ Aliasing paměťového prostoru: Pokud adresový dekodér reaguje jenom na spodn
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Architektura sběrnice PCI-Express a USB: typy transakcí, způsob komunikace a směrování transakcí, detekce chyb a způsob zotavení.} \label{cha:63}
-4. semestr, NAV, \texttt{??}
+4. semestr, NAV, \texttt{nav - pci\_pcix\_pcie.pdf}, \texttt{nav\_usb20.pdf}, \texttt{nav\_usb30.pdf}
 
 \section{Vývoj sběrnic typu PCI}
 
@@ -7048,6 +7048,8 @@ Nedochází o opakovanému vyzývání ze strany Requesteru, pro načtení dat j
 \paragraph{Obsluha přerušení}: PCI-X zařízení musí podporovat MIS (Message Signaled Interrupt). Přerušení je generováno pomocí běžné zápisové operace do prostoru MSI kontroléru (místo INTx signálu).
 \dots
 
+
+
 \section{PCI-Express}
 Rychlé, plně duplexní sériové linky s kapacitou 2,5 Gb/s, 5 Gb/s nebo 8 Gb/s. Pro jeden kanál lze takto propojit až 32  těchto linek s přenosovou kapacitou až 16 GB/s (se zahrnutím kódování 8/10 -- 20\% režie pro PCI-e v1).
 
@@ -7063,7 +7065,7 @@ Transakce probíhají přes paketovou komunikaci. Data jsou rozdělována rovnom
 
 \paragraph{Konektory}: Základní verze je pro PCI-e x1, pro další se konektor rozšiřuje. Pouze jedna pevná zarážka oddělující společné signály od datových vodičů. Do většího konektoru lze zapojit zařízení s menším konektorem. Dále Mini PCI Express.
 
-\paragraph{Topologie PCI Express}
+\subsection{Topologie PCI Express}
 Stromová topologie.
 \begin{itemize}
 	\item Root Complex -- centrální bridge mezi CPU, pamětí a PCIe sběrnící (Bus 0)
@@ -7091,7 +7093,7 @@ Typy transakcí:
 	\end{itemize}
 \end{itemize}
 
-\paragraph{Vrstvový model}
+\subsection{Vrstvový model}
 \begin{description}
 	\item[Transakční vrstva] přenos paketů mezi libovolnými uzly, řeší i směrování přes přepínače.\\
 	Sestavuje hlavičku paketu, připojuje data a vypočítá volitelné CRC. Obsahuje buffery pro příchozí a odchozí pakety, rozhoduje o prioritě zpracování (QoS), výměnu informací o velikosti volného místa (Flow Control), zahrnuje řízení spotřeby bez účasti SW nebo PCI kořene -- ACPI/PCI, řeší konfiguraci PCI zařízení.
@@ -7113,6 +7115,155 @@ Switch vyhodnocuje prioritu na základě portů (pro pakety se stejným VC) a č
 
 \paragraph{LDDP (Data Link Layer Packet)} používaný pro potvrzení ACK/NACK, Flow Control a Power Management (uvádí linku do různých režimů spotřeby). Pakety platí pouze v rámci linky, generovány automaticky bez účasti SW nebo jádra PCI.
 
+\subsection{Konfigurace PCI zařízení}
+\paragraph{Struktura paměťového prostoru}: 3 typy paměti: Paměť (prefetchable -- lze přednačítat do cache, non-prefetchable), IO prostor, Konfigurační prostor (struktury o velikosti 256 B -- typ 0 pro koncové uzly, typ 1 -- pro switch nebo bridge). Kompatibilní s PCI, PCI-X, ale rozšiřuje strukturu až na 4 kB.
+\begin{itemize}
+	\item Konfigurace typu 0 (Endpoint): \emph{Vendor ID} (přiřazeno výrobci), \emph{Device ID} (určuje výrobce), \emph{Revision ID}, \emph{Class Code} (obecný typ zařízení -- multimediální, wifi, síťové), \emph{Subsystem Vendor ID}, \emph{Subsystem ID} (podsystémy v rámci zařízení), \emph{Base Address (BAR)} -- až 6 bloků paměti (3 pro 64bitový prostor), alokace paměťového prostoru pro PCI zařízeni.
+	\item Konfigurace typu 1 (Switch/Bridge): Struktura pro každý port switche. Opět 2 položky \emph{Base address (BAR)}, \emph{Prefetchable Memory Base/Limit} -- bázová adresa a velikost cachovatelné paměti pro všechna zařízení připojená k danému portu, \emph{Non-Prefetchable Memory Base/Limit} -- pro ne-cachovatelnou paměť, \emph{I/O Base/Limit} -- pro IO prostor (horních 16 bitů)\\
+	\emph{Primary Bus} -- číslo usptream sběrnice (k Root), \emph{Secondary Bus} -- číslo downstream sběrnice (ke koncovým zařízením), \emph{Subordinate Bus} -- nejvyšší číslo směrnice na sekundární sběrnici.
+\end{itemize}
+Pří příchodu paketu do zařízení/směrovače je jednoduché ověřit, zda adresa a cílové zařízení je v rozsahu Base a Limit registrů.
+
+\emph{Proces enumerace PCI zařízení} -- na začátku není známá topologie. Objevování probíhá v těchto krocích:
+\begin{enumerate}
+	\item Systémový software se pokusí přečíst Vendor ID ze všech 32 možných zařízení na sběrnici O (Config Read operace)
+	\item Pokud se odpověď nevrátí, zařízení neexistuje. Jinak provede zápis Primary, Secondary a Subordinate Bus.
+	\item SW u všech připojených zařízení přečte jejich typ (0 = endpoint, 1 = switch)
+	\item Pokud se jedná o switch, byla nalezena nová sběrnice, Bus 1 a SW aktualizuje položky Primary, SEconday a Subordinary Bus Number u existujícíh zařízení.
+	\item Postup se opakuje rekurzivně, doku nejsou objeveny všechna Endpoint zařízení
+\end{enumerate}
+
+\subsection{Způsoby směrování}
+tři způsoby směrování
+\begin{itemize}
+	\item Směrování na základě adresy -- zadána adresa do paměti\\
+	Adresa v hlavičce je 32 nebo 64 bitů (paměť, IO prostor, konfigurační paměť.
+	\begin{itemize}
+		\item Koncové zařízení: zkontroluje adresu se všemi svými BAR adresami a velikostmi bloků. Pokud adresa vyhovuje, je paket přijat a zpracován. Jinak je odstraněn.
+		\item Přepínač: Nejdříve zkontroluje, jestli je adresa určena pro něj (obě bázové adresy) a paket zpracuje.\\
+		Jinak porovná prefetch/non-prefetch/IO paměti na svých sekundárních a přesměruje paket na příslušný port.\\
+		Pokud paket přichází z primárního portu a nespadá do žádného z paměťových prostorů na sekundárních portech, je obsloužen jako nepodporovaný požadavek.\\
+		Pokud přichází se sekundárního rozhraní a adresa nespadá do žádného z ostatních sekundáních portů, potom je směrován na primární port.
+	\end{itemize}
+	\item Směrování na základě identifikace -- zadána identifikace Bus ID, Device ID, Function ID\\
+	\begin{itemize}
+		\item Koncové zařízení: zkontroluje zda identifikace paketu odpovídá jeho číslo. Pokud ano, paket zpracuje, jinak paket odstraní
+		\item Přepínač: Nejdříve zkontroluje, jestli je paket určen pro něj (porovná se svým ID a pokud souhlasí, zpracuje paket.\\
+		Zkontroluje, jestli ID spadá do rozsahu některého z jeho sekundárních portů (Secundary Bus ID, Subordinary Bus ID) a přepošle paket na příslušný port.\\
+		Pokud přichází z primárního portu a nevyhovuje žádnému ID, obsloužen jako neplatný požadavek\\
+		Pokud přichází ze sekundárního portu a neodpovídá žádnému z rozsahů pro ostatní sekundání portu, je odeslán na primární port.
+	\end{itemize}
+	\item Implicitní směrování -- speciální značka -- pro Root Complex, sousední zařízení, nebo broadcast. Pouze pro zprávy.
+	Místo adresy nebo ID značka určující Root, zařízení připojené na druhé straně linky, nebo všesměrovou zprávu broadcast. Zařízení nemusí znát přesnou topologii systému a přesné ID zařízení, se kterým komunikuje.\\
+	\begin{itemize}
+		\item Koncové zařízení: může zpracovat pouze zprávy broadcast, nebo zprávy cílené pro přijímací uzel.
+		\item Přepínač: Zpracovává broadcast zprávy z primárního portu a forwarduje je na všechny sekundární porty. Nezpracovává broadcast zprávy ze sekundárních portů. Se zprávami pro root to probíhá opačně.
+	\end{itemize}
+\end{itemize}
+
+Směrování na základě adresy a identifikace je kompatibilní s PCI, PCI-X. Implicitní vzniklo pro účely zpráv. Memory/IO -- Adresa, Configuration/Completion -- Identifikace, Message -- všechny tři možnosti. Každý paket obsahuje položky \emph{Type} a \emph{Format}, které určují typ transakce a formát hlavičky s ohledem na typ směrování.
+
+Současná verze 3.O používá scrambling a kódování 128/130 -- dvojnásobná propustnost oproti v2.0 i když propustnost linky není dvojnásobná. Efektivita přenosu výrazně lepší (20\%).
+
+Sériová, snadná škálovatelnost, místo hromady vodičů pakety (nové funkce). PCIe před v3.0 mělo velkou režii přenosu. Nevýhodou je latence (cache paměti)
+
+\section{USB}
+Dříve hromada různých konektorů a kabelů, bez podporu hot-attachment, vysoká cena.
+
+USB standard: Jediný typ konektoru pro libovolné periferie, více periferií k jednomu konektoru, automatická detekce a konfigurace periferního zařízení.
+
+\paragraph{Komunikace s periferií}
+Nevyužívá IO prostor, IRQ, DMA kanály.
+
+každé zařízení má unikátní adresu v rámci USB systému -- až 127 různých adres. Zařízení obsahuje registry a porty, ke kterým je možné přistupovat. Registry a porty se značí jako endpoints. \emph{Endpoint Zero} je obsažen v každém periferním zařízení. Komunikace -- transakce do všech zařízení (kromě low-speed), paketová komunikace.
+
+Low-speed -- 1.5 Mb/s (USB 1.x)\\
+High-speed -- 12 Mb/s (USB 1.x)\\
+High-speed -- 480 MB/s (USB 2.0)
+
+USB Host Controller (UHC) řídí přenosy ze strany hostitelského počítače. Více USB portů. Součástí IO Controller Hub, nebo připojený na PCI sběrnici.
+
+Hvězdicovité uspořádání, přípojným místem USB hub, transakce se šíří od Host Controlleru všem zařízením (kromě LS), odpoví pouze to, které je adresováno. Transakce jsou uloženy v paměti v podobě deskriptorů (adresa USB zařízení, typ trasakce (R/W), velikost přenosu, rychlost přenosu, umístění datového bufferu v paměti.
+
+Přenosové deskriptory jsou nahrávány a vykonávány v intervalech zvaných Frame (USB1: 1ms, USB2: 125us). Transakce popsány pomocí Transfer Deskriptorů -- nové transakce plánovány do dalších frame. Přenosové pásmo sběrnice je rozděleno mezi jednotlivá zařízení.
+
+Základní typy transakcí:
+\begin{itemize}
+	\item Isochnonous: synchronní spojení, pro real-time aplikace (audio, modem)
+	\item Interrupt: Zjištění, zda má zařízení k dispozici data (polling ze strany UHC). Plánováno periodicky podle požadavků zařízení.
+	\item Control: Konfigurace a řízení zařízení. Každé zařízení má konfigurační bod (endpoint zero)
+	\item Bulk: Nevyžadují minimální přenosovou rychlost (tiskárna, scanner)
+\end{itemize}
+Periodické transakce (isochronous, interrupt) mohou zabírat maximálně 90\% celkové propustnosti, řídící maximálně 10\%, bulk je alokován až pro nevyužité pásmo.
+
+Napájení může být buď ze sběrnice, nebo vlastní (max 5V a 500mA, garance 4.4 V a 100mA). Během počáteční konfigurace musí zařízení odebírat méně než 100 mA. Pokud potřebujeme více, specifikováno v konfiguračních deskriptorech. Toto zařízení musí být vypínatelné (řízené SW pomocí řídicích paketů).
+
+Sběrnice je uspána ze strany UHC, pokud je nečinná (IDLE) déle než 3ms, probuzení může přijít i ze strany zařízení.
+\subsection{Komunikace a význam signálů}
+Diferenciální datové vodiče -- redukce šumu přijímajícího a vysílajícího zesilovače, half-duplex komunikace.
+
+Detekce připojení nového zařízení: Přivedení napájení na daný port (spouštěno periodicky ze strany SW). Zařízení nastaví napětí na D+, aplikace Reset zařízení a detekce USB 2.0 zařízení.
+
+FS a LS zařízení rozlišeno zakončovacím odporem připojenými na D+ (FS) a D- (LS) (opačná polarita D+ a D-), HS nejdříve detekováno jako FS, ve stavu RESET detekce HS zařízení. Informace o zařízení uložena ve stavovém registru rozbočovače.
+
+Kódování přenášených dat: NRZI (nulový bit neguje předchozí hodnotu). Hodinový signál odvozen z datových vodičů. Bit stuffing -- po šesti jedničkách za sebou je vždy vložena nula. Synchronizace pomocí SOP (Start-of-Packet) sekvence 0000 0001. Konec paketu pomocí SO0 (single-ended-zero).
+
+\subsection{Model komunikace}
+\begin{itemize}
+	\item Isochnonous: Aplikace běžící v reálném čase vyžadující určitou propustnost. Na základě konfigurace garantována určitá propustnost. Není prováděna detekce ani zotavování z chyb, nejsou podporovány u LS zařízení.\\
+	Je možné zajistit synchronní přenos mezi dvojicí zařízení (musí řídit SW aplikace (CD -- Speaker)
+	\item Interrupt: Přenosy plánovány periodicky každý k-tý rámec (rychlé mohou být každý, pomalé min. každý 255). Podle konfigurace garantována určit šířka přenosového pásma. Podpora pro detekci a zotavení z chyb (porušený paket odvysílán v bezprostředně následujícím Frame). (Myš, klávesnice)
+	\item Bulk: Nepotřebují garantovat rychlost, ale bezchybné doručení dat. Obsazují nevyužité pásmo. Použity všechny prostředky pro detekci a zotavení z chyb.
+	\item Control: Garance 10\% přenosového pásma pro konfiguraci zařízení a rozbočovačů. Použity pro detekci a zotavení z chyb.
+\end{itemize}
+Při LS přenosech je potřeba hub předem upozornit, aby přeposlal transakci také na porty s LS zařízeními. Komunikace mezi HS a FS/LS je realizována pomocí rozdělených transakcí.
+
+\subsection{Struktura transakcí a formát paketů}
+Každá transakce se skládá z více paketů
+\begin{itemize}
+	\item Token Packet -- začátek přenosu. Typ přenosu (IN, OUT, SETUP, SOF), adresa cílového zařízení a číslo koncového body a směr přenosu
+	\item Data Packet -- přenos dat. Max. délka dána typem transakce.
+	\item Handshake Packet -- zjištění stavu dokončení transakce (ACK, NACK, STALL). Zaslán zpět do zařízení vysílající data.
+\end{itemize}
+
+Formát paketu:
+\begin{itemize}
+	\item Synchronizační sekvence -- (0000 0001) 8 bitů pro odvození hodin
+	\item Packet Identifier (PID) -- 8bitů pro rozlišení typu paketu -- 4 bity typ, další 4 zabezpečení
+	\item Cyclic Redundancy Checking (CRC) -- zabezpečení dat. Datové 16bit CRC, ostatní 5bit CRC
+	\item End Of Packet (EOP) -- detekce konce paketu -- sběrnice ve stavu SE0 po dobu alespoň dva bity.
+\end{itemize}
+
+\subsection{Detekce chyb a zotavení}
+Detekce na základě chybné hodnoty Paket ID, špatné CRC zabezpečující datovou část, nebo pokud v přijatém paketu nejsou vloženy nulové bity (Stuff bity).
+
+Pokud je detekována chyba, je ignorován. Pokud vysílající zařízení neobdrží potvrzení (Bus Timeout), je rozpoznána chyba.
+
+Pokud selže ukončení transakce, zařízení stále vysílá není odvysílán EOP, Hub problematické zařízení odpojí.
+
+\subsection{SW model komunikace}
+\begin{itemize}
+	\item USB Iterface Layer -- nejnižší vrstva -- USB Host controller, rozbočovače a rozhraní na USB
+	\item USB Device Layer -- Rozhraní a služby pro uživatelský software, alokuje potřebnou šířku pásma pro zařízení a zároveň ovládá UHC.
+	\item Function Layer -- Vazba mezi uživatelským programem a logickou funkcí zařízení. Pro ovládání zařízení využívá rozhraní, které poskytuje ovladač daného USB zařízení.
+\end{itemize}
+
+Komunikační model: komunikační kanály --  pipes. Streaming pipes: USB nespecifikuje formát přenášených dat (Isochronous, Interrupt, Bulk), Jednostranné; Message pipes: Struktura definovaná USB standardem, hlavně řídicí přenosy, oboustranné.
+
+\section{USB 3.0}
+Zpětná kompatibilita, zachovat současné výhody USB (hoplug, easy-to-use), zvýšit přenosové pásmo (externí disky, HDTV kamery), zlepšit řízení napájení a redukovat spotřebu sběrnice).
+
+Pro každý směr vyhrazen samostatný diferenciální pár (2 nové jednosměrné páry), stínění. Dual-bus architektura -- práce souběžně s USB 2.0. SuperSpeed rozbočovače pracují na principu store-and-forward. Asynchronní notifikace.
+
+Směrování paketů -- transakce nejsou šířeny do všech zařízení na sběrnici, mohou probíhat současně vstupní a výstupní transakce. Interrupt transakce vysílány přímo ze zařízení (odstranění pollingu), rozdělené Bulk transakce. Možnost více různých streamů v rámci jedné fronty.
+
+Použití kování 8/10 jako v PCIe a síťových rozhraní Ethernet, hodinový signál odvozen od datových vodičů, pakety zabezpečeny pomocí CRC-16, položka RouteString zajišťuje směrování v rozbočovačích.
+
+Úsporný režim pro funkce, nebo celého zařízení. Hostitelský počítač zasílá zprávy o plánovaných přenosech, pokud nejsou, možnost přepnout do stavu s redukovaným napájením.
+
+\emph{Rozbočovače} umožňují propagovat stav sběrnice, směrovat podle RouteString, programovatelný časovač pro detekci neaktivního stavu na downstream portech.
+
+Propustnost až 5Gb/s
 
 \end{document}
 
