@@ -6083,7 +6083,135 @@ Musíme ukázat:
 \chapter{Blokující a neblokující párové (point-to-point) komunikace v MPI.} \label{cha:31}
 \chapter{Kolektivní komunikace v MPI, paralelní vstup a výstup.} \label{cha:32}
 \chapter{Propojovací sítě: Topologie a směrovací algoritmu, přepínání a řízení toku.} \label{cha:33}
+?. semestr, ??, \texttt{??}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Klasifikace metod komprese dat (ztrátové, bezeztrátové, intuitivní, algoritmické, četnost výskytu, pravděpodobnost výskytu), princip kódování délek sledů, kódování „přesuň na začátek.‘‘} \label{cha:34}
+2. semestr, KKO, \texttt{KKO1-UVOD 2016.pdf}, \texttt{KKO2-ZAKLADNI TECHNIKY 2016.pdf}
+
+\emph{Kódování} -- proces vzájemně jednoznačného přiřazení symbolů jedné množiny symbolům druhé množiny. Tato definice implicitně předpokládá blokový kód.
+
+Existují také \emph{tokové (streaming) kódy}, které plynule kódují vstupní tok na výstupní tok (aritmetické kódování).
+
+Kódování může \emph{zachovávat}, \emph{zmenšovat} (komprese) nebo \emph{zvětšovat} (překódování pro opravu chyb) redundanci kódu.
+
+\emph{Redundance} -- číslo udávající objem dat, použitý při zakódování dané informace navíc, než je minimálně zapotřebí (informace = data).
+
+\emph{Zdroj dat} bez paměti, nebo s pamětí (se vzájemnou závislostí symbolů).
+
+\emph{Abecední redundance} -- v anglických textech se nejčastěji vyskytuje číslo E, proto se mu přiřadí nejkratší kód s proměnnou délkou kódového slova.
+
+\emph{Kontextová redundance} -- za písmenem Q následuje v angličtině nejčastěji U. Výrazný u obrazových a zvukových záznamů.
+
+Komprese náhodných souborů je prakticky nemožná, protože zde není prakticky žádná redundance. Komprese dvou různých souborů musí vést na dva různé soubory, jinak by nebyla možná zpětná dekomprese.
+
+Obecná metoda komprese neexistuje. Algoritmus musí zkoumat data, vyhledávat redundanci a snažit se ji odstranit. Metody jsou datově závislé.
+
+\section{Klasifikace metod komprese dat}
+(ztrátové, bezeztrátové, intuitivní, algoritmické, četnost výskytu, pravděpodobnost výskytu)
+
+\emph{Neadaptivní kompresní metoda} je fixní a nemění svůj výpočtový postup. Navržena pro určitý typ dat. Naopak \emph{adaptivní metoda} zkoumá vstupní data a základě jejich analýzy přizpůsobuje svoje operace.
+
+\emph{Ztrátová/bezstrátová komprese} Některé kompresní metody jsou ztrátové. Dosahují vyššího kompresního poměru za cenu ztráty jisté informace (komprese obrazu, videa, zvuku). Člověk nemusí poznat rozdíl.
+
+\emph{Kaskádová} kompresní metoda je tvořena řetězcem po sobě jdoucích kompresí, případně přípravných úprav vstupního datového toku.
+
+\emph{Perceptivní komprese} -- ztrátový kompresor odstraňuje data, jejichž nepřítomnost člověk nepozná (znalosti o lidském vnímání obrazu a zvuku). Proměnná subjektivní kvalita umožňuje komprimovat náročné úseky měně a jednoduché více.
+
+\emph{Symetrická komprese}, pokud kompresor a dekompresor používají prakticky stejného algoritmu v inverzním režimu. U \emph{asymetrické metody} kompresor nebo dekompresor pracuje výrazně déle (nevadí u archivace).
+
+\emph{Algoritmický/deterministický} kodér se nazývá, pokud pracuje ve shodě, tj. generuje správný komprimovaný kód.
+
+\emph{Univerzální} je kompresní metoda, která nevyužívá statistik vstupního toku. Univerzální metoda je \emph{optimální}, pokud má kompresní parametry asymptoticky se blížící entropii dlouhého vstupního toku.
+
+\emph{Rozdílování souborů} určuje rozdíly dvou souborů a ty pak komprimuje.
+
+\begin{itemize}
+	\item \emph{Proudový režim} -- kodér bere postupně byte, nebo několik bytů nad kterými pracuje.
+	\item \emph{Blokový režim} -- vstupní tok čtený po blocích.
+\end{itemize}
+
+\begin{itemize}
+	\item Fyzické metody: Pracuje s bitovým tokem a nevyužívají členění na slova
+	\item Logické metody: Pracují s datovými položkami vstupního toku a nahrazují je kratšími položkami (specializované na daný typ dat)
+\end{itemize}
+
+Kompresní výkonnost:
+\begin{itemize}
+	\item Kompresní poměr = $\frac{\text{velikost vstupního toku}}{\text{velikost výstupního toku}}$. Může být popsáno jako \emph{bpb} (bitů na bit), \emph{bpp} (bitů na pixel), \emph{bpc} (bitů na znak). Také bitrate (bitová rychlost).\\
+	Bitová režie -- funkce jednotlivých bitů: Část nese informaci, zbývající část (režie) nese jisté tabulky).
+	\item Kompresní faktor -- obrácení hodnota kompresního poměru: $\frac{\text{velikost výstupního toku}}{\text{velikost vstupního toku}}$
+	\item Kompresní zisk = $100 \log_e \frac{\text{referenční velikost}}{\text{komprimovaná velikost}}$, kde referenční velikost je buď nekomprimovaný tok, nebo komprimovaný nějakou standardní kompresní metodou.
+	\item Rychlost komprese -- počet cyklů na byt (cpb), důležité pro kompresi na speciálním HW.
+	\item Relativní komprese -- 
+\end{itemize}
+
+\subsection{Korpusy}
+\emph{Korpus Calgary} -- 18 standardně používaných souborů sestavený k testování kompresních programů (textové, obrazové, objektové soubory).
+
+\emph{Korpus Canterbury} -- z 800 dokumentů 11 tříd vybrány \uv{průměrné} dokumenty a další 3 náhodné. Chybí velké soubory, chybí texty v jiných jazycích, nepřítomnost skupin, medicínské soubory.
+
+\emph{Korpus Silesia} -- aktuální typy souborů od textu po spustitelné, PDF, office, multimedia.
+
+\emph{Pravděpodobnostní model} -- použitý u statistické komprese dat. Před kompresí se vytvoří model dat (přečtení celého souboru a určení frekvence výskytů symbolů -- zdlouhavé. Častěji odhady).
+
+\emph{Adaptivní komprese} -- nejdříve se přiřadí stejná pravděpodobnost všem symbolům a ta se přizpůsobuje během komprese.
+
+\section{Princip kódování délek sledů}
+Úroveň binární/číselní/znaková/slovní. Myšlenka: \uv{Pokud se datová položka d vyskytuje ve vstupním textu n-krát za sebou (sled délky n), nahradí se n výskytů d jedinou dvojicí (n,d)}. Run Length Encoding (RLE).
+
+Pro jednoznačné dekódovaná je potřeba ještě vyhrazený symbol, který uvozuje dvojici počtu a symbolu. Proto kódujeme pouze sledy o délce 4 a více znaky.
+
+Problémy: V anglickém textu je mnoho dvojic, ale trojice jsou vzácné. Speciální znak @ se může ve vstupním textu vyskytovat. Maximální omezení na 255 opakování.
+
+MNP 5 (Microcom Network Protocol): Komprese u modemů (řeší výskyt znaku @ v RLE): Tři stejné znaky se zakódují jako XXX0 (0 opakování), sled 4 znaků se zakóduje 4 znaky a komprese probíhá až od délek 5 symbolů.
+
+Kompresní poměr RLE: N vstupních znaků, M opakování s průměrnou délkou L. Každé z M opakování se nahradí 3 znaků: $\frac{N - M(L-3)}{N}$.
+
+Variantou je kódování digramů (pokud vstup obsahuje pouze některé symboly a my můžeme často opakující se dvojice nahradit symbolem, který se ve vstupní sekvenci nevyskytuje.
+
+Nebo také kódování opakujících se frází a substituce vzorků (komprese počítačových programů, kde se často vyskytují vyhrazená slova, proměnné).
+
+RLE komprese obrazu -- bitová mapa (ideálně černobílá). Pokud máme jenom dvě barvy, stačí ukládat délky (střídají se). Pro stupně šedi opět pomocí dvojice (délka sledu, hodnota pixelu).
+
+Rozlišení hodny barvy od bytu obsahujícího počet:
+\begin{itemize}
+	\item Pokud máme pouze 128 barev, použijeme jeden bit na značku pro rozlišení barvy a pčtu
+	\item Pokud máme 256 barev, můžeme jednu barvu zanedbat a volný symbol použít jako značku před počtem
+	\item Pro každých 8 bajtů výstupu je jeden bajt označující, zda bajt na dané pozici je počet nebo barva.
+\end{itemize}
+
+U barevných lze kódovat sledy barev zvlášť. Lze skenovat po řádcích, sloupcích, nebo uhlopříčce. Dobré ukládat konec řádku (pixely \uv{přes hranu} nemají nic spolčeného).
+
+Nevýhoda u obrazu: Když se obraz změní, musí se RLE kompletně přepočítat.
+
+\subsection{BinHex 4.0}
+(konverze 8 bitových souborů na ASCII)
+
+Záhlaví s CRC, jménem souboru, délkou, autorem, typem. RLE kovaání pomocí $90_{16}$. Rozděnelní na 6-bitové úseky a zakování do podmnožiny 64 znaků ASCII.
+
+\subsection{Obrazové soubory BMP}
+Barevná paleta a pixely v základním tvaru nebo komprimované pomocí RLE. RLE8 (8bitová barevná hloubka) ukládá dvojice počet a hodnota pixelu. Dva nulové bity jsou konec řádku.
+
+\section{Kódování \uv{přesuň na začátek}}
+Myšlenkou je udržovat abecedu symbolů jako seznam, ve kterém jsou často se vyskytující symboly umístěny na začátku (zakódovaná hodnota je kolik symbolů jej v seznamu předchází). Když použijeme symbol, přesuneme jej na začátek seznamu.
+
+Metoda je lokálně adaptivní (podle frekvence symbolů v lokálních oblastech vstupu). Pro vstup \uv{koncentrační vlastnost}. Střední hodnota znaků je menší. To je výhodné pro Huffmanovo nebo aritmetické kódování (nebo můžeme provést již v rámci tohoto):
+\begin{itemize}
+	\item Přiřadit Huffmanovy kódy celým číslům v rozsahu $[0, n]$ takž, že menší čísla budou mít kratší kódy
+	\item Přiřadit kódy celým číslům tak, že kód čísla $i \geq 1$ je jeho binární podoba, před kterou je $\lfloor \log_2 i \rfloor$ nul.
+	\item Adaptivní Huffmanovo kódování
+	\item Pro maximální kompresi použít 2 průchody -- první počítá frekvence a druhý provede vlastní kódování (Huffmanovy kódy podle podle frekvence).
+\end{itemize}
+
+Podobně lze použít na slova, pokud máme omezenou vstupní abecedu, ale seznam A může růst do ohromné velikosti.
+
+Skalární kvantování je ztrátová metoda. Nepoužívá se pro kompresi obrazu (raději vektorové kvantování nebo Grayův kód).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Kódy s proměnnou délkou - princip, zdůvodnění, Huffmanovy kódy - různé typy, kanonický Huffmanův kód, adaptivní Huffmanův kód, aritmetický kód.} \label{cha:35}
 \chapter{Slovníkové metody (LZ77, LZ78, práce se slovníkem, pohyblivé okno, prodlužování položek).} \label{cha:36}
 \chapter{Informace a entropie, Shannova věta o kódování.} \label{cha:37}
