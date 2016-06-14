@@ -6213,8 +6213,120 @@ Skalární kvantování je ztrátová metoda. Nepoužívá se pro kompresi obraz
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Kódy s proměnnou délkou - princip, zdůvodnění, Huffmanovy kódy - různé typy, kanonický Huffmanův kód, adaptivní Huffmanův kód, aritmetický kód.} \label{cha:35}
+2. semestr, KKO, \texttt{KKO3-1-STATISTICKE METODY-TI-UNARNI2016.pdf}, \texttt{KKO3-8-HUFFMAN 2016.pdf}
+
+Pokud mají znaky různou pravděpodobnost výskytu (a tím pádem data menší entropii). Použití kódů s proměnnou délkou zmenšuje redundanci.
+
+Kód může být nejednoznačný (kde oddělit jednotlivé zakódované znaky). Aby byl jednoznačný, je potřeba , aby měl \emph{prefixovou vlastnost}:
+\uv{Když se některé bitová kombinace přidělí některému symbolu jako jeho kód, žádný jiný kód nesmí touto kombinací začínat}.
+
+\section{Prefixové kódy}
+Prefixový kód splňuje prefixovou vlastnost. Binární reprezentace čísel tuto vlastnost nemá a stejně tak nemusí být známa velikost množiny.
+
+\subsection{Unární kódy}
+Unární kód nezáporného celého čísla $n$ je definován jako $n-1$ jedniček následovaných jednou 0 (binární z doby kamenné).
+
+Obecné unární kódy (start-step-stop) závisí na trojici celočíselných parametrů (start, step, stop) a je definován takto:
+
+K datovým symbolům se vytvoří kódová slova tak, že n-té kódové slovo se stává z n jedniček, následovaných jednou 0, následovanou všemi kombinacemi bitů, kde $a = \text{start} + n \cdot \text{step}$. Když $a = \text{stop}$, pak se osamocená 0 předcházející a bitů vypustí. Počet kódů pro zadanou trojici je konečný a závisí na volbě parametrů: 380 kódů pro (3, 2, 9) a 2044 kódů pro (2, 1, 10).
+
+Trojice (n, 1, n) definuje standardní n-bitové kódy, což můžeme ověřit přímou konstrukcí. Kód $(0, 0, \infty)$ definuje kód $0, 10, 110, 1110, \dots$.
+
+Shannon-Fanoovo kódování byla první metoda k nalezení dobrých kódů s proměnnou délkou. Konstruuje kódu shora dolů (od levého největšího bitu k nejnižšímu).
+
+\section{Huffmanovy kódy}
+
+\subsection{Huffmanovo kódování}
+Podobně jako Shannon-Fanovo kódování (tvoří kódy zdola nahoru -- zleva doprava). Začíná od symbolů s nejnižsí pravděpodobností.
+Pokud máme více možností pro spojení dvojic, vybíráme ty, které jsou ve stromu níže (nižší variance kódu -- výhodné pro vysílání komunikační linkou).
+
+Huffmanova metoda se nedá aplikovat na abecedu se dvěma symboly (nelze přiřadit kód kratší než 2 symboly). Ale lze tyto data používat jako 4 nebo 8 bitů s novou abecedou.
+
+\subsection{Huffmanovo dekódování}
+Před kompresí je potřeba určit kód (na základě pravděpodobnosti výskytu symbolů). Tyto pravděpodobnosti (jako odstupňovaná celá čísla) se musí uvést v komprimovaném toku, aby jakýkoliv dekodér byl schopný tok dekomprimovat. Lze poslat také kódy, nebo celý strom, což je ještě složitější/delší.
+
+Sestrojit Huffmanův strom, odvodit kódy stejně jako kompresor. Nebo číst přímo ze stromu: pokud přečte 0, jdeme vetví dolů (pravděpodobnější), pokud 1, jdeme větví nahoru.
+
+V Huffmanově stromě (kde je každý uzel součtem svých potomků) se váhový součet listů, kde váhy jsou vzdálenosti listů od kořene rovná součtu vnitřních uzlů (nelistů, včetně kořene).
+
+Celkový počet různých kódů pro n symbolů je $2^{n-1}$
+
+\paragraph{Ternární Huffmanovy kódy}: Snadno aplikovat na kódy s jiným číselným základem. Hledají se vždy 3 symboly s nejmenší pravděpodobností.
+
+\paragraph{Výška Huffmanova stromu}: Nejnižší strom se vytvoří, pokud mají symboly stejné pravděpodobnosti. Výška úplného stromu je $n-1$ a nazývá se balancující, nebo nesymetrický strom (Fibonacciho posloupnost pravděpodobností).
+
+Pokud tato délka stromu není žádoucí, lze strom přetvarovat a zkrátit nejdelší kódy (změna pravděpodobností z Fibonacciho posloupnosti).
+
+\subsection{Kanonické Huffmanovy kódy}
+vybrán z mnoha možných, protože vlastnosti umožňují snadné a rychlé požití.
+
+Užitečné v případě, že máme velkou abecedu a je rozhodující rychlé dekódování. Dekodér snadno identifikuje délku testováním jednoho bitů za druhým. Jakmile je délka známá, symbol nalezneme jedním krokem.
+
+Příklad: Archivace a komprese pomocí \emph{slovně orientovaného} adaptivního Huffmanova kodéru.
+
+Dekodér: Hirschberg-Sieminski -- Vypočítává délky kódů abecedy s $n$ symboly s použitím  jediného pole o velikosti $2n$. Polovina tohoto pole se používá jako hromada.
+
+\emph{Hromada} je vyrovnaný binární strom, ve kterém každý list obsahuje datovou položku a položky jsou uspořádány tak, že všechny cesty z listů do kořenu prochází uzly, které jsou v pořadí uspořádání a to buď neklesajícím (max-heap), nebo nerostoucím (min-heap). Operace \emph{prosívání} hromady je odstranění kořene a znovu uspořádání uzlů, aby tvořily hromadu. Kořen se pak porovnává se svými potomky a aby bylo dosaženo uspořádání, mohou se vyměnit (maximálně však $\lceil \log_2 n \rceil$ výměn -- výška stromu).  Jednoduché uložení v poli bez ukazatelů.
+
+\subsection{Adaptivní Huffmanovo kódování}
+V praxi nejsou četnosti symbolů známé. \emph{Semiadaptivní} metoda je dvouprůchodová (první čte frekvence, druhý kóduje).
+
+Začít s prázdným stromem a postupně jej upravovat. Modifikace musí být stejné na straně kompresoru i dekompresoru (jsou synchronní, pracují provázaně -- lockstep, nebo zrcadlení).
+
+První symbol se zapíše na výstup v nekomprimované formě, přidá se do stromu a přiřadí se mu kód. Další nález použije již tento kód a inkrementuje jeho frekvenci. Pokud již není Huffmanův strom (nejlepší), musí se přeuspořádat.
+
+Rozeznání (většinou) ASCII hodnoty symbolu a komprimovaného kódu? Před každý nekomprimovaný symbol se vloží speciální symbol (escape sekvence). Escape sekvence je také ve stromě s nulovou frekvencí (nejdelší kód).
+
+\paragraph{Úpravy stromu}
+Po každém vstupu symbolu ověření, zda v jednotlivých úrovních jsou frekvence uspořádány v neklesajícím pořadí zleva doprava a zdola nahoru (levý dolní uzel má nejnižší frekvenci -- vlastnost sourozenců).
+
+Operace: Porovnej X s následníky ve stromu (zleva doprava, zdola nahoru). Je-li větší, vyměň je (nesmí se vyměnit s rodičem). Je-li X kořen, končíme, jinak cyklus opakujeme s rodičem.
+
+\paragraph{Přeplnění čítače} se může stát pro dlouhé vstupy. Možnosti: Rescale (změna měřítka) všech čítačů (podělení 2) -- snižuje přesnost a nový strom nemusí být Huffmanův. Více reflektuje nedávné symboly, než ty v dávné minulosti.
+
+\paragraph{Přeplnění kódu}
+Když se do stromu přidá mnoho symbolů a ten je pak zbytečně vysoký -- potřeba omezení délky kódu pro kodér. Není problém pro dekodér
+
+\paragraph{Varianta adaptivního Huffmanovy metody}
+Jednodušší, ale méně efektivní. Přiřazení kódů náhodně (stejná pravděpodobnost) a strom upravovat podle opravdové pravděpodobnosti vyskytujících se symbolů -- nemusí měnit strom, pouze vyměňovat uzly.
+
+Problém přeplnění počítadla symbolů -- opět vydělit všechna pole 2 po přečtení maxima symbolů.
+
+\subsection{Aritmetický kód}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Slovníkové metody (LZ77, LZ78, práce se slovníkem, pohyblivé okno, prodlužování položek).} \label{cha:36}
+2. semestr, KKO, \texttt{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Informace a entropie, Shannova věta o kódování.} \label{cha:37}
+2. semestr, KKO, \texttt{KKO3-1-STATISTICKE METODY-TI-UNARNI2016.pdf}
+
+Data jsou řetězec s výskyty n symbolů $a_1$ až $a_n$. Taková množina je \emph{abeceda} s n symboly. Protože existuje n symbolů, můžeme každý pokládat za číslici se základem $n$, což je ekvivalentní $\log_2 n$ bitů.
+
+$H = s \log_2 n$ označíme \emph{objem informace (entropie)}, měřený v bitech přenesený za jednotku času. Symbol $a_i$ se vyskytuje s pravděpodobností $P_i$ a součet pravděpodobností je 1. Tedy $1=\sum P_i = nP$, $P = 1/n$ a $H = -s \log_2 P$. Čím je rozdělení pravděpodobností méně pravidelné, tím je entropie nižší (a tedy obsah informace).
+
+Entropie klávesnice je 7 bitů na znak (96 možností), anglického korpusu 4,5, zakódování v Huffmanově kódu 4,7. Pokud se zaměříme na osmice znaků (vlastnost sousedství), entropie vychází asi 19 bitů, tedy 1,3  bitů na znak (\emph{mez bezztrátové komprese angličtiny}).
+
+Redundance dat $R$ je definována jako rozdíl mezi nejvyšší možnou entropií množiny symbolů a jeho skutečnou entropií, tedy
+$$R = \left[ - \sum\limits_1^n P \log_2 P \right] - \left[ - \sum\limits_1^n P_i \log_2 P_i \right] = \log_2 n + \sum\limits_1^n P_i \log_2 p_i $$
+Pro zcela komprimovaná data (bez redundance) je tedy $R=0$.
+
+\textbf{Zpráva s $n$ symboly se může komprimovat na $nH$ bitů, ale ne více.}
+
+\subsection{Obsah algoritmické informace}
+
+Kolmogorov-Chaitinova složitost (KCC) definuje složitost binárního řetězce jako délku (v bitech) nejkratšího počítačového programu, který při spuštění vygeneruje S (algoritmický informační obsah).
+
+Algoritmický informační obsah je míra obsahu informace ve zprávě.
+
+Součet Shannonovy informace a KCC je konstantní.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Bezpečnostní kódy: lineární, Hammingovy, cyklické, konvoluční. Detekce a oprava chyb.} \label{cha:38}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
