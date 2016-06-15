@@ -6340,8 +6340,100 @@ Struktura pro uložení: Nevyvážený binární strom usídlený v poli.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Slovníkové metody (LZ77, LZ78, práce se slovníkem, pohyblivé okno, prodlužování položek).} \label{cha:36}
-2. semestr, KKO, \texttt{}
+\chapter{Slovníkové metody} \label{cha:36}
+2. semestr, KKO, \texttt{KKO3-16-QM-PPM-CTW.pdf}, \texttt{KKO4-1-LZ77.pdf}
+
+(LZ77, LZ78, práce se slovníkem, pohyblivé okno, prodlužování položek)
+ 
+\emph{Komprese textu} -- slovníkový (nepoužívá statistický model) nebo statistický princip (modelovací + kódovací stupeň)
+
+\paragraph{Statistické metody}:
+Kontext -- minulý text, který znají jak kodér tak dekodér. Posledních N symbolů používaných k predikci (Markovský model řádu N), např. PPM (Prediction with Partial String Matching), nebo Burrows-Wheelerova transformace používají statistické metody. PPMZ (nedeterministické kontexty).
+
+\paragraph{Slovníkové metody} vybírají řetězce symbolů a pomocí slovníku zakódují každý řetězec jako značku (token). Slovník může být statický nebo dynamický (adaptivní metody -- přidávání a mazání).
+
+Slovníkové metody jsou entropické kodéry, jsou univerzální. Například slovník anglických slov (velikost $2^19$ a jeden bit je značka, pokud slovo ve slovníku není, pak je v obsahu délka a za ní následuje dané slovo v ASCII).
+
+\emph{Adaptivní metody} začnou s prázdným slovníkem, nebo malým.
+
+Komprese řetězců  může být účinnější než komprese jednotlivých symbolů (lze ukázat na pravděpodobnosti).
+
+\subsection{Jednoduchá slovníková komprese}
+dvouprůchodová
+\begin{enumerate}
+	\item První průchod sestaví seznam všech různých nalezených bytů a jejich četnost.
+	\item Uspořádáme seznam v sestupném pořadí (max 256 položek)
+	\item Seznam je slovník a zapíše se do komprimovaného souboru, kterému předchází jeho délka.
+	\item Zdrojový soubor se znovu přečte a pro každý byt se vyhledá jeho index. Ten se zapíše do výstupního souboru s prefixem jeho délky (3b).
+\end{enumerate}
+Dekompresor přečte délku slovníku, slovník a poté každý byte dekóduje na základě 3-bitového kódu délky a hodnoty indexu.
+
+Pro uniformní rozložení je komprese 0.9375 + 257 b pro slovník, ale pro běžné příklady je kolem 0.5.
+
+\section{LZ77 (pohyblivé okno)}
+(LZ1). Levá část okna je aktuální slovník a obsahuje symboly, které vstoupily v poslední době. Část vpravo je předvídací buffer (look-ahead buffer) s textem, který se teprve bude kódovat. V praxi levá část několik tisíc bajtů a předvídací buffer pouze několik desítek.
+
+Kóder prohlíží vyhledávací buffer zprava doleva a vyhledává shodu s prvním symbolem v předvídacím bufferu. Pokud nalezne, hledá shodu v co nejvíce symbolech následujících za těmito výskyty, pokud mají stejnou velikost, tak vybere poslední a připraví značku (offset, délka, následující symbol).
+
+Modifikace LZH vybírá první (nejbližší) výskyt, který vede k menším offsetům a teoreticky kratším kódům (huffmanovo kování).
+
+Pokud se zpětným prohledáváním nenalezne shoda, zapíše se značka s nulovým offsetem i délkou.
+
+Offset většinou 10-12 bitů (vyhledávací buffer), Délka několik bitů (předvídací buffer, protože může volně přecházet i z vyhledávacího), Symbol většinou 8 bitů. 
+
+Dekodér jednodušší (asymetrické kompresní metoda). Udržuje buffer s velikostí rovnou oknu kodéru. Dekodér načte značku, najde ve svém bufferu shodu, zapíše shodu a třetí pole do výstupního toku, posune shodu + třetí pole do bufferu. Vhodné pro častou dekompresi.
+
+Optimalizace vyhledávacího bufferu kruhovou frontou, nebo hashovací tabulkou.
+
+\subsection{LZSS}
+Udržování předvídacího bufferu v kruhové frontě, vyhledávací buffer (slovník) v binárním vyhledávacím stromu (levý podstrom menší hodnoty, pravý větší), vytváří značky pouze se dvěma poli.
+
+Ve stromě jsou záznamy o délce předvídacího okna (vyhledávací okno - předvídací okno + 1). Vyhledání této shody trvá $\lceil \log_2 n \rceil$ kroků. Pokud se celý řetězec shoduje, kodér se pokusí nalézt další shodu.
+
+Aktualizace stromu odstraněním řetězců \uv{ze začátku} a přidáním nových. Potřeba hlídat tvar (vyvážený x šikmý).
+
+Pokud se nenajde žádná shoda, je poslána značka s příznakem znaku (např. pro následujících 8 značek).
+
+Nedostatky: Omezený kontext (pokud se slovo vyskytovalo dříve, je zapomenuto). Omezená velikost předvídacího bufferu vede k omezení délky shody. Rozšíření je náročné (dlouhé značky, pomalá komprese).
+
+\subsection{LZX}
+Varianta LZ77, jiný způsob kódování offsetů shody, které mohou být velké. Použití v CAB souborů MS. Značky jsou buď neztotožněné znaky, nebo dvojice (offset, délka). Kódy s proměnnou délkou (kanonické Huffmanovy stromy).
+
+Opakované offsety -- speciální kódy pro poslední 3 použité offsety (LRU fronta). Předzpracování pro x86 instrukce CALL (relativní na absolutní). Výstupní formát jsou bloky dat.
+
+Diferencování souborů: VCDIFF -- LZ77 na původním souboru a poté na připojeném modifikovaném. Pro druhý soubor je komprese velmi efektivní -- původní soubor je již ve vyhledávácím bufferu. Je-li soubor příliš velký na vyhledávací buffer, je potřeba oba soubory segmentovat. Instrukce ADD (přidat nové znaky), RUN (opakování n stejných znaků), COPY (stejný jako původní soubor, kolik kopií)
+
+\section{LZ78 (LZ2)}
+Nepoužívá vyhledávací buffer, předvídací buffer, ani pohyblivé okno. Pouze slovník dříve nalezených řetězců. Značky mají dvě pole -- ukazatel do slovníku a kód symbolu.
+
+Slovník má prázdný řetězec na pozici 0, na další pozice se ukládají přečtené slova. Když se řetězec nenajde, pošle se (0, x), když najde, zkusíme najít také následující znak y, pokud ten nenajdeme, pošleme (37, y) (kde 37 je ukazatel na slovo \uv{x} ve slovníku) a řetězec xy se přidá do slovníku.
+
+Vhodnou strukturou je strom (Trie), kde řetězec je cesta od kořenu po list. Teoreticky každý list až 256 potomků (dynamická struktura).
+
+Co dělat, pokud strom zaplní paměť není specifikováno metodou, ale jsou různé možnosti:
+\begin{itemize}
+	\item Zmrazení slovníku -- nepřidáváme žádné nové uzly -- statický slovník
+	\item Odstranění stromu a začátek znovu -- rozdělení vstupu na bloky s vlastním slovníkem (předpoklad použití nových dat a ne starých).
+	\item Odstranění nějakých dlouho nepoužívaných položek (jak dobře určit?)
+\end{itemize}
+
+Dekodér udržuje slovník stejným způsobem jako kodér a proto je složitější než u LZ77.
+
+\subsection{LZFG}
+Kodér generuje komprimovaný soubor se značkami a literály (ASCII) promíchaně. Značka \emph{literal} indikuje, že následuje řetězec literálů, značka \emph{copy} značí následující řetězec (délka), dříve v datech nalezený (offsef, vzdálenost).
+
+Metoda A1 -- 8-bitová značka literal (0000nnnn -- udavájící počet ASCII bytů + 1) a 16-bitová značka copy (sssspp \dots p, kde s nenulové 4-bitové pole určuje délku řetězce + 1 a p označuje offset + 1).
+
+Metoda A2 má delší vyhledávací buffer až 21 kB -- kódy s proměnnou délkou.
+
+\paragraph{LZRW1}
+Jednoduchá a rychlá varianta LZ77, navazuje na LZFG A1. Nalezení shody v jednom kroku pomocí hashovací tabulky.
+
+\paragraph{LZRW4}
+Kombinace slovníkových metod s predikcí.
+
+\paragraph{LZW}
+odstraňuje druhé pole ze značky. Patentována a licencována. Slovník je inicializován pro všech 256 osmibitových znaků.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
