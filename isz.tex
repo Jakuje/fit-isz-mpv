@@ -6213,7 +6213,7 @@ Skalární kvantování je ztrátová metoda. Nepoužívá se pro kompresi obraz
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Kódy s proměnnou délkou - princip, zdůvodnění, Huffmanovy kódy - různé typy, kanonický Huffmanův kód, adaptivní Huffmanův kód, aritmetický kód.} \label{cha:35}
-2. semestr, KKO, \texttt{KKO3-1-STATISTICKE METODY-TI-UNARNI2016.pdf}, \texttt{KKO3-8-HUFFMAN 2016.pdf}
+2. semestr, KKO, \texttt{KKO3-1-STATISTICKE METODY-TI-UNARNI2016.pdf}, \texttt{KKO3-8-HUFFMAN 2016.pdf}, \texttt{KKO3-14-ARITM KODOVANI.pdf}
 
 Pokud mají znaky různou pravděpodobnost výskytu (a tím pádem data menší entropii). Použití kódů s proměnnou délkou zmenšuje redundanci.
 
@@ -6292,8 +6292,51 @@ Jednodušší, ale méně efektivní. Přiřazení kódů náhodně (stejná pra
 
 Problém přeplnění počítadla symbolů -- opět vydělit všechna pole 2 po přečtení maxima symbolů.
 
-\subsection{Aritmetický kód}
+\section{Aritmetický kód}
+Huffmanova metoda produkuje nejlepší kódy pro jednotlivé symboly. Ale ideálné kódy vytváří pouze když symboly mají pravděpodobnost výskytu záporné mocny 2. Aritmetické kódování přiděluje jeden kód celému vstupnímu souboru.
 
+Metoda začíná s určitým intervalem, čte vstupní soubor symbol za symbolem a používá pravděpodobnosti jednotlivých symbolů k zužování intervalu. To vyžaduje větší přesnost a tak číslo postupně roste. Symbol s vysokou pravděpodobností zmenší interval méně než symbol s nízkou pravděpodobností.
+
+Interval je určen dolní a horní mezí, nebo jednou mezí a šířkou. Výstup lze interpretovat jako číslo z intervalu $[0, 1)$.
+
+Nejdříve je potřeba spočítat nebo odhadnout frekvence výskytů jednotlivých symbolů.
+\begin{enumerate}
+	\item Začneme definování aktuálního intervalu jako $[0, 1)$\\
+	Low = 0; High = 1;
+	\item Opakujeme následující dva kroky pro každý symbol vstupního toku:
+	\begin{enumerate}
+		\item Rozdělím aktuální interval na podintervaly, jejichž velikosti jsou proporcionální pravděpodobnostem symbolů
+		\item Vybereme podinterval pro s a prohlásíme ho za nový aktuální interval\\
+		NewLow = OldLow + Range * LowRange(X)\\
+		NewHigh = OldLow + Range * HighRange(X)
+	\end{enumerate}
+	\item Výstupem je nějaké číslo, které jednoznačně identifikuje aktuální interval (uvnitř aktuálního intervalu).
+\end{enumerate}
+Dekodér musí znát symboly a frekvence použití pro kódování -- potřeba také předat jako tabulku. Dekódování probíhá následovně:\\
+Code = (Code - LowRange)/Range
+
+Problém s intervaly v 0 -- potřeba definice konce souboru (eof s nízkou frekvencí), abychom mohli rozeznat symboly, které obsahují všechny stejné symboly (nebo na ně končí). Pokud je délka řetězce známa, můžeme pracovat bez EOF symbolu.
+
+Implementační detaily: Čísla s neomezenou přesností jsou nepraktická. Implementace pomocí celočíselné aritmetiky (Low=0000, High=9999). Pokud jsou meze blízko sebe, provedeme shift doleva (vygenerujeme výstupní symbol) a zprava nasuneme 0 pro Low a 9 pro High.
+
+Dekódování:
+\begin{enumerate}
+	\item Vypočítej index ((Code - Low + 1) x 10 - 1)/(High-Low) a odsekni k nejbližšímu celému číslu
+	\item Použij index k nalezení následujícího symbolu pomocí porovnávání se sloupcem kumulovaných pravděpodobností
+	\item Aktualizuj Low a High podle vztahu\\
+	Low = Low + (High - Low + 1) LowCumFreq[X]/10\\
+	High = Low + (high - Low + 1) HighCumFreq[X]/10 - 1
+	\item Pokud jsou nejlevější číslice Low a High shodné, posuň Low, High a Code o jednu pozici doleva. Do Low vstoupí zleva 0, do High 9 a do Code příští vstupní číslice z komprimovaného toku.
+\end{enumerate}
+
+Podtečení: Pokud se Low a High přibližují, ale nemají stejné první číslice (4999, 5000). Ztrácí se významové číslice. Řešení: Detekovat a změnit měřítko (vytlačit druhou největší významovou číslici v Low a High). Dokud se neshodují, posouváme a poté zapíšeme 4 následovanou řadou 9, nebo 5 následovanou řadou 0, podle počtu posuvů.
+
+Komprese je velmi blízká entropii (např. v binárním kódu)
+
+\subsection{Adaptivní aritmetické kódování}
+Ukládání kumulovaných frekvencí a jejich změny po každém kroku. Pořadí symbolů v tabulce je možné měnit, pokud to kodér i dekodér dělají stejným způsobem. Model musí být upraven až po zakódovány symbolu, aby dekodér mohl zrcadlit chování kodéru.
+
+Struktura pro uložení: Nevyvážený binární strom usídlený v poli.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
