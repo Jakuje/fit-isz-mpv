@@ -6435,10 +6435,16 @@ Kombinace slovníkových metod s predikcí.
 \paragraph{LZW}
 odstraňuje druhé pole ze značky. Patentována a licencována. Slovník je inicializován pro všech 256 osmibitových znaků.
 
+\paragraph{Deflate} je založena na variantě LZ77 s Huffmanovým kódem (použití v Zip).
+
+\paragraph{LZMA} je rozšíření LZ77. Formát 7-Zip podporuje různé kompresní algoritmy včetně Deflate, LZMA. LZMA používá intervalové kódování (celočíselná verze aritmetického kódování).
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Informace a entropie, Shannova věta o kódování.} \label{cha:37}
-2. semestr, KKO, \texttt{KKO3-1-STATISTICKE METODY-TI-UNARNI2016.pdf}
+2. semestr, KKO, \texttt{KKO3-1-STATISTICKE METODY-TI-UNARNI2016.pdf}\\
+2. semestr, PDS, \texttt{pds-01-teorie-16.pdf}
 
 Data jsou řetězec s výskyty n symbolů $a_1$ až $a_n$. Taková množina je \emph{abeceda} s n symboly. Protože existuje n symbolů, můžeme každý pokládat za číslici se základem $n$, což je ekvivalentní $\log_2 n$ bitů.
 
@@ -6460,9 +6466,171 @@ Algoritmický informační obsah je míra obsahu informace ve zprávě.
 
 Součet Shannonovy informace a KCC je konstantní.
 
+\section{Teorie informace (PDS)}
+Komunikace: Zakódování -- Přenesení zprávy -- Dekódování zprávy (znalost kódu)
+
+Shannon: Zdroj -- Kodér -- Přenosový kanál -- Dekodér -- Cíl
+
+Důležitá pravděpodobnost $P(x = a_n) = P(x) = P(a_n)$, že nastane jev $a_n$. Součet pravděpodobností všech možných jevů je 1.
+
+\paragraph{Množství informace}: Méně pravděpodobná zpráva/symbol nese větší množství informace. Funkce $I(x)$ -- množství informace k pravděpodobnosti $P(x)$ výskytu zprávy $x$.
+
+Méně pravděpodobná zpráva nese více informace: $P(x) > P(y) \Rightarrow I(x) < I(y)$, množství informace dvou nezávislých informací je jejich součet $I(xy) = I(x) + I(y)$.
+$$I(x) = \log_2 \frac{1}{P(x)}$$
+jednotkou je shannon [Sh].
+
+\subsection{Entropie}
+nepředvídatelnost, neurčitost náhodného jevu. K vyjádření očekávaného množství informace. Jevy s nízkou entropií můžeme jednodušeji předvídat. Pro úplný náhodný jev $X$:
+$$H(X) = \sum_{x \in A_x} P(x) log_2 \frac{1}{P(x)}$$
+Maximální entropie je při uniformní pravděpodobnosti (nepředvídatelné), nejmenší pokud má jedna z možností pravděpodobnost 100\%.
+
+Klasický text má nízkou entropii, proto je dobré jej zkomprimovat, před šifrováním -- je těžší rozluštit.
+
+\paragraph{Podmíněná entropie}
+Pokud známe hodnotu náhodného jevu X, změní se entropie náhodného jevu Y?
+$$H(Y|X) = \sum\limits_{i=1}^n P(x_i) H(Y|X = x_i)
+= - \sum\limits_{i=1}^n P(x_i) \sum\limits_{j=1}^m P(y_j, x_i) log_2 P(y_j, x_i)
+= - \sum\limits_{i=1}^n \sum\limits_{j=1}^m P(x_i, y_j) log_2 P(y_j, x_i)$$
+
+Entropie má úzký vztah k reprezentaci informace. Kódování komprimuje informace do co nejmenšého počtu bitů, nebo pro opravu chyb při přenosu zprávy. Entropii lze použít k zjištění minimálního počtu bitů pro přenos informace, výpočtu redundance, účinnosti a propustnosti přenosového kanálu.
+
+\paragraph{Kódování} přiřazuje zprávám jedné abecedy, zprávy druhé abecedy (matematicky zobrazení). \emph{Prefixový kód} lze jednoznačně dekódovat bez oddělovacích značek.
+
+\paragraph{Huffmanův kód}: Symbolům s větší pravděpodobností přiřazujeme kratší zprávy.
+Délka zprávy: $L = \sum_{i=1}^n P(x_i)l(x_i)$, účinnost kódu: $\mu = \frac{H(X)}{L}$, redundance $r = 1 - \mu$.
+
+\paragraph{Přenosový kanál} -- informace jde od zdroje k cíli přes tento kanál. Může mít různou přenosovou rychlost, chybovost.
+\begin{itemize}
+	\item Kanál bez paměti: přiřazuje prvkům z abecedy X prvky z abecedy Y bez závislosti na předchozích výskytech: $P(y_i|x_i) = 1$ -- při přenosu symbolu x bude vždy dekódován odpovídající symbol y.
+	\item Přenosový kanál s chybami -- Přidáme do schématu šum. Podmíněná pravděpodobnost chyby $P(y_1, x_2)$, $P(y_2, x_1)$. Může se stát, že bude přeneseno y.
+	\item Obecný kanál bez paměti -- můžeme popsat pomocí matice pravděpodobností -- na diagonále přenos bez chyb, ostatní jsou chyby:
+	$$K = 
+	 \begin{pmatrix}
+	  P(0|a) & P(0|b) \\
+	  P(1|a) & P(1|b) \\
+	 \end{pmatrix} =
+	 \begin{pmatrix}
+	  0.9 & 1-0.7 \\
+	  1-0.9 & 0.7 \\
+	 \end{pmatrix}$$
+\end{itemize}
+
+\paragraph{Kapacita přenosového kanálu}: zdroj zasílá r zpráv za sekundu. Entropie je H bitů za zprávu. Rychlost informace je $R = r \cdot H$. Kapacita kanálu je $C$. Pokud $R \leq C$ přenos může být uskutečněn bez chyby i pokud kanál obsahuje šum. Pokud $R > C$ nemůžeme se vyhnout chybě při přenosu.
+
+\paragraph{Propustnost kanálu $c$} je největší množství informace za znak, které může kanál přenést. Kapacita kanálu $C$ je největší množství informace, které kanál ,§že přenést za jednu sekundu.
+
+
+\section{Shannova věta o kódování}
+
+Má-li diskrétní kanál kapacitu $C > 0$, pak použitím dostatečně dlouhých kódovaných úseků lze produkce informace $H'(X) < C$ libovolně přiblížit k $C$ a přitom učinit pravděpodobnost chyby libovolně malou. 
+
+\begin{itemize}
+    \item Rychlost produkce informace: $H'(X) = H(X) / T$
+    \item $H(X)$ -- množství informace připadající v průměru na jeden symbol
+    \item $T$ -- průměrný čas vysílání jednoho symbolu: $T = 1 / v_m$
+    \item $v_m$ -- modulační rychlost
+\end{itemize}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Bezpečnostní kódy: lineární, Hammingovy, cyklické, konvoluční. Detekce a oprava chyb.} \label{cha:38}
+
+\section{Bitové chyby}
+Děje se na L1, řešena v rámci L2. Korupce bitů. Nejčastější je bitová inverze. Většinou řešíme redundancí.
+
+\paragraph{Důvody vzniku chyb}: šum a útlum.
+Spolehlivost $BER = \frac{\text{počet chybných bitů}}{\text{celkový počet přenesených bitů}}$ (reálný parametr spolehlivosti linky),
+$p_e = \approx BER$ je odhadovaný.
+
+\section{Blokové bezpečnostní kódy}
+Fixní množství bloků a zabezpečení bloků je na sobě nezávislé.
+
+Blok $k$ (datových) bitů je zakódován pomocí $n$ bitů (kódové slovo). Kód obsahuje $n-k$ bitů redundance a označujeme je jako $(n, k)$ kódy.
+
+\paragraph{Parita} je blokový kód $(k+1, k)$. Redundantní bit je přidán tak, aby celkový počet 1 v kódovém slovu byl sudý (sudá parita) nebo lichý (lichá parita). Při detekci nedokážeme opravit chybu.
+
+\paragraph{Složená parita} datové bity seřadíme do pole a spočteme paritní bit pro každý sloupec a řádek. Lze detekovat dvě chyby na řádku/sloupci a dokážeme opravit jednu chybu.
+
+\subsection{Hammingovy kódy}
+Kódová slova musí být natolik odlišná, aby se zamezilo transformaci chybového kódového slova na správné. Tuto odlišnost nazýváme \emph{Hammingova vzdálenost} -- minimální počet bitů, který je třeba změnit, aby se jedno kódové slovo transformovalo na druhé. Budeme označovat $d_{min}$.
+
+Počet špatně přenesených bitů menší než $d_{min}$ jsme schopni detekovat ($d_{min} - 1$). Pokud chceme \emph{detekovat} $E$ chyb, $d_{min} = E+1$, pokud chceme \emph{opravit} $E$ chyb, vzdálenost musí být $d_{min} = 2E + 1$.
+
+\paragraph{Perfektní kódy} (perfect codes) -- obsahují nejmenší počet redundantních bitů, pokud chceme opravit 1 bitovou chybu. Obecně tedy $c \geq \log_2(n+1)$ redundantních bitů pro kódová slova délky $n$. Pro optimální kód je také $c$ minimální.
+
+\paragraph{Základní Hammingův kód (7,4)} paritní bity jsou na pozicích mocniny 2 (tedy 1, 2, 4). Paritní bit na pozici $b_{2^l}$ kontroluje všechny $b_{p'}$, jejichž binárně zapsaná bitová pozice $p$ má na 1 na pozici $l$. Součet pozic chybných paritních bitů určuje pozici chyby.
+
+\subsection{Polynomiální reprezentace}
+Řetězec k+1 bitů lze chápat jako číslo, nebo jako polynom $a_kx^k + a_{k-1}x^{k-1} + \dots + a_1x + a_0$ či vektor $(a_k, a_{k-1}, \dots, a_1, a_0)$. Aritmetika modulo 2 (nedochází k přenosům a výpůjčkám) -- operace odpovídají XOR (sčítání, dělení).
+
+\paragraph{Generátor} musí používat oba, odesílatel i příjemce stejný. Generující polynom $g(x)$ o stupni $n$ je polynomiálním zápisem generátoru.
+
+\paragraph{Galoisovo těleso $GF(q) = (M, +, \cdot, 0, 1)$}: Prvočíslo $p$ a přirozené číslo $n \geq 1$ existuje (až na izomorfismus jednoznačné) těleso o $p^n$ prvcích. $GF(p^n) = GF(q)$, kde $q = p^n$ lze složit z více $GF(p)$ (nerozložitelný polynom).
+
+Primitivní prvek $\alpha$ je generátor grupy $(F^*, \cdot, 1)$, kde $F^*$ jsou všechny nenulové prvky. $G(x)$ s koeficienty v $GF(q)$ má $q$ kořenů a $g(x)$ je nerozložitelný a aspoň jeden takový vždy existuje.
+
+Je-li $\alpha$ kořenem $g(x)$ v $GF(q)$, pak platí, že $\alpha^0 = \alpha^q = 1, \alpha^2, \alpha^3, \dots, \alpha^{q-1}$ jsou také kořeny $g(x)$. Pro $g(x)$ lze kořeny zapsat i formou matice (vektoru): $H = [a^0, a^1, a^2, \dots, a^{q-1}]$. Označíme-li bitovou reprezentaci zabezpečené zprávy jako $z$, pak lze ověření úspěšného přenosu chápat jako řešení rovnice $z \cdot H^T = 0$.
+
+Polynom je nerozložitelný, je pokud polynom nelze rozložit na součin jednodušších polynomů.
+
+\subsection{Lineární kódy}
+Kódové slovo uvažujeme jako vektor. Kódová slova lineárního kódu vytvářejí lineární prostor $L \subseteq GF^n(2)$. Pro kódová slova $x, y \in L$ a $\alpha \in GF(2)$ platí $x+y \in L$ a $\alpha \cdot x \in L$.
+
+Každý lineární prostor lze popsat několika navzájem nezávislými vektory tohoto prostoru (\emph{báze lineárního prostoru} -- generující vektory). Ostatní vektory lze získat lineární kombinací těchto nezávislých vektorů.
+
+Matice složenou z generujících vektorů nazýváme \emph{generující matice} G. Má $n$ sloupců (počet znaků kódového slova) a $k$ řádků ($2^k$ kódových slov). $n > k$. Lineární blokový kód zapisujeme $(n, k)$.
+
+\paragraph{Symetrický kód} je generován pomocí matice tvaru $G = [I_k|P]$, kde $i_k$ je jednotková matice $k \times k$ a $P$ je obecná matice $k \times (n-k)$. Tento kód má rozdělená místa ve značce na $k$ informačních a $n-k$ zabezpečujících bitů.
+
+\paragraph{Kontrolní matice} $H$ je generující matice prostoru $L'$, který je duální k prostoru $L$, generovanému maticí $G$. Tento prostor je tvořen vektory, které jsou ortogonální (kolmé) k vektorům prostoru $L$. Tedy: $G \times H^T = 0$, $x \times H^T = 0, x \in G$ a lze ji odvodit z G: $H = [P^T|I_{n-k}]$.
+
+\subsection{Hammingovy kódy}
+Pro základní Hammingův kód $(7, 4)$ použijeme těleso $GF(2^3)$, tedy $GF(8)$. Ireducibilní polynom použijeme $\alpha = x^3 + x + 1$. Prvky jsou potom $a^z$ pro $z = 0, \dots 6$.
+
+\subsection{CRC}
+Vhodně zvolený generující polynom ovlivňuje detekci chyb a to tak, že dokáže najít:
+\begin{itemize}
+	\item všechny 1 bitové chyby
+	\item téměř všechny 2 bitové chyby
+	\item všechny shluky až $m$ chyb, pokud $g(x)$ je stupně $m$.
+\end{itemize}
+Standardizováno několik polynomů (CRC-10, 12, 16, 32)
+
+Řetězec datových bitů, které chceme zabezpečit chápeme jako číslo. Toto číslo vydělíme předem zvolenou konstantou a zbytek po dělení připojíme k datovým bitům jako jejich zabezpečující část.
+
+(polynomiální reprezentace) $z(x)$ je zpráva, $g(x)$ je generující polynom, $r(x)$ je zbytek po dělení stupně $\leq n$, $t(x)$ je $(n+k)$-bitová zpráva zabezpečená CRC, \^{t}$(x)$ je zabezpečená zpráva jak ji přijme příjemce.
+\begin{enumerate}
+	\item Rozšíříme $z$ o $n$ bitů zprava (přidáme 0), získáme $n+k$ bitů ($z(x) \cdot x^n$)
+	\item Spočítáme $x^n z(x): g(x)$, kde zbytek $r$ po dělení jsou CRC zabezpečující bity přenášené zprávy
+	\item Odečteme zbytek po dělení od $x^n z(x)$ a výsledek $t(x) = x^n z(x) - r(x)$ odešleme
+	\item Příjemce provede kontrolu přenosu tím, že \^{t}$(x):g(x)$ a pokud zbytek $r(x)$ odpovídá 0, byla zpráva přenesena bez bitových chyb.
+\end{enumerate}
+
+\section{Proudové bezpečnostní kódy}
+Zabezpečený bit po bitu, kování následujícího bitu závisí na hodnotě určitého množství bitů předchozích.
+
+\subsection{Konvoluční kódování}
+Rekurentní i nerekurentní kódy. Pro linky s dostatečnou šířkou pásma (velká redundance) a s výskytem pouze Gaussovského šumu (satelitní spojení). Implementace pomocí posuvných registrů.
+
+\begin{description}
+	\item[Rekurentní konvoluční kodér] -- závislý na hodnotě předchozího výstupu
+	\item[Nerekurentní konvoluční kodér] -- není závislý na hodnotě předchozího výstupu. Každý výstup lze popsat generujícím polynomem. Koeficient $a_0$ je aktuální vstup, $a_i, i > 0$ pak propojení na posuvný registr, kde $i$ vyjadřuje jeho pořadí (zpoždění).
+\end{description}
+
+Způsob reprezentace:
+\begin{itemize}
+	\item Konečný automat: Stavy odpovídají stavu posuvných registrů, přechody pak funkcí vstupu/výstupu
+	\item Stromová struktura:
+	\item Trellis diagram: Varianta KA rozvinutá v časové rovině (zobrazeny stavy pro čas $t$ a $t+1$), vrchní hrana odpovídá přechodu přes 0, spodní pak přes 1\\
+	Dekódování: Viterbiho algoritmus:
+	\begin{itemize}
+		\item Pokud se dvě cesty střetnou v jednom stavu, tak si pamatujeme jenom tu s menší Hammingovou vzdáleností.
+		\item Pokud mají stejnou vzdálenost a končí ve stejném stavu, jednu náhodně vyřadíme.
+		\item Omezující délka: Počet posuvných registrů, jejichž obsah ovlivňuje aktuální výstup.
+		\item Při dekódování se ze správnou považuje cesta s nejmenší kumulovanou Hammingovou vzdáleností dekódovaných bitůg.
+	\end{itemize}
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
