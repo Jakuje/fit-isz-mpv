@@ -273,9 +273,30 @@ Rekonfigurovatelné počítání -- úspora zdrojů, efektivní implementace vý
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Výpočetní modely} \label{cha:2}
-X. semestr, XXX, ??
+1. semestr, HSC, \texttt{controlflow\_20141123.pdf}, \texttt{dataflow\_20151215.pdf}
 
 (StateCharts, Kahnova síť procesů, synchronní dataflow)
+
+Modelování: Na co nejvyšší úrovni (velká složitost na nižších). Vhodné výpočetní a komunikační modely: Zohledňují charakter dané úlohy a usnadňují tak její efektivní implementaci: KA, Petriho sítě, Dataflow, Diskrétní události.
+\begin{itemize}
+	\item Řídicí struktury
+	\begin{itemize}
+		\item FSM
+		\item rozšíření FSM: s datovou, rozšířené, StatCharts, SpecCharts
+	\end{itemize}
+	\item Datové toky
+	\begin{itemize}
+		\item Kahnova síť procesů (KNP)
+		\item Synchronní dataflow (SDF)
+	\end{itemize}
+	\item Souběžnost
+\end{itemize}
+
+
+\section{State Charts}
+\section{Kahnova síť procesů}
+\section{Synchronní dataflow}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3611,7 +3632,7 @@ Existence kružnice se zápornou délkou je indikována pomocí záporného diag
 
 1. semestr, TIN, \texttt{opora.pdf}, 2., 3. kapitola
 
-\subsection{Jazyky}
+\section{Jazyky}
 \begin{mydef}
 Abecedou rozumíme neprázdnou množinu prvků, které nazýváme \emph{symboly abecedy}.
 \end{mydef}
@@ -3684,7 +3705,7 @@ Algebraická struktura $\left< A, +, \cdot, 0, 1 \right>$ se nazývá polokruh s
 Algebra jazyků $\left< 2^{\Sigma^*}, \cup, \cdot, \emptyset, \{\epsilon\} \right>$, kde $\cup$ je sjednocení a $\cdot$ konkatenace jazyků tvoří polokruh.
 \end{veta}
 
-\subsection{Gramatika}
+\section{Gramatika}
 Nejznámější prostředek pro reprezentaci jazyka (konečné, nekonečné). Používá dvou konečných disjunktních abeced: Množina $N$ nonterminálních symbolů a množina $\Sigma$ terminálních symbolů.
 
 \emph{Noterminální symboly}, krátce \emph{nonterminály}, mají roli pomocných proměnných označující určité syntaktické celky -- syntaktické kategorie.
@@ -3735,13 +3756,13 @@ Nechť $G=(N, \Sigma, P, S)$ je gramatika. Řetězec $\alpha \in (N \cup \Sigma)
 Větná forma, která obsahuje pouze terminální symboly se nazývá \emph{věta}. Jazyk $L(G)$, generovaný gramatikou $G$, je definován množinou všech vět $L(G) = \{ w | S \Rightarrow^* w \land w \in \Sigma^*\}$.
 \end{mydef}
 
-\subsection{Chomského klasifikace gramatik}
-\subsubsection{Typ 0: Neomezené}
+\section{Chomského klasifikace gramatik}
+\subsection{Typ 0: Neomezené}
 Gramatika typu 0 obsahuje pravidla v nejobecnějším tvaru
 
 $$\alpha \to \beta, \alpha \in (N \cup \Sigma)^* N (N \cup \Sigma)^*, \beta \in (N \cup \Sigma)^*$$
 
-\subsubsection{Typ 1: Kontextové}
+\subsection{Typ 1: Kontextové}
 Gramatika typu 1 obsahuje pravidla ve tvaru
 
 $$ \alpha A \beta \to \alpha \gamma \beta, A \in N, \alpha, \beta in (N \cup \Sigma)^*, \gamma \in (N \cup \Sigma)^+$$
@@ -3749,12 +3770,12 @@ nebo
 $$S \to \epsilon$$
 pokud se $S$ neobjevuje na pravé straně žádného pravidla.
 
-\subsubsection{Typ 2: Bezkontextové}
+\subsection{Typ 2: Bezkontextové}
 Gramatika typu 2 obsahuje pravidla tvaru
 
 $A \to \gamma, A \in N, \gamma \in (N \cup \Sigma)^*$
 
-\subsubsection{Typ 3: Lineární (pravé lineární)}
+\subsection{Typ 3: Lineární (pravé lineární)}
 Gramatika typu 3 obsahuje pravidla tvaru
 
 $A \to xB$ nebo $A \to x; A, B \in N, x \in \Sigma^*$
