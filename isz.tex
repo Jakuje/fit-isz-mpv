@@ -279,21 +279,51 @@ Rekonfigurovatelné počítání -- úspora zdrojů, efektivní implementace vý
 
 Modelování: Na co nejvyšší úrovni (velká složitost na nižších). Vhodné výpočetní a komunikační modely: Zohledňují charakter dané úlohy a usnadňují tak její efektivní implementaci: KA, Petriho sítě, Dataflow, Diskrétní události.
 \begin{itemize}
-	\item Řídicí struktury
+	\item Řídicí struktury -- Controlflow
 	\begin{itemize}
 		\item FSM
 		\item rozšíření FSM: s datovou, rozšířené, StatCharts, SpecCharts
 	\end{itemize}
-	\item Datové toky
+	\item Datové toky -- Dataflow
 	\begin{itemize}
 		\item Kahnova síť procesů (KNP)
 		\item Synchronní dataflow (SDF)
 	\end{itemize}
 	\item Souběžnost
+	\begin{itemize}
+		\item Communicating Sequential Processes (CSP)
+		\item Petriho sídě.
+	\end{itemize}
 \end{itemize}
 
+FSM -- Moore, Mealy
 
-\section{State Charts}
+FSM s datovou cestou (FSMD): Mikroprogramovatelný automat -- flexibilita na úkor efektivity.
+
+EFSM -- rozšířené konečné automaty. Pro FSM s velkým množsvím opakujících se stavů -- rozšíření o proměnné: Vstupní podmínky, Výstupní akce a Přiřazení proměnné (Set action). Nedeterministický popisuje pouze podstatné vlastnosti systému (skryje detaily o okolním prostředí).
+
+Exploze stavů FSM: Při spojování dvou FSM do jednoho (N $\times$ M stavů), ošetření výjimek. Složitější chování se těžko modeluje
+
+\section{StateCharts}
+Rozšíření FSM pro snazší modelování -- přehlednější zápis a snadnější použití.
+
+\emph{Objekt}: Stavy jsou všechny kombinace podstavů. StateCharts zapisuje hierarchicky (OR-super-stav). Souběžnost: Dva a více FSM současně aktivní (AND-super-stavy). Přechody podmíněny nebo asociovány s akcemi. Výpočet od listů ke kořenům. Synchronní komunikační mechanismus.
+
+Stromová reprezentace stavů:
+\begin{itemize}
+	\item Základní stavy: Nemají potomka, odpovídají stavům FSM
+	\item AND-super-stav: Aktivní stavy v obou (kartézský součin potomků) -- Souběžnost
+	\item OR-super-stav: Jeden ze základních stavů je aktivní (Sjednocení potomků)
+	\item Defaultní stav: Vstupní bod sub-stavu
+	\item Historie: V OR-super-stavu pokračujeme tam, odkud jsme super-stav opustili
+	\item Časovač: Speciální výstupní hrana: timeout -- pokud je stav po dobu N ve stavu, bude vygenerována výstupní událost timeout.
+	\item Podmíněné přechody: n[c]/a, kde n je událost, c je podmínka a a je akce.
+\end{itemize}
+
+Hierarchie AND/OR-super-stavů, existují překladače do C či VHDL, nevhodné pro distribuované aplikace, nepopisují datové toky
+
+SpecCharts -- rozšíření FSM -- možnost psát jazykové konstrukce v souběžných FSM
+
 \section{Kahnova síť procesů}
 \section{Synchronní dataflow}
 
