@@ -325,8 +325,107 @@ Hierarchie AND/OR-super-stavů, existují překladače do C či VHDL, nevhodné 
 SpecCharts -- rozšíření FSM -- možnost psát jazykové konstrukce v souběžných FSM
 
 \section{Kahnova síť procesů}
-\section{Synchronní dataflow}
+Sekvenční procesy komunikující zasíláním zpráv.
 
+Komunikace: kanály -- fronty FIFO s potenciálně nekonečnou kapacitou. Neblokující zápis, blokující a destruktivní čtení. Deterministické chování -- čtení z fronty na základě přítomnosti dat.
+
+Paralelní programování, Grafická reprezentace: Orientovaný graf: Uzly jsou procesy (v jakémkoliv čase počítají, nebo čekají na vstupy -- sekvenční program), hrany jsou jednosměrné kanály (FIFO, nedefinovaný ale končený čas).
+
+Uváznutí -- reálná implementace mám omezenou frontu, nebo se data ztrácejí.
+
+\paragraph{Monotónnost}: Monotónní proces generuje z uspořádané množiny vstupních sekvencí $X \subseteq{X'}$ uspořádanou množinu výstupních sekvencí: $X \subseteq X' \Rightarrow F(X) \subseteq F(X')$.
+Množina výstupních sekvencí $X_i \subseteq X_i'$ je uspořádaná, pokud pro každou sekvenci $i$ platí
+$[x_1] \subseteq [x_1, x_2] \subseteq [x_1, x_2, x_3, \dots]$
+
+\paragraph{Determinismus}: Pokud historie všech kanálů závisí pouze na historii všech vstupních kanálů (historie kanálu -- sekvence tokenů, které byly jak zapsány, tak čteny) a pokud se skládá z monotónních procesů.
+V deterministické KPN je funkční chování nezávislé na časování.
+
+Nedeterministické mohou používat neblokující čtení, číst/zapisovat z/do stejného kanálu, nebo umožnit procesům sdílet proměnné.
+
+Příklad použití: DSP aplikace s datovými proudy, MPEG-2 dekodér.
+
+\section{Synchronní dataflow (SDF)}
+
+Model je statický, velikosti front mohou být stanoveny dopředu, každý proces čte a zapisuje pevný počet tokenů, řeší problém s nedeterminismem při přetečení front, spuštění procesu při určitém množství dat ve vstupní frontě, pevně dán objem dat, který je při vykonání procesu produkován.
+
+Nelze modelovat datově závislé chování -- přítomnost tokenu spouští proces, ne jeho hodnota.
+
+\begin{description}
+	\item[Aktory] A, B, C
+	\item[Tokeny] 1, 2, 3
+	\item[Kanály] (FIFO fronty) $\alpha, \beta$ -- každý má unikátního producenta/konzumenta
+	\item[Inicializační tokeny] kosočtverce
+	\item[Stav] Vektor popisující, kolik tokenů je v každém kanálu
+	\item[Počáteční stav] je určen inicializačními tokeny: $(\alpha:2, \beta: 1)$
+	\item[Přechody]: $(k_1, \dots, k_i, \dots, k_j, \dots, k_n) \xrightarrow{A}(k_1, \dots, k_i - c_A, \dots, k_j+p_A, \dots, k_n)$, pokud A konzumuje $c_A$ tokenů z $\alpha_i$ a produkuje $p_A$ tokenů do $\alpha_j$.
+\end{description}
+
+Aktor bez vstupu se může spouštět kdykoliv a produkuje počet tokenů na výstupu. Aktor se vstupem a výstupem potřebuje ke spuštění N tokenů na vstupu a generuje M tokenů na výstupu. Token bez výstupu s každým spuštěním spotřebuje počet tokenů na vstupu.
+
+Topologie je pevně dána, objem komunikovaných dat je fixní $\Rightarrow$ Případné uváznutí lze odhalit, velikost front lze stanovit předem, deterministické chování, modelovací možnosti omezeny na úroveň FSM, přirozeně paralelizovatelné.
+
+Aplikace: DSP, Obecně kontinuální datové toky.
+
+\paragraph{Monotónnost} -- FIFO, predikovatelné chování, model není časovaný: spuštění okamžité, po implementaci trvá nějakou dobu.
+
+Vykonání úlohy -- posloupnost stavů systému.
+
+Aktor nemůže využívat vnitřní stavovou proměnnou k ovlivnění výpočtu. Může mít obecně různou četnost produkce/konzumace tokenů (2 na vstupu, 1 na výstupu -- např. operace součtu).
+
+\paragraph{Determinismus} -- výsledky vždy stejné bez ohledu na pořadí spuštění aktorů, velikost bufferů konstantní (lze naplánovat), každý aktor může být na jiném výpočetním prostředku (jiná rychlost). 
+
+\begin{itemize}
+	\item Konzistentní systém -- deterministický
+	\item Nekonzistentní systém -- nedeterministické chování -- některá FIFO musí mít neomezenou hloubku.
+	\item Uváznutí (Deadlock) -- konzistentní graf se může dostat do stavu ve kterém nelze spustit žádný aktor.
+\end{itemize}
+
+Rovnice ekvivalence: Řešením je vektor opakování. Pro každý kanál platí: počet produkovaných  = počet konzumovaných tokenů (počáteční vektor se neuplatňuje): $q_A \cdot N = q_B \cdot M$ (počet spuštění na iteraci x počet tokenů konzumovaných/produkovaných).
+
+Rozhodnutelné vlastnosti: Konzistence, Uváznutí, Velikost bufferů.
+
+Graf, Rovnice ekvivalence, Matice ekvivalence (lze řešit např. Gaussovou eliminační metodou).
+
+\paragraph{Matice topologie $M$}: Hodnost matice pro konzistentní systémy: $h(M) = n-1$ (při určitém spouštěcím vektoru může dojít k uváznutí). Rozpojené systémy $h(M) < n-1$, Nekonzistentní systémy: $h(M) = n$ (buffery s potenciálně nekonečnou kapacitou). Hodnost matice je dána počtu lineárně nezávislých řádků matice (nenulových řádků).
+
+\paragraph{Kontrola uváznutí SDF}: Kontrola, zda je graf konzistentní, nalezni nenulový vektor opakování $q$. Simuluj vykonání na základě vektoru opakování -- pokud lze iterace vykonat, pak systém neuvázne.
+
+\paragraph{Ošetření uváznutí} vložením inicializačního tokenu do zpožďovacího elementu.
+
+Vykonávání: Konzistentní plán (spouštěcí vektor, při kterém bude vykonávání konzistentní = rovnice ekvivalence = 0). Konzistentní minimální plán -- minimum tokenů ve spouštěcím vektoru.
+
+Implementace:
+\begin{itemize}
+	\item Plánování výpočtu
+	\begin{itemize}
+		\item Stanovení četnosti výpočtu (řešení soustavy lineárních rovnic)
+		\item Stanovení plánu: simulace jednoho běhu systému
+	\end{itemize}
+	\item Cíl: Sekvence spouštění procesů, která:
+	\begin{itemize}
+		\item Běží pro každý proces aspoň jednou (proporčně k četnosti jeho spouštění)
+		\item Zamezení podtečení bufferů (proces není spuštěn, dokud všechny jeho vyprodukované tokeny nejsou zkonzumovány)
+		\item Výsledek: Počet tokenů, které budou v každém bufferu při inicializaci
+	\end{itemize}
+	\item Výpočet bude proveden bez nebezpečí akumulace tokenů bufferech.
+\end{itemize}
+
+Modelování řízení: Controlflow modelování (Dataflow jsou datově řízené) -- rozšíření o podmínky: Boolean Dafa FLow (BDF), Dynamic Data Flow (DDF). Další rozšíření:
+\begin{itemize}
+	\item Latence: Aktory jsou ohodnoceny dobou vykonání (ns, takty)
+	\item Delay: FIFO fronty jsou nahrazeny komunikačními kanály s pevným počtem zpožděním (D, registr). Aktor čeká na přítomnost tokenu v D (pipeline?).
+\end{itemize}
+
+Analýza výkonnosti: Propustnost a latence: Stanovení hranic (bound)
+\begin{itemize}
+	\item Loop Bound (LB): Součet latencí aktorů/počet zpoždění D v cestě smyčkou v SDF
+	\item Iteration Bound (IB): Největší LB v SDF -- horní limit propustnosti
+\end{itemize}
+
+
+Transformace -- zlepšení výkonnosti: Zkrácení latence nebo zvýšení propustnosti: Multi-rate $\to$ Single-rate (duplikace aktorů podle četnosti jejich spouštění), Retiming (rozložení zpoždění ve smyčkách pro zvýšení propustnosti), Pipelining (zřetězení -- další zpoždění), Unfolding (rozbalení smyček -- zvyšuje paralelismus duplikování aktorů, zvýšení propustnosti).
+
+C-slow -- prokládaný návrh nahrazením každého registru sekvencí C-registrů -- zvýšení latence a zachování propustnosti (zmenšení periody hodin v kombinaci s retimingem)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
