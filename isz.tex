@@ -1915,7 +1915,7 @@ Je-li $o(a) = \infty$, pak jsou mocniny prvku $a$ navzájem různé. Je-li $o(a)
 
 
 \section{Svazy a Booeovy algebry}
-\subsection{(Částečně uspořádané množiny}
+\subsection{(Částečně uspořádané množiny)}
 
 $M$ je množina, $R$ je relace na $M$. 
 
@@ -1947,8 +1947,8 @@ Buď $(M, \leq)$ uspořádaná množina a $N \subseteq M$. Potom se nazývá $u 
 \paragraph{Hasseův diagram} Buď $(M, \leq)$ konečná uspořádaná množina a nechť relace "sousední" je definována takto:
 
 a, b sousedí: $\Leftrightarrow \begin{cases}
-a < b \text{nebo} b < a \\
-\text{neexistuje c taková, že} a < c < b \text{nebo} b < c < a
+a < b \text{ nebo } b < a \\
+\text{ neexistuje c taková, že } a < c < b \text{ nebo } b < c < a
 \end{cases}$
 
 Potom je Hasseův diagram $(M, \leq)$ dán grafy relace \uv{sousedí}. (Množina uzlů je M; je-li $a < b$, nakreslí se uzel $a$ \uv{níže} než uzel $b$ a $a$ se spojí s $b$ hranou, pokud jsou $a$ a $b$ sousední).
@@ -2847,43 +2847,43 @@ Při určování konečného pole $K = GF(p^n)$, tj. při sestavování tabulek 
 
 \section{Definice, příklady}
 \begin{mydef}
-Metrickým prostorem budeme rozumět dvojici $\mathcal{X} = (X, \varrho)$, kde $X$ je množina, jejíž prvky nazýváme bodu a $varrho$ je tzv. vzdálenost (metrika), což je nezáporná reální funkce $varrho(x, y)$, která je definována pro každou dvojicí $x, y \in X$ (tedy $varrho: X \times X \to \mathbb{R}_0^+$ je zobrazení) a která splňuje tyto podmínky:
+Metrickým prostorem budeme rozumět dvojici $\mathcal{X} = (X, \varrho)$, kde $X$ je množina, jejíž prvky nazýváme bodu a $\varrho$ je tzv. vzdálenost (metrika), což je nezáporná reálná funkce $\varrho(x, y)$, která je definována pro každou dvojicí $x, y \in X$ (tedy $\varrho: X \times X \to \mathbb{R}_0^+$ je zobrazení) a která splňuje tyto podmínky:
 \begin{enumerate}[1)]
-	\item $\forall x, y \in X: varrho(x, y) = 0 \Leftrightarrow x = y$
-	\item $\forall x, y \in X: varrho(x, y) = varrho(y, x)$ (symetrie)
-	\item $\forall x, y, z \in X: varrho(x, y) + varrho(y, z) \geq varrho(x, z)$ (trojúhelníková nerovnost)
+	\item $\forall x, y \in X: \varrho(x, y) = 0 \Leftrightarrow x = y$
+	\item $\forall x, y \in X: \varrho(x, y) = \varrho(y, x)$ (symetrie)
+	\item $\forall x, y, z \in X: \varrho(x, y) + \varrho(y, z) \geq \varrho(x, z)$ (trojúhelníková nerovnost)
 \end{enumerate}
 \end{mydef}
 
 Příklady:
 \begin{itemize}
-	\item Diskrétní metrický prostor $(X, varrho)$:
-	$$varrho(x, y) = \begin{dcases}
+	\item Diskrétní metrický prostor $(X, \varrho)$:
+	$$\varrho(x, y) = \begin{dcases}
 	0 \text{v případě} x = y\\
 	1 \text{v případě} x \not= y
 	\end{dcases}$$
-	\item Metrický prostor $\mathbb{R}^1$ se vzdáleností $varrho(x, y) = |x-y|$
-	\item $n$-rozměrný euklidovský prostor $\mathbb{R}^n$ se vzdáleností $varrho(x, y) = \sqrt{\sum\limits_{k = 1}^n}(y_k - x_k)^2$. Tento metrický prostor $(\mathbb{R}^n, varrho)$ značíme $\mathbb{R}^n_1$.
-	\item Metrický prostor $\mathbb{R}^n_0$ používá vzdálenost $varrho_0(x, y) = \max\limits_{1 \leq k \leq n} |y_k - x_k|$
-	\item Množina $C(\left<a, b \right>)$ (často též značená $C^0\left<a,b\right>$) všech spojitých reálných funkcí, které jsou definovány na intervalu $\left<a, b\right>$, se vzdáleností: $varrho(f, g) = \max\limits_{a \leq t \leq b} | g(t) - f(t)$ také tvoří metrický prostor.
+	\item Metrický prostor $\mathbb{R}^1$ se vzdáleností $\varrho(x, y) = |x-y|$
+	\item $n$-rozměrný euklidovský prostor $\mathbb{R}^n$ se vzdáleností $\varrho(x, y) = \sqrt{\sum\limits_{k = 1}^n}(y_k - x_k)^2$. Tento metrický prostor $(\mathbb{R}^n, \varrho)$ značíme $\mathbb{R}^n_1$.
+	\item Metrický prostor $\mathbb{R}^n_0$ používá vzdálenost $\varrho_0(x, y) = \max\limits_{1 \leq k \leq n} |y_k - x_k|$
+	\item Množina $C(\left<a, b \right>)$ (často též značená $C^0\left<a,b\right>$) všech spojitých reálných funkcí, které jsou definovány na intervalu $\left<a, b\right>$, se vzdáleností: $\varrho(f, g) = \max\limits_{a \leq t \leq b} | g(t) - f(t)$ také tvoří metrický prostor.
 	\item Označme symbolem $l_2$ metrický prostor, jehož body jsou posloupnosti reálných čísel
 	$x = (x_1, x_2, \dots, x_n, \dots)$
 	splňující podmínku
 	$\sum\limits_{k=1}^\infty x_k^2 < +\infty$
 	a v němž se vzdálenost definuje vztahem
-	$varrho(x, y) = \sqrt{\sum\limits_{k=1}^\infty(y_k - x_k)^2}$
-	\item Uvažujeme množinu všech spojitých funkcí na intervalu $\left<a, b\right>$. Vzdálenost definujeme jako $varrho(x, y) = \left( \int_a^b (x(t) - y(t))^2 dt \right)^\frac{1}{2}$. Tento metrický prostor budeme značit $C_2^0\left<a, b\right>$ a nazývat prostorem spojitých funkcí s kvadratickou metrikou.
-	\item Uvažujme množinu všech ohraničených posloupností $x = (x_1, x_2, \dots, x_n, \dots)$ reálných čísel. Položíme-li $varrho(x, y) = sup |x_k - y_k|$ dostaneme metrický prostor $M^\infty$.
+	$\varrho(x, y) = \sqrt{\sum\limits_{k=1}^\infty(y_k - x_k)^2}$
+	\item Uvažujeme množinu všech spojitých funkcí na intervalu $\left<a, b\right>$. Vzdálenost definujeme jako $\varrho(x, y) = \left( \int_a^b (x(t) - y(t))^2 dt \right)^\frac{1}{2}$. Tento metrický prostor budeme značit $C_2^0\left<a, b\right>$ a nazývat prostorem spojitých funkcí s kvadratickou metrikou.
+	\item Uvažujme množinu všech ohraničených posloupností $x = (x_1, x_2, \dots, x_n, \dots)$ reálných čísel. Položíme-li $\varrho(x, y) = sup |x_k - y_k|$ dostaneme metrický prostor $M^\infty$.
 \end{itemize}
 
 \begin{mydef}
-Nechť $\mathcal{X} = (X, varrho)$ je libovolný metrický prostor. Metrický prostor $\mathcal{M} = (M, varrho)$ s toutéž metrikou $varrho$ uvažovanou pouze na množině $M \subset X$ se nazývá podprostorem metrického prostoru $X$.
+Nechť $\mathcal{X} = (X, \varrho)$ je libovolný metrický prostor. Metrický prostor $\mathcal{M} = (M, \varrho)$ s toutéž metrikou $\varrho$ uvažovanou pouze na množině $M \subset X$ se nazývá podprostorem metrického prostoru $X$.
 \end{mydef}
 
 \section{Konvergence posloupností}
-Buď $\mathcal{X} = (X, varrho)$ metrický prostor, $x_0 \in X, r \in \mathbb{R}^+$. \emph{Otevřenou koulí} $S(x_0, r)$ v metrickém prostoru $\mathcal{X}$ budeme nazývat množinu bodů $x \in X$, které vyhovují podmínce
+Buď $\mathcal{X} = (X, \varrho)$ metrický prostor, $x_0 \in X, r \in \mathbb{R}^+$. \emph{Otevřenou koulí} $S(x_0, r)$ v metrickém prostoru $\mathcal{X}$ budeme nazývat množinu bodů $x \in X$, které vyhovují podmínce
 
-$$varrho(x, x_0) < r$$
+$$\varrho(x, x_0) < r$$
 
 Bod $x_0$ se nazývá \emph{středem} a číslo $r$ \emph{poloměrem} této koule.
 
@@ -2913,11 +2913,11 @@ Uzávěr sjednocení je roven sjednocení uzávěrů:
 $$ \overline{M_1 \cup M_2} = \overline{M_1} \cup \overline{M_2} $$
 \end{veta}
 
-Nechť $x_1, x_2, \dots$ je posloupnost bodů v metrickém prostoru $\mathcal{X} = (X, varrho)$. Říkáme, že tato \emph{posloupnost konverguje k bodu} $x \in X$, jestliže ke každému reálnému číslu $\epsilon > 0$ lze najít takové přirozené čislo $N(\epsilon)$, že okolí $O_\epsilon(x)$ obsahuje všechny body $x_n$, kde $n \geq N(\epsilon)$. Bod $x$ se nazývá \emph{limita posloupnosti} $\{x_n\}$.
+Nechť $x_1, x_2, \dots$ je posloupnost bodů v metrickém prostoru $\mathcal{X} = (X, \varrho)$. Říkáme, že tato \emph{posloupnost konverguje k bodu} $x \in X$, jestliže ke každému reálnému číslu $\epsilon > 0$ lze najít takové přirozené čislo $N(\epsilon)$, že okolí $O_\epsilon(x)$ obsahuje všechny body $x_n$, kde $n \geq N(\epsilon)$. Bod $x$ se nazývá \emph{limita posloupnosti} $\{x_n\}$.
 
 Nebo: Posloupnost $\{x_n\}$ konverguje k bodu $x$, jestliže
 
-$$\lim\limits_{n\to \infty} varrho(x, x_n) = 0 $$
+$$\lim\limits_{n\to \infty} \varrho(x, x_n) = 0 $$
 
 Žádná posloupnost nemůže mít dvě různé limity. Jestliže posloupnost $\{x_n\}$ konverguje k bodu $x$, potom každá posloupnost vybraná z této posloupnosti konverguje k témuž bodu.
 
@@ -2944,8 +2944,8 @@ Příklad neseparabilního prostoru: Metrický prostor $M^\infty$ všech ohrani�
 
 \section{Spojitá zobrazení. Homeomorfismus. Izometrické zobrazení}
 \begin{mydef}
-Nechť $\mathcal{X} = (X, varrho)$ a $\mathcal{Y} = (Y, varrho^*)$ jsou dva různé metrické prostory. Zobrazení $f: \mathcal{X} \to \mathcal{Y}$ prostoru $\mathcal{X}$ do prostoru $\mathcal{Y}$ se nazývá spojité v bodě $x_0 \in X$, jestliže k libovolnému $\epsilon > 0$ lze najít takové $\delta > 0$, že pro všechny body $x$ s vlastností $varrho(x, x_0) < \delta$ platí
-$$varrho^*(f(x), f(x_0)) < \epsilon$$
+Nechť $\mathcal{X} = (X, \varrho)$ a $\mathcal{Y} = (Y, \varrho^*)$ jsou dva různé metrické prostory. Zobrazení $f: \mathcal{X} \to \mathcal{Y}$ prostoru $\mathcal{X}$ do prostoru $\mathcal{Y}$ se nazývá spojité v bodě $x_0 \in X$, jestliže k libovolnému $\epsilon > 0$ lze najít takové $\delta > 0$, že pro všechny body $x$ s vlastností $\varrho(x, x_0) < \delta$ platí
+$$\varrho^*(f(x), f(x_0)) < \epsilon$$
 \end{mydef}
 
 Zobrazení $f: \mathcal{X} \to \mathcal{Y}$ se nazývá spojité, jestliže je spojité ve všech bodech prostoru $\mathcal{X}$.
@@ -2979,9 +2979,9 @@ Aby vzájemně jednoznačné zobrazení bylo homeomorfní, je nutné a stačí, 
 \end{veta}
 
 \begin{mydef}
-Říkáme, že vzájemně jednoznačné zobrazení $y = f(x)$ metrického prostoru $\mathcal{X} = (X, varrho)$ na metrický prostor $\mathcal{Y} = (Y, varrho^*)$ je izometrické, jestliže
+Říkáme, že vzájemně jednoznačné zobrazení $y = f(x)$ metrického prostoru $\mathcal{X} = (X, \varrho)$ na metrický prostor $\mathcal{Y} = (Y, \varrho^*)$ je izometrické, jestliže
 
-$$ varrho(x_1, x_2) = varrho^*(f(x_1), f(x_2)) \quad \forall x_1, x_2 \in X $$
+$$ \varrho(x_1, x_2) = \varrho^*(f(x_1), f(x_2)) \quad \forall x_1, x_2 \in X $$
 
 Samotné metrické prostory $\mathcal{X}$ a $\mathcal{Y}$ mezi kterými je možno stanovit izometrické zobrazení se nazývají izometrickými mezi sebou.
 \end{mydef}
@@ -2992,11 +2992,11 @@ Samotné metrické prostory $\mathcal{X}$ a $\mathcal{Y}$ mezi kterými je možn
 
 \begin{mydef}
 Posloupnost $\{x_n\}$ bodů metrického prostoru $\mathcal{X}$ budeme nazývat \emph{cauchyovskou} (nebo \emph{fundamentální}), jestliže splňuje Caughyovo kritérium, tj. jestliže ke každému $\epsilon > 0$ existuje takové kladné celé číslo $N(\epsilon)$, že
-$$ \forall m,n \geq N(\epsilon) \quad varrho(x_m, x_n) < \epsilon $$
+$$ \forall m,n \geq N(\epsilon) \quad \varrho(x_m, x_n) < \epsilon $$
 \end{mydef}
 
 \begin{mydef}
-Jestliže v metrickém prostoru $\mathcal{X}$ libovolná cauchyovská posloupnost konverguje (tj. existuje $x \in \mathcal{X}$ tak, že $varrho(x_n, x) \to 0$), potom nazýváme tento prostor \emph{úplný}.
+Jestliže v metrickém prostoru $\mathcal{X}$ libovolná cauchyovská posloupnost konverguje (tj. existuje $x \in \mathcal{X}$ tak, že $\varrho(x_n, x) \to 0$), potom nazýváme tento prostor \emph{úplný}.
 \end{mydef}
 
 Příklady:
@@ -3015,8 +3015,8 @@ Není-li metrický prostor $\mathcal{X}$ úplný, pak jej lze vždy vnořit do �
 \section{Banachův princip pevného bodu (BPPB}
 
 \begin{mydef}
-Nechť $\mathcal{X} = (X, varrho)$ je metrický prostor. Zobrazení $A$ prostoru $\mathcal{X}$ do prostoru $\mathcal{X}$ se nazývá \emph{kontraktivní} (neboli kontrakce), existuje-li takové číslo $\alpha < 1$, ž epro libovolné dva body $x, y \in X$ platí nerovnost
-$$varrho(Ax, Ay) \leq \alpha varrho(x, y)$$
+Nechť $\mathcal{X} = (X, \varrho)$ je metrický prostor. Zobrazení $A$ prostoru $\mathcal{X}$ do prostoru $\mathcal{X}$ se nazývá \emph{kontraktivní} (neboli kontrakce), existuje-li takové číslo $\alpha < 1$, ž epro libovolné dva body $x, y \in X$ platí nerovnost
+$$\varrho(Ax, Ay) \leq \alpha \varrho(x, y)$$
 \end{mydef}
 
 \begin{veta}
@@ -3278,7 +3278,7 @@ $\sum\limits_{k=1}^\infty c_k^2 \leq ||f||^2$.
 Uvedenou nerovnost nazýváme \emph{Besselovou nerovností}.
 
 \begin{mydef}
-Ortonormální systém se nazývá \emph{uzavřený}, jestliže mezi každým vektorem $f \in R$ a jeho Fourierovými koeficienty $c_k$ platí tzv. \emph{Parsevalova nerovnost}:
+Ortonormální systém se nazývá \emph{uzavřený}, jestliže mezi každým vektorem $f \in R$ a jeho Fourierovými koeficienty $c_k$ platí tzv. \emph{Parsevalova rovnost}:
 
 $$\sum\limits_{k=1}^\infty c_k^2 = ||f||^2$$
 \end{mydef}
@@ -3744,8 +3744,8 @@ $$
 kde na začátku platí $p_{ij} = j$. Algoritmus má vždy $n$ iterací.
 
 Začneme s maticí $A^0 = A, P^0 = P$ a v $i$-té iteraci vytvoříme matice $A^i, P^i$ pomocí $A^{i-1}, P^{i-1}$. Nakonec tedy dostaneme matice $A^n, P^n$. Prvky matic $A^j, P^j, j = 1, 2, \dots, n$ se vypočítají následujícím způsobem:
-$$a_{ik}^j = a_{ik}^{j-1}, p_{ik}^j = p_{ik}^{j-1} \text{ jestliže } a_{ik}^{j-1} \leq a_{ij}^{j-1} + a_{ij}^{j-1}$$
-$$a_{ik}^j = a_{ij}^{j-1} + a_{jk}^{j-1}, p_{ik}^j = p_{ij}^{j-1} \text{ jestliže } a_{ik}^{j-1} > a_{ij}^{j-1} + a_{ij}^{j-1}$$
+$$a_{ik}^j = a_{ik}^{j-1}, p_{ik}^j = p_{ik}^{j-1} \text{ jestliže } a_{ik}^{j-1} \leq a_{ij}^{j-1} + a_{jk}^{j-1}$$
+$$a_{ik}^j = a_{ij}^{j-1} + a_{jk}^{j-1}, p_{ik}^j = p_{ij}^{j-1} \text{ jestliže } a_{ik}^{j-1} > a_{ij}^{j-1} + a_{jk}^{j-1}$$
 
 Indukcí lze dokázat, že po skončení algoritmu má prvek $a_{ij}^n$ hodnotu minimální vzdálenosti z uzlu $i$ do uzlu $j$. Dá se též ověřit, že pokud $p_{ij}^n = k$, potom $(i,k)$ je první hrana v minimální cestě z uzlu $i$ do uzlu $j$, což se dá využít při konstrukci této trasy.
 
@@ -4261,7 +4261,7 @@ Každý \emph{nedeterministický} konečný automat $M$ lze převést na \emph{d
 \begin{alg}
 Převod nedeterministického KA na ekvivalentní DKA\\
 Vstup: NKA $M = (Q, \Sigma, \delta, q_0, F)$\\
-Výstup: NKA $M = (Q', \Sigma, \delta', q_0', F')$\\
+Výstup: DKA $M = (Q', \Sigma, \delta', q_0', F')$\\
 Metoda:
 \begin{enumerate}
 	\item Polož $Q' = 2^Q \backslash \{0\}$
@@ -4288,14 +4288,14 @@ Metoda:
 	$A \to x, \quad x \in \Sigma^*$
 	se nazývá \emph{pravá lineární}, resp. \emph{levá lineární} gramatika.
 	\item Gramatika $G = (N, \Sigma, P, S)$ s pravidly tvaru:
-	$A \to xB, \quad A, B \in N, x \in \Sigma^*$,
-	$A \to x, \quad x \in \Sigma^*$, případně
-	$S \to \epsilon, \quad a \in \Sigma$
+	$A \to aB, \quad A, B \in N, a \in \Sigma$,
+	$A \to a, \quad a \in \Sigma$, případně
+	$S \to \epsilon$ (pokud se $S$ neobjevuje na pravá straně žádného pravidla)
 
 	respektive tvaru
-	$A \to Bx, \quad A, B \in N, x \in \Sigma^*$,
-	$A \to x, \quad x \in \Sigma^*$, případně
-	$S \to \epsilon, \quad a \in \Sigma$
+	$A \to Ba, \quad A, B \in N, a \in \Sigma$,
+	$A \to a, \quad a \in \Sigma$, případně
+	$S \to \epsilon$ (pokud se $S$ neobjevuje na pravá straně žádného pravidla)
 	se nazývá \emph{pravá regulární}, resp. \emph{levá regulární} gramatika. Souhrnně \emph{regulární}.
 \end{itemize}
 \end{mydef}
