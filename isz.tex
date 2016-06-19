@@ -7479,12 +7479,78 @@ Umístění knihovny, přiřazení signálů pořadím/jménem
 
 Testbench -- testování VHDL komponent v prostředí VHDL -- instance vyvíjené komponenty (UUT -- Unit Under Test), Generátor testovacích vektorů, monitorování a ověřování reakcí UUT.
 
+\section{Syntetizovatelné konstrukce}
+Pouze podmnožina VHDL. Problematické: čtení/zápis souborů, rozsah smyček a generických instancí musí být konstantní. Inerntní nebo transportní zpoždění pomocí příkazu wait. Ověřování funkce komponent (assert, report).
+
+Standard IEEE 1076.6 -- 1999 pro RT syntézu -- podmnožina jazyka + sémantika pro VHDL RT syntézu, která by měla být podporována syntézními nástroji.
+
+Problémy při syntéze:
+\begin{itemize}
+	\item Nežádoucí vznik Latch registrů -- není definovaná hodnota výstupu pro některou kombinaci vstupů -- zachování původní hodnoty pomocí Latch registru.
+	\item Neúplný sensitivity list -- jiné chování v simulaci a v HW
+	\item Proměnná délka smyčky nebo příkazu generate -- nelze v čipu dynamicky měnit.
+\end{itemize}
+
+Syntetizovatelné šablony -- zaručeno rozpoznání komponenty syntézou (kontrola nad syntézním nástrojem a prostor pro optimalizace). Pokrývají základní prvky úrovně RLT (KO D, multiplexor, dekodér, čítač, sčítačka, násobička, dělička, KA)
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Logická syntéza obvodů} \label{cha:53}
-3. semestr, PCS, \texttt{01-uvod.pdf}
+3. semestr, PCS, \texttt{02-synteza_obvodu.pdf}
 
 (návrh pro technologie FPGA a ASIC, fáze syntézy, optimalizace, mapování, techniky zřetězení a vyvážení)
+
+Úrovně popisu obvodu: První 3 nezávisí na cílové technologii. Přidávání více informací
+
+\begin{itemize}
+	\item Specifikace:
+	co má obvod dělat z uživatelského pohledu, cíle návrhu (rychlost, spotřeba, cena, rozměry)
+	\item Architektura:
+	Interní struktura, jak má obvod fungovat, propojení dílčích bloků
+	\item RTL VHDL/Verilog:
+	Popis synchronních obvodů -- oddělení kombinační logiky a paměťových prvků (registrů). Chování obvodu v jednotlivých hodinových cyklech
+	\item NetList (prvky cílové technologie):
+	Detailní propojení komponent cílové technologie.
+	\item Layout (Polygony masky IC):
+	Základ pro výrobní data dané cílové technologie. Geometrické obrazce odpovídající křemíkové nebo metal-oxidové vrstvě tvořící základní prvky integrovaného obvodu.
+\end{itemize}
+
+\section{Syntéza}
+Transformace popisu obvodu do konfigurace FPGA nebo masky pro výrobu IC/ASIC.
+
+Obecně automatické transformace mezi různými úrovněmi abstrakce. Na detailnější popis, s cílem dosáhnout parametry zadané uživatelem (rychlost, spotřeba, testovatelnost). Vstupem je také seznam požadavků (\emph{constraints}) specifikovaných uživatelem (perioda, hodin, zpoždění propojovacích vodičů).
+
+Behaviorální syntéza: Z behaviorálního popisu.\\
+Logická syntéza: Z HDL popisu na úrovni RHL (meziregistrových přenosů) je vytvořen NetList prvků cílové technologie.
+
+ASIC: Behaviorální návrh -- Gate-level NetList -- Transistor-level NetList -- Physical layout -- data pro vytvoření masky
+
+FPGA: Behaviorální návrh -- Gate-level NetList -- Map, Place & Route -- FPGA configuration file
+
+\paragraph{Logická syntéza}\\
+Vstupy: Popis obvodu v některém HDL jazyce, knihovna prvků cílové technologie, uživatelem definovaná omezení.
+
+\subsection{Fáze syntézy}
+\begin{enumerate}
+	\item HDL popis obvodu je převeden do \emph{interní reprezentace} (primitivní hradla AND, OR, flip-flop)
+	\item Boolovské optimalizace -- algoritmy pro optimalizaci boolovských výrazů
+
+	Algebraické, Karnaughova mapa (sdružujeme 1), Quine-McCluskey (Úplná normální disjunktní forma, hledání sousedných implikantů a minimálního pokrytí -- mřížka implikantů, NP-úplný problém), Espresso (nejsou generovány všechny zkrácené implikanty, vhodně voleny implikanty pokrývající jedničkové vrcholy funkce. Opakuj: REDUCE -- EXPAND -- IREDUNDANT COVER)
+	\item Mapování do hradel cílové technologie -- využití knihovny s prvky cílové technologie.
+
+	Přístupy založené na pravidlech (LLS) a algoritmické přístupy (Dragon, MISII) -- reprezentace obvodu pomocí DAG (Direct Acyclic Graph) -- vstup graf obvodu v DAG, výspuem je pokrytí grafu prostřednictvím DAG primitiv (s minimální cenou).
+
+	\emph{Knihovny cílové technologie}: informace o prvcích cílové technologie -- logická funkce, zabraná plocha na čipu, časování průchodů signálu ze vstupu na výstup, omezení na fanout, časová omezení dané buňky.
+
+	\emph{Constraints}: Pro řízení optimalizace a mapování. Omezení na čas, spotřebu, umístění a testovatelnost. Do budoucna layout, packaging. Timing constraints -- časová omezení, nastavení maximálního zpoždění pro vybrané cesty: Clock, Pad-To-Pad. Kritická cesta: Prvky a propoje tvořící největší zpoždění.
+\end{enumerate}
+
+\emph{Pipelining}: Větší úsek kombinační logiky se rozdělí na menší části, mezi ně se vloží registry. Až k+1 násobné zrychlení, ale k-krát větší latence. Velikost logiky by měla být vyvážená v jednotlivých stupních. Nelze použít v obvodech se zpětnou vazbou.
+
+\emph{Retiming}: Přeuspořádání kombinační logiky mezi jednotlivými stupni zřetězené architektury pro vyvážení kombinační cesty -- vyšší pracovní frekvence (implementováno v syntézních nástrojích). Základní pravidlo: Registr na výstupu může být přesunut před tento prvek, pokud je aplikován na všechny jeho vstupy.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -7496,9 +7562,11 @@ Testbench -- testování VHDL komponent v prostředí VHDL -- instance vyvíjen�
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Aplikace omezujících podmínek.} \label{cha:55}
-3. semestr, PCS, \texttt{01-uvod.pdf}
+3. semestr, PCS, \texttt{03-omezujici_podminky.pdf}
 
 (časová a fyzická omezení)
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
