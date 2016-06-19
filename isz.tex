@@ -5947,8 +5947,8 @@ Přesné informace o složitosti jsou většinou zbytečné, o skutečném prost
 \begin{mydef}
 Nechť $\mathcal{F}$ je množina funkcí $f: \mathbb{N} \to \mathbb{N}$. Pro danou funkci $f \to \mathcal{F}$ definujeme množiny funkcí $O(f(n)), \Omega(f(n)), \Theta(f(n))$ takto:
 \begin{itemize}
-	\item Asymptotické horní omezení funkce $f(n)$ je množina $O(f(n)) = \{g(n) \in \mathcal{F} | \exists c \in \mathbb{R}^+, \exists n_0 \in \mathbb{N} \forall n \in \mathbb{N}: n \leq n_0 \Rightarrow 0 \leq g(n) \geq c \cdot f(n)\}$
-	\item Asymptotické dolní omezení funkce $f(n)$ je množina $\Omega(f(n)) = \{g(n) \in \mathcal{F} | \exists c \in \mathbb{R}^+, \exists n_0 \in \mathbb{N} \forall n \in \mathbb{N}: n \leq n_0 \Rightarrow 0 \geq c \cdot f(n) \leq g(n)\}$
+	\item Asymptotické horní omezení funkce $f(n)$ je množina $O(f(n)) = \{g(n) \in \mathcal{F} | \exists c \in \mathbb{R}^+, \exists n_0 \in \mathbb{N} \forall n \in \mathbb{N}: n \geq n_0 \Rightarrow 0 \leq g(n) \leq c \cdot f(n)\}$
+	\item Asymptotické dolní omezení funkce $f(n)$ je množina $\Omega(f(n)) = \{g(n) \in \mathcal{F} | \exists c \in \mathbb{R}^+, \exists n_0 \in \mathbb{N} \forall n \in \mathbb{N}: n \geq n_0 \Rightarrow 0 \leq c \cdot f(n) \leq g(n)\}$
 	\item Asymptotické oboustranné omezení funkce $f(n)$ je množina $\Theta(f(n)) = \{g(n) \in \mathcal{F} | \exists c_1, c_2 \in \mathbb{R}^+, \exists n_0 \in \mathbb{N} \forall n \in \mathbb{N}: n \geq n_0 \Rightarrow 0 \leq c_1 \cdot f(n) \leq g(n) \leq c_2 \cdot f(n)\}$
 \end{itemize}
 \end{mydef}
@@ -5968,14 +5968,14 @@ Mějme dány funkce $t, s : \mathbb{N} \to \mathbb{N}$ a nechť $T_M$, resp. $S_
 
 \subsection{Časově/prostorově konstruovatelné funkce}
 
-Třídy složitosti obvykle budujeme nad tzv. časově/prsotorově konstruovatelnými funkcemi: Intuitivní hierarchická struktura tříd složitosti.
+Třídy složitosti obvykle budujeme nad tzv. časově/prostorově konstruovatelnými funkcemi: Intuitivní hierarchická struktura tříd složitosti.
 
 \begin{mydef}
-Funkci $t: \mathbb{N} \to \mathbb{N}$ nazveme časově konstruovatelnou (time constructible), jestliže existuje vícepáskový TS, jenž pro libovolný vstup $w$ zastaví po přesně $t(|w|)$ krocích.
+Funkci $t: \mathbb{N} \to \mathbb{N}$ nazveme časově konstruovatelnou (space constructible), jestliže existuje vícepáskový TS, jenž pro libovolný vstup $w$ zastaví s využitím přesně $t(|w|)$ buněk pásky.
 \end{mydef}
 
 \begin{mydef}
-Funkci $s: \mathbb{N} \to \mathbb{N}$ nazveme časově konstruovatelnou (time constructible), jestliže existuje vícepáskový TS, jenž pro libovolný vstup $w$ zastaví s využitím přesně $s(|w|)$ krocích.
+Funkci $s: \mathbb{N} \to \mathbb{N}$ nazveme prostorově konstruovatelnou (time constructible), jestliže existuje vícepáskový TS, jenž pro libovolný vstup $w$ zastaví s využitím přesně $s(|w|)$ krocích.
 \end{mydef}
 
 \begin{itemize}
