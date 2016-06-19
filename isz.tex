@@ -7498,7 +7498,7 @@ Syntetizovatelné šablony -- zaručeno rozpoznání komponenty syntézou (kontr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Logická syntéza obvodů} \label{cha:53}
-3. semestr, PCS, \texttt{02-synteza_obvodu.pdf}
+3. semestr, PCS, \texttt{02-synteza\_obvodu.pdf}
 
 (návrh pro technologie FPGA a ASIC, fáze syntézy, optimalizace, mapování, techniky zřetězení a vyvážení)
 
@@ -7527,9 +7527,9 @@ Logická syntéza: Z HDL popisu na úrovni RHL (meziregistrových přenosů) je 
 
 ASIC: Behaviorální návrh -- Gate-level NetList -- Transistor-level NetList -- Physical layout -- data pro vytvoření masky
 
-FPGA: Behaviorální návrh -- Gate-level NetList -- Map, Place & Route -- FPGA configuration file
+FPGA: Behaviorální návrh -- Gate-level NetList -- Map, Place \& Route -- FPGA configuration file
 
-\paragraph{Logická syntéza}\\
+\paragraph{Logická syntéza}
 Vstupy: Popis obvodu v některém HDL jazyce, knihovna prvků cílové technologie, uživatelem definovaná omezení.
 
 \subsection{Fáze syntézy}
@@ -7562,11 +7562,51 @@ Vstupy: Popis obvodu v některém HDL jazyce, knihovna prvků cílové technolog
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Aplikace omezujících podmínek.} \label{cha:55}
-3. semestr, PCS, \texttt{03-omezujici_podminky.pdf}
+3. semestr, PCS, \texttt{03-omezujici\_podminky.pdf}
 
 (časová a fyzická omezení)
 
+Bez aplikace omezujících podmínek:
+\begin{itemize}
+	\item nemusí obvod pracovat na požadované frekvenci
+	\item nemusí být dodržen správný komunikační protokol na pinech obvodu
+	\item jednotlivé vstupy/výstupy nemusí být umístěny na správných pozicích.
+\end{itemize}
 
+Omezující podmínky jsou vstupem pro Syntézu i Place\&Route části. Výstupem jsou naopak Timing reports.
+
+\section{Časové omezující podmínky}
+
+\paragraph{Nastavení hodinové frekvence} (Syntéza, P\&R)
+jedno z nejdůležitějších omezení. Kontrola délky kombinačních cest. Započítá setup/hold time a zpoždění hodinových rozvodů.
+
+\emph{Multi-Clock cycle}:
+Chceme aby syntetizátor povolil pro kombinační logiku delší cestu, než je velikost periody (víme, že data přichází jednou za dva takty)
+
+\emph{Max Delay}: Potřeba definovat vlastní délku kombinační cesty na místo implicitní periody.
+
+\emph{Multiple Clock Domain}: Řízení obvodu dvěma nebo více hodinovými signály (externí periferie). Cesty propojující hodinové domény ignorovány (hodinové signály z nezávislých zdrojů -- omezit Max Delay), nebo jako nejvyšší společný dělitel (hodinové signály ze stejného zdroje)
+
+\paragraph{Specifikace zpoždění na vstupních/výstupních pinech} (Syntéza, P\&R)
+
+\emph{Input Delay} -- dva obvody řízené stejným hodinovým signálem. Specifikuje dobu o jakou jsou data zpožděna na pinu druhého obvodu (datasheet, časový diagram komunikace).
+
+\emph{Output Delay} -- dva obvody řízené stejným hodinovým signálem. Specifikuje dobu potřebnou pro správné vzorkování signálu do registru druhého obvodu (datasheet, časový diagram komunikace).
+
+\emph{Input to Output Delay} -- Navrhovaný obvod je pouze kombinační -- potřeba nastavit zpoždění očekávána kombinační logiky ze vstupu na výstup.
+
+\paragraph{Specifikace falešných cest} (Syntéza, P\&R)
+Omezení délky kombinační cesty může být zbytečné, pokud nemá vliv na správnou funkci obvodu (False Path).
+
+
+\section{Fyzické omezující podmínky}
+
+\paragraph{Přiřazení pinů} (P\&R)
+jedna z nejdůležitějších podmínek, potřeba vycházet ze specifikace -- některé piny mohou být určeny pro speciální účely. Také pro komunikaci s okolím (vstupy, výstupy).
+
+\paragraph{Mapování HDL konstrukcí do prvků cílové technologie (BRAM paměti, DDR buňky)} (Syntéza)
+
+\paragraph{Fyzické umístění specifických hradel resp. funkčních jednotek do přesně definované oblasti čipu} (P\&R)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
