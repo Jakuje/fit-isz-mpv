@@ -7428,11 +7428,87 @@ Usually logic based methods.
 \chapter{Architektura grafických procesorů, odlišnosti od superskalárních procesorů.} \label{cha:49}
 \chapter{Programovací jazyk CUDA, model vláken a paměťový model.} \label{cha:50}
 \chapter{Základní rysy nízkopříkonových procesorů (požadavky, architektura, výkonnost).} \label{cha:51}
-\chapter{Jazyky pro popis obvodů (VHDL, syntetizovatelné konstrukce).} \label{cha:52}
-\chapter{Logická syntéza obvodů (návrh pro technologie FPGA a ASIC, fáze syntézy, optimalizace, mapování, techniky zřetězení a vyvážení).} \label{cha:53}
-\chapter{Moderní přístupy k syntéze číslicových obvodů (reprezentace obvodu pomocí AIG, techniky odstraňování funkční redundance v AIG, tradiční mapování AIG do LUT).} \label{cha:54}
-\chapter{Aplikace omezujících podmínek (časová a fyzická omezení).} \label{cha:55}
-\chapter{Verifikace číslicových obvodů (metodologie OVM).} \label{cha:56}
+\chapter{Jazyky pro popis obvodů} \label{cha:52}
+3. semestr, PCS, \texttt{01-uvod.pdf}
+
+(VHDL, syntetizovatelné konstrukce)
+
+Popis obvodu -- VHDL -- syntéza -- Netlist -- generování konfigurace -- cílová technologie FPGA
+
+Popis číslicových obvodů: Původně grafická reprezentace pomocí logického schématu. Zvyšující se složitost vedla ke vzniku HDL (Hardware Description Language) jazyků.
+
+HDL jazyky: Zařízení je možné modelovat a simulovat. Proces syntézy (analogie ke kompilaci) umožňuje transformovat HDL popis do prvků cílové technologie. V praxi se použív VHDL a Verilog.
+
+Extrémní nárůst hradel vede k zavádění abstraktních jazyků: SystemC, HandelC, ImpulseC, CatapultC, které přináší výrazné urychlení vývoje nových zařízení.
+
+\section{Jazyk VHDL}
+VHSIC (Very High Speed Integrated Circuit) Hardware Description Language. Původně pro vojenské účely, později se stalo IEEE standardem. Není svázaný s žádnou cílovou technologií.
+
+Umožňuje tři úrovně popisu: Behaviorální, Strukturní a Data Flow.
+
+VHDL popisuje číslicová zařízení pomocí komponent:
+\begin{itemize}
+	\item \emph{Entita} definuje rozhraní komponenty k okolí.
+	
+	Rozhraní se skládá ze signálů (směr IN, OUT, INOUT) rozhraní a generických parametrů.
+	\item \emph{Architektura} popisuje funkci a chování. Vždy svázána s konkrétní entitou (které definuje interakce s okolím).
+	
+	Popis na úrovni struktury (strukturní popis -- z čeho je složena) nebo chování (behaviorální popis -- co komponenta dělá). Lze kombinovat.
+	
+	Obsahuje jméno entity, deklarační část (signály, konstanty, typy uvnitř architektury) a sekci paralelních příkazů (instance komponent, procesy -- strukturní nebo behaviorální popis)
+\end{itemize}
+Jedna entita může mít více architektur.
+
+\subsection{Behaviorální popis}
+Architektura je složena z jednoho nebo více procesů, jak se mění vstupy v závislosti na změnách vstupů (nemusí být zřejmá hardwarová realizace).
+
+\paragraph{Proces ve VHDL} obsahuje
+\begin{itemize}
+	\item Seznam citlivých proměnných (sensitivity list): proces spouštěn po změně signálu ze seznamu (simulace)
+	\item Deklarační část procesu
+	\item Sekvenční příkazy: Program popisující chování dané komponenty nebo její části. Na základě vstupních signálů a vnitřních proměnných program vypočítá hodnoty výstupních signálů.
+\end{itemize}
+
+\subsection{Dataflow popis}
+Modelování datových závislostí. Zkrácený zápis chování pomocí paralelních příkazů uvnitř architektury (přiřazovací, podmíněný a výběrový příkaz).
+
+\paragraph{Signály ve VHDL} slouží ke komunikaci, mohou být implementovány pomocí vodiče nebo sběrnice (více vodičů). Datové typy bit/vector. U sběrnice určen rozsah a význam bitů (LSB, MSB)
+
+\subsection{Strukturní popis}
+Umístění knihovny, přiřazení signálů pořadím/jménem
+
+Testbench -- testování VHDL komponent v prostředí VHDL -- instance vyvíjené komponenty (UUT -- Unit Under Test), Generátor testovacích vektorů, monitorování a ověřování reakcí UUT.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Logická syntéza obvodů} \label{cha:53}
+3. semestr, PCS, \texttt{01-uvod.pdf}
+
+(návrh pro technologie FPGA a ASIC, fáze syntézy, optimalizace, mapování, techniky zřetězení a vyvážení)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Moderní přístupy k syntéze číslicových obvodů} \label{cha:54}
+3. semestr, PCS, \texttt{01-uvod.pdf}
+
+(reprezentace obvodu pomocí AIG, techniky odstraňování funkční redundance v AIG, tradiční mapování AIG do LUT)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Aplikace omezujících podmínek.} \label{cha:55}
+3. semestr, PCS, \texttt{01-uvod.pdf}
+
+(časová a fyzická omezení)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Verifikace číslicových obvodů} \label{cha:56}
+3. semestr, PCS, \texttt{01-uvod.pdf}
+
+(metodologie OVM)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Technologie programovatelného hardware (architektura FPGA, struktura konfigurovatelných bloků a vestavěných bloků, propojovací sít, způsoby konfigurace, srovnání s technologií ASIC).} \label{cha:57}
 \chapter{Vestavěný počítačový systém} \label{cha:58}
 4. semestr, NAV, \texttt{NVS1.pdf} - \texttt{NVS6.pdf}
