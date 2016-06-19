@@ -7555,9 +7555,118 @@ Vstupy: Popis obvodu v některém HDL jazyce, knihovna prvků cílové technolog
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Moderní přístupy k syntéze číslicových obvodů} \label{cha:54}
-3. semestr, PCS, \texttt{01-uvod.pdf}
+3. semestr, PCS, \texttt{04-modely\_metody.pdf}
 
 (reprezentace obvodu pomocí AIG, techniky odstraňování funkční redundance v AIG, tradiční mapování AIG do LUT)
+
+VHDL RLT -- Translate -- Unoptimized BOolean Description -- Optimizations -- Optimized Boolean Description -- Technology Mapping -- Gate Level Netlist
+
+Nástroj ABC -- And-Inverter Graf (AIG)
+
+Jednoduché číslicové obvody: Pravdivostní tabulka, Schéma, Logická funkce, Karnaughova mapa, Booleova algebra, Výsledný obvod.
+
+Složité číslicové obvody: Optimalizační metody pro jednoduché nelze použít -- Algoritmické (Quite-McCluskey, Espresso). S rostoucí složitostí obvodů se výrazně zvyšuje i složitost algoritmických metod. Proto je lepší použít jinou reprezentace -- grafovou.
+
+Syntéza s využitím AIG:
+\begin{enumerate}
+	\item Konstrukce AIG odstraňuje strukturně ekvivalentní uzly
+	\item Optimalizace AIG odstraňuje funkčně ekvivalentní uzly
+	\item Mapování hledá reprezentaci AIG pomocí prvků cílové technologie.
+\end{enumerate}
+
+\section{And-Inverter Graf -- AIG}
+AIG má 3 druhy uzlů (konstantí, vstupní a AND). Různé atributy:
+\begin{description}
+	\item[Konstantní uzel] je unikátní a má přiřazenou hodnotu 0
+	\item[Vstupní uzly] mají přiřazenou vstupní proměnnou
+	\item[AND uzly] reprezentují operace $\land$ a mají dva potomky
+	\item[Hrany] mají přiřazeno znaménko (inverze)
+\end{description}
+Omezení kladená na strukturu grafu -- snaha o maximální sdílení.
+
+Výhody: Použití jediné operace, jednodušší algoritmy, správa paměti
+
+\begin{mydef}
+AIG je \emph{orientovaný acyklický graf} $G=(V,E)$ kde
+\begin{itemize}
+	\item $V=\{ 0 \} \cup V_{PI} \cup V_{AND}$ je konečná množina uzlů 3 typů
+	\begin{itemize}
+		\item Unikátní uzel \uv{0} reprezentující konstantu CONST\_0
+		\item Vstupní uzly $V_{PI}$
+		\item AND uzly $V_{AND}$
+	\end{itemize}
+	\item $E \subseteq V \times V_{AND}$ je množina hran spojujících uzly grafu G
+\end{itemize}
+Pro komponenty grafu dále platí:
+\begin{itemize}
+	\item Vstupní uzly $V_{PI}$ nemají žádnou vstupní hranu
+	\item AND uzly $V_{AND}$ mají právě dvě vstupní hrany
+	\item Všem hranám je prostřednictvím funkce $inv: E \to \{0, 1\}$ přiřazen atribut inverze.
+\end{itemize}
+\end{mydef}
+
+Konstrukce od vstupů k jeho výstupům. Hashování umožňuje sdílet části obvodu.
+
+Kromě kombinačních obvodů je možné reprezentovat také sekvenční:
+\begin{enumerate}
+	\item Rozdělit sekvenční obvod na kombinační části reprezentované pomocí samostatných AIG. Výstup registru je vstup AIG, výstup AIG je vstup dalšího registru.
+	\item Přidat možnost reprezentovat v AIG registry -- nové atributy hran (počet registrů a jejich počáteční hodnoty) -- sekvenční AIG.
+\end{enumerate}
+
+\begin{mydef}
+Sekvenční AIG je \emph{orientovaný graf} $G=(V,E)$ kde
+\begin{itemize}
+	\item $V=V_{AND} \cup V_{PI} \cup V_{PO}$ je konečná množina uzlů 3 typů
+	\begin{itemize}
+		\item AND uzly $V_{AND}$ (mají právě dvě vstupní hrany)
+		\item Vstupní uzly $V_{PI}$ (nemají žádnou vstupní hranu)
+		\item Výstupní uzly $V_{PO}$ (nemají žádnou výstupní hranu)
+	\end{itemize}
+	\item $E \subseteq V \times V_{AND}$ je množina hran spojujících uzly grafu G
+\end{itemize}
+Každá hrana $e \in E$ má
+\begin{itemize}
+	\item Přiřazení nezápornou váhu $w(e) \in N$ reprezentující počet registrů podél této hrany
+	\item Přiřazenou množinu inicializačních hodnot $i_1(e), \dots i_w(e)$
+	\item Přiřazen atribut inverze $inv(e) \in \{0, 1\}$ přiřazen atribut inverze.
+\end{itemize}
+\end{mydef}
+Konstrukce od vstupů obvodu a libovolných registrů na cyklické části obvodu směrem k jeho výstupům.
+
+AIGER -- formát uložení AIG.
+
+
+\section{Optimalizace AIG}
+Účelové funkce při optimalizaci: Počet uzlů AIG (plocha obvodu, spotřeba zdrojů), Hloubka AIG (zpoždění obvodu).
+
+Charakteristiky cílového stavu: Sdílené uzly -- velký fanout. Vyvážený AIG. Často lze použít lokální optimalizace.
+
+\subsection{Rewriting}
+Nahrazení podstromu AIG funkčně ekvivalentním podstromem s menším počtem uzlů. Optimální podstromy pro určité funkce jsou předpočítány, zachován počet úrovní AIG.
+
+Výběr: Kořenem jsou postupně všechny AIG uzly, listy jsou řezem kořenového uzlu o 4 prvcích. Pro ekvivalenci podstromů se používá NPN ekvivalence.
+
+\begin{mydef}
+Řez uzlu n je množina uzlů nazývaných listy takových, že každá cesta v AIG vedoucí od vstupních uzlů k uzlu n prochází alespoň jedním listem. Uzel n je nazýván kořenem řezu.
+\begin{description}
+	\item[Triviální řez] uzlu je tvořen kořenem samotným
+	\item[Velikost řezu] je dána počtem \textbf{jeho listů}
+	\item[Objem řezu] je celkový počet uzlů na všech cestách mezi kořenem a listy řezu.
+\end{description}
+Řez uzlu je \emph{k-feasible}, pokud je jeho velikost menší nebo rovna K
+\end{mydef}
+
+Množina $C(n)$ K-feasible uzlů $n$ je definována rekurzivně:
+Vstupní uzel: $C(n) = \{\{n\}\}$ (triviální řez), pro AND uzel: $C(n) = \{\{n\}\} \cup \{u \cup v | u \in C(a) \land v \in C(b) \land |u \cup v| \leq K \}$. Výpočet probíhá od vstupních uzlů k výstupním v topologickém pořadí.
+
+\paragraph{NPN ekvivalence} -- boolovské funkce F a G patří do stejné třídy ekvivalence (jsou NPN ekvivalentní), jestliže lze F odvodit z G pouze pomocí negace vstupů (N), Permutace vstupů (P), Negace výstupů (N).
+
+Příklad: $(a \land b) \land (a \land c) = a \land (b \land c)$
+
+\subsection{Resubstitution}
+Vytvoření funkce pomocí jiných uzlů, které jsou již v AIG. Vybrané uzly pro nové vyjádření jsou nazvány \emph{divisors}.
+
+Odebrání uzlů v maximum fanout free cone (MFFC). Přidání uzlů nutných pro nové vyjádření funkce původního uzlu. Zisk z resubstituce je označován jako $k$-resubstitution. Odebrány uzly z $|MFFC|$ a přidáno $k$ nových uzlů. Zmenšení, pokud $|MFFC| \geq k+1$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
