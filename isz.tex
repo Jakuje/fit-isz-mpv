@@ -7555,7 +7555,7 @@ Vstupy: Popis obvodu v některém HDL jazyce, knihovna prvků cílové technolog
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Moderní přístupy k syntéze číslicových obvodů} \label{cha:54}
-3. semestr, PCS, \texttt{04-modely\_metody.pdf}
+3. semestr, PCS, \texttt{04-modely\_metody.pdf}, \texttt{logicke\_optimalizace.pdf}, \texttt{06-cilova\_technologie.pdf}
 
 (reprezentace obvodu pomocí AIG, techniky odstraňování funkční redundance v AIG, tradiční mapování AIG do LUT)
 
@@ -7667,6 +7667,83 @@ Příklad: $(a \land b) \land (a \land c) = a \land (b \land c)$
 Vytvoření funkce pomocí jiných uzlů, které jsou již v AIG. Vybrané uzly pro nové vyjádření jsou nazvány \emph{divisors}.
 
 Odebrání uzlů v maximum fanout free cone (MFFC). Přidání uzlů nutných pro nové vyjádření funkce původního uzlu. Zisk z resubstituce je označován jako $k$-resubstitution. Odebrány uzly z $|MFFC|$ a přidáno $k$ nových uzlů. Zmenšení, pokud $|MFFC| \geq k+1$.
+
+Vstup AIG uzlu se nazývá fanin, výstup AIG uzlu se nazývá fanout.
+\emph{Transitive fanin} TFI(n) uzlu n zahrnuje uzel n a všechny uzly na cestách od vstupních uzlů po uzel n.
+\emph{Transitive fanout} TFO(n) uzlu n zahrnuje uzel n a všechny uzly na cestách od tohoto uzly po výstupy.
+
+\paragraph{Maximum fanout free cone} uzlu n je podmnožina TFI(n) taková, že každá cest z uzlu v této podmnožině k výstupům vede přes uzel n. MFFC obsahuje uzel n a všechny uzly využívané pouze tímto uzlem. Po odstranění uzlu n je monžé odstranit i jeho MFFC.
+
+\emph{Rekonvergencí řízený řez} -- pokud se cesty začínající na výstupu uzlu znovu potkávají ještě před výstupem AIG. Z pohledu resubstituce výhodné -- co největší objem, co největší počet rekonvergentních cest.
+
+\subsection{Redundancy removal}
+Odstranění hran, které nepřispívají k tvorbě výstupní funkce.
+
+Využívá rekonvergenci. K prokázání redundance se používá náhodná simulace, případně SAT solver. Pracovním prostorem je okno nad AIG (podgraf reprezentující okolí zkoumané hrany.
+
+Vstupní hrana může být redundantní i jen s ohledem na podmnožinu vstupních hran. 
+
+\section{Optimalizace pro cílovou technologii}
+Vytvoření reprezentace číslicového obvodu pouze pomocí prvků cílové technologie.
+
+Vstup: Číslicový obvod, knihovna prvků cílové technologie, uživatelem definovaná omezení.
+
+Algoritmické přístupy: Číslicový obvod jako DAG, prvky cílové technologie jako DAG primitiva s danou cenou, algoritmus hledá pokrytí DAT pomocí DAG primitiv s minimální cenou. Nalezení optimálního mapování je NP-těžký problém.
+
+\begin{itemize}
+	\item Standardní buňky -- základní logické funkce (INV, AND, OR, XOR? XNOR, \dots)
+	\item FPGA -- LUT s k vstupy (implementace libovolné logické funkce k proměnných
+	\item Makrobuňky -- kombinací LUT a standardních buněk. Velký počet vstupů. Implementace podmnožiny všech log. funkcí nad svými vstupy.
+\end{itemize}
+
+Mapování AIG do FPGA -- podstrom AIG (řezy uzlů AIG) o K listech lze reprezentovat jako LUT s K vstupy.
+
+\subsection{Tradiční mapování do FPGA}
+\begin{itemize}
+	\item Cut enumeration: Nalezení K-feasible řezů, určení hladiny ulzů (nejdelší cesta od vstupních uzlů k danému uzlu -- počet hran), hladina řezu (dána maximální hladinou listu mezi listy řezu zvýšenou o 1).
+	\item Najdi minimální řezy minimální hloubky a ulož jako reprezentanty pro každý uzel
+\end{itemize}
+
+Při depth-oriented maping byl pro každý uzel vybrán reprezentativní řez (s minimální hladinou). Jeho použití při mapování zajistí minimální zpoždění obvodu.
+
+Dále je potřeba hlídat celkové zpoždění mapovaného obvodu -- zpoždění LUT (propoje nelze zatím určit). Některé řezy lze nahradit alternativním řezem (bez vlivu na celkové zpoždění) a zmenšit plochu mapovaného obvodu.
+
+\paragraph{Arrival time} jak dlouho po změně vstupní po změně se změna projeví u příslušného uzlu. Vstupní uzel $a(n) = 0$. Pro AND uzel $a(n) = \min_{c \in C(n)\backslash \{n\}} (\max_{m \in C}(a(m)+1))$. Výpočet probíhá v topologickém pořadí.
+
+Celková zpoždění obvodu je maximální arrival time na výstupech obvodu.
+
+\paragraph{Required time} vyjadřuje kdy nejpozději po změně vstupní proměnné se musí změna projevit u příslušného uzlu aby bylo zachováno celkové zpoždění obvodu. Výstupní uzel $r(n) = \max_{m \in PO}(a(m))$. Ostatní uzly: $r(n) = \min_{n \in c, c \in C(M)}(r(m)-1)$. Výpočet v opačném topologickém pořadí.
+
+Pro zachování celkového zpoždění nesmí v žádném uzlu arrival time překročit required time.
+
+\paragraph{Area flow} -- globální heuristika sloužící k výběru mezi řezy, jejichž arrival time nepřekračuje required time. Preference řezů vedoucí k použití většího počtu sdílených uzlů.
+
+\paragraph{Exact local area} -- lokální heuristika sloužící k výběru mezi řezy, jejich arrival time nepřekračuje required time. Preferovány řezy s menším počtem LUT ve svém MFFC.
+
+Pořadí aplikace heuristik je významné.
+
+\section{Vylepšení tradičního mapovacího algoritmu}
+
+\subsection{Signatury řezů}
+Zjednodušená reprezentace řezů umožňující snadnou a rychlou kontrolu jejich podstatných vlastností (Duplicita, Dominance, k-feasibility). M-bitové číslo, jehož bity kódují ID uzlů (ne)přítomných mezi listy řezu.
+
+\begin{itemize}
+	\item Duplicita: Pokud nejsou singatury totožné, pak nejsou totožné ani řezy.
+	\item Dominance: Pokud signatura $sign(c_2)$ neobsahuje všechny bity s hodnotou 1 vyskytující se v $sign(c_1)$, pak řez $c_1$ nedominuje řez $c_2$.
+	\item K-feasibility: Pokud je počet bitů s hodnotou 1 v $(sign(c_1)$ OR $sign(c_2))$ vyšší neř K, pak $c_1 \cup c_2$ není K-feasible řez.
+\end{itemize}
+
+\subsection{Prioritní řezy}
+Typicky K-fesible omezeno na C = 4 - 8 prioritních řezů (rychlejší běh algoritmů, menší paměťové nároky). Prioritní řezy vybírány z množiny max. $(C+1)^2$ kandidátních řezů (+ triviální řez). Nejlepší kandidátní řezy po seřazení zvolenou řadicí funkcí.
+
+\subsection{Zahazování řezů}
+Pro každý uzel existuje mnoho řezů, které je potřeba ukládat. Všechny nutné pouze pokud uzly nemají zpracovány všechny potomky. U ostatních stačí ukládat reprezentativní uzly.
+
+\section{Lossless syntéza}
+
+Výsledky mapování silně závisí na struktuře AIG -- optimalizace často aproximační. Dílčí AIG mohl mít lepší strukturu z pohledu mapování.
+
+Princip: Funkčně ekvivalentní uzly z AIG nejsou odstraňovány, ale sdružovány do tříd ekvivalentních uzlů
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
