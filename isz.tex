@@ -7797,9 +7797,54 @@ jedna z nejdůležitějších podmínek, potřeba vycházet ze specifikace -- n�
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Verifikace číslicových obvodů} \label{cha:56}
-3. semestr, PCS, \texttt{01-uvod.pdf}
+3. semestr, PCS, \texttt{verifikace2012.pdf}
 
 (metodologie OVM)
+
+Složitost integrovaných obvodů se zdvojnásobuje každých 24 měsíců. Se složitostí obvodů roste až exponenciálně složitost verifikace.
+
+Verifikace -- implementovaný systeém je korektní (neobjevují se nesrovnalosti a chyby). V souladu s jistou interpretací specifikace.
+
+Validace -- ověření, zda interpretace systému je správně zvolená, systém popsaný ve specifikaci.
+
+\paragraph{Verifikační plán} -- co verifikujeme a jak to budeme verifikovat. Specifické testy, verifikační přístupy a nástroje, jak se pozná ukončení, zdroje (lidské, výpočetní, odhad ceny), Seznam ověřovaných funkcí na jednotlivých úrovních abstrakce obvodu.
+
+\paragraph{Simulace a testování} -- bug hunting. Prostředí simulátoru (ModelSim), reprodukování chybových scénářů a ladění chyb. Nedokazuje, že již systém neobsahuje další chyby. Řízený test: Ruční příprava vstupních testovacích vektorů (testbench), simulace, manuální kontrola výstupů.
+
+\paragraph{Formální verifikace}: matematické metody k formálnímu popisu systému nebo jeho vlastností a ověření funkčnosti systému v souladu se specifikací. Výsledkem je
+\begin{description}
+	\item[Důkaz správnosti] neexistuje žádný vstup, který by způsobil porušení sledované podmínky
+	\item[Protipříklad] určitý běh systému, nebo vstup, které vede k porušení sledované podmínky
+\end{description}
+
+Techniky verifikace:
+\begin{itemize}
+	\item Model checking -- prozkoumání stavového prostoru (KA)
+	\item Statická analýza -- nevyžaduje spouštění systému
+	\item Theorem proving -- deduktivní metoda podobná matematickému dokazování
+	\item Equivalency checking -- formálně dokazuje, že dvě reprezentace obvodu mají stejné chování (různé úrovně abstrakce)
+	\item SAT solving -- NP-úplný problém splnitelnost boolovských formulí
+\end{itemize}
+Problémy: negarantuje konečnost (aproximace způsobuje falešné alarmy), Problém stavové exploze (model checking), interakce s člověkem, odpovědi \uv{I don't know}
+
+\paragraph{Funkční verifikace}: ověřuje zda model obvodu plní specifikaci (sledováním jeho výstupů).
+
+Implementace v SystemVerilog (OOP): DPI (Dirrect Programming Interface): Volání funkcí zapsaných v jiných programovacích jazycích.
+\begin{description}
+	\item[Generování náhodných vstupních vektorů] Velké množství, korektnost vstupů zajištěna pomocí omezujících podmínek.
+	\item[verifikace řízená pokrytím] Funkční pokrytí, pokrytí kódu, pokrytí cest, FSM pokrytí.
+	\item[založená na formálních tvrzeních (assertions)] tvrzení (výraz v temporální logice), které musí v daném systému vždy platit.
+	\item[samokontrolní mechanismy (self-checking mechanisms)] Predikce výstupů systému -- referenční model, scoreboarding, offline checking.
+\end{description}
+
+\paragraph{Verifikační metodiky} (souhrn praktik a postupů) -- znovupoužitelnost a snadná rozšiřitelnost. Vrstvený testbench a verifikace řízená pokrytím.
+
+\paragraph{OVM metodika}
+Cadence, Mentor Graphics. Knihovna tříd v SystemVerilog. Obsahuje strukturní a class-based část. Fixní a variabilní.
+
+Problémy funkční verifikace: Pokrytí většinou náhodné, téměř nikdy kompletní. Verifikaci považujeme za ukončenou, když máme nějakou úroveň pokrytí. Simulace je pomalá (paralelní hardwarový systém) -- řešení: Akcelerace v hardware (emulátor, FPGA), implementace části verifikačního prostředí v C (DPI vrstva).
+
+\paragraph{Post-Silicon validace} -- ověření funkčnosti fyzické reprezentace (prototypu) -- chyby které vznikly ve výrobě, během syntézy, place\&route, funkční chyby související s vysokou rychlostí obvodu.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
